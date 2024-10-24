@@ -1,0 +1,159 @@
+/* @import './base.css'; */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *,
+  *::after,
+  *::before {
+    @apply box-border;
+  }
+
+  body {
+    @apply text-fontBase bg-body;
+    font-family: "Public Sans", system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  /* LIST & Colla */
+
+  .list__item-child {
+    @apply flex justify-between items-center cursor-pointer lg:text-sm text-base font-normal  py-2 px-4 rounded-md mt-2 m-0  hover:bg-secondaryHover gap-2;
+  }
+
+  .collapsible--extend .collapsible__content {
+    @apply block;
+  }
+
+  .collapsible--extend .collapsible__chevron {
+    @apply rotate-90;
+  }
+
+  .collapsible__content {
+    @apply hidden bg-darken rounded-md font-thin lg:p-2 lg:shadow-md z-50;
+  }
+
+  /* TABLE & PAGINATION */
+  .table__block {
+    @apply py-2 px-5 lg:px-2 text-sm lg:text-xs capitalize;
+  }
+  .table__block--with-border {
+    @apply py-2 px-5 lg:px-2 text-sm lg:text-xs  border border-colorBorder;
+  }
+
+  .pagination {
+    @apply flex justify-center items-center mt-3;
+  }
+  .pagination__item {
+    @apply flex justify-center items-center ml-2 w-8 h-8 rounded-md cursor-pointer;
+    background: rgba(225, 222, 245, 0.08);
+  }
+
+  .pagination__item:hover {
+    @apply text-primary;
+  }
+
+  .pagination__item a {
+    @apply inline-flex items-center justify-center  h-full w-full;
+  }
+
+  .pagination__item:hover,
+  .pagination-active {
+    @apply text-white;
+  }
+
+  .pagination-active {
+    @apply bg-primary text-white rounded-md;
+  }
+
+  /* Button */
+  .btn {
+    @apply text-white px-3 py-2 rounded-sm hover:opacity-95 transition duration-150 ease-in-out;
+  }
+  .btn--small {
+    @apply px-2 py-1;
+  }
+  .btn--block {
+    @apply w-full;
+  }
+
+  /* Badges */
+
+  .badge {
+    @apply py-1 px-2 rounded-sm text-white;
+  }
+
+  .badge-primary {
+    @apply bg-primary;
+  }
+  .badge-warning {
+    @apply bg-warning;
+  }
+  .badge-success {
+    @apply bg-success;
+  }
+  .badge-danger {
+    @apply bg-danger;
+  }
+  .badge-secondary {
+    @apply bg-secondary;
+  }
+
+  /* switch */
+  .switch input {
+    @apply opacity-0 h-0 w-0; /* Hide the checkbox */
+  }
+
+  .switch {
+    @apply relative inline-block w-12 h-6 cursor-pointer; /* Set dimensions and cursor */
+  }
+
+  .switch__slider {
+    @apply relative inline-block w-full h-full bg-gray-600 rounded-full transition-colors duration-300; /* Background and transition */
+  }
+
+  .switch__slider::before {
+    content: "";
+    @apply absolute h-[1.1rem] w-[1.2rem] left-[3px] bottom-[3px] bg-gray-300 rounded-full transition-transform duration-300; /* Knob styles */
+  }
+  /*  Modal */
+
+  .modal-dialog-center {
+    display: flex;
+    align-items: center;
+    min-height: calc(100% - var(1.75rem) * 2);
+  }
+}
+
+.router-link-exact-active {
+  @apply bg-primary  font-semibold;
+  @apply text-white !important;
+
+  border-radius: 4px;
+}
+
+.router-link-exact-active:hover {
+  @apply bg-primary;
+}
+
+.sprite {
+  background-image: url(../logo/spritesheet.png);
+  background-repeat: no-repeat;
+  display: block;
+}
+
+.sprite-logo-lg {
+  width: 120px;
+  height: 117px;
+  background-position: -5px -5px;
+}
+
+.sprite-small-lg {
+  width: 36px;
+  height: 35px;
+  background-position: -135px -5px;
+}
