@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { computed, ref, toRefs } from 'vue'
+import { ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const emits = defineEmits({
@@ -38,7 +38,7 @@ const { examData } = toRefs(props)
 const header = ref(['#', 'Exam Title', 'Description', 'Time Limit', 'Question Limit', 'Action'])
 
 const setSelect = async (id) => {
-    await navigateTo(`question/${id}`)
+    await navigateTo(`Question/${id}`);
 }
 
 const handleUpdate = (val) => {

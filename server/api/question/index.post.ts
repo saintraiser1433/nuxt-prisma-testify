@@ -3,10 +3,10 @@ import { ChoicesModel, QuestionModel } from "~/types/types";
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   return prisma.$transaction(async (tx) => {
-    const { question, exam_id, choices } = body;
+    const { description, exam_id, choices } = body;
 
     const questBody: QuestionModel = {
-      question: question,
+      question: description,
       exam_id: exam_id,
     };
 
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const checkExamIsExist = await tx.question.findFirst({
+    const checkExamIsExist = await tx.exam.findFirst({
       where: {
         exam_id: Number(value.exam_id),
       },
@@ -41,8 +41,7 @@ export default defineEventHandler(async (event) => {
       status: choice.status,
     }));
 
-    const { error: errorChoice, value: choicesValue } =
-      choicesValidation.insert(choiceBody);
+    const { error: errorChoice, value: choicesValue } = choicesValidation.insert(choiceBody);
 
     if (errorChoice) {
       throw createError({

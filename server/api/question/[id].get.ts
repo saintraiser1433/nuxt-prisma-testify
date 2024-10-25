@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
-  const checkIfExist = await prisma.question.findFirst({
+  const checkIfExist = await prisma.exam.findFirst({
     where: {
       exam_id: Number(id),
     },
@@ -17,7 +17,6 @@ export default defineEventHandler(async (event) => {
     select: {
       question_id: true,
       question: true,
-      exam_id: true,
       Choices: {
         select: {
           choices_id: true,

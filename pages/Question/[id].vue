@@ -1,84 +1,83 @@
 <template>
-    <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
-    <div>dasdasd</div>
-    <!-- <div class="grid grid-cols-5 gap-5">
-        <div class="col-span-5 lg:col-span-1 ">
-            <UICard title="Exam Information">
-                <template #default>
-                    <ExamForm :isUpdate="isUpdate" :formData="data" @dataExam="submitExam" @reset="resetInstance">
-                    </ExamForm>
-                </template>
-</UICard>
-
-</div>
-<div class="col-span-5 lg:col-span-4 ">
-    <UICard title="List of Exam's">
-        <template #default>
-                    <ExamList :examData="exam" @update="editExam" @delete="removeExam">
-                    </ExamList>
-                </template>
-    </UICard>
-</div>
-</div> -->
+    <div class="grid grid-cols-12 gap-2">
+        <div class="col-span-12 lg:col-span-4 xl:col-span-4">
+            <UICard title="Question Information">
+                <QuestionForm @dataQuestChoice="submitQuestion" :formData="data" :isUpdate="isUpdate"
+                    @reset="resetInstance">
+                </QuestionForm>
+            </UICard>
+        </div>
+        <div class="col-span-12 lg:col-span-4 xl:col-span-8">
+            <UICard title="Question List">
+                <QuestionList :questionData="question" @update="edit" @delete="remove"></QuestionList>
+            </UICard>
+        </div>
+    </div>
 </template>
 
 <script setup>
-// const { setToast } = useToast()
-// const { setAlert } = useAlert()
-// const { createExam, updateExam, deleteExam } = useExam()
-// const data = ref({})
-// const isUpdate = ref(false)
+const { setToast } = useToast()
+const { setAlert } = useAlert()
+const { createQuestion, updateQuestion, deleteQuestion } = useQuestion()
+const route = useRoute().params;
+const data = ref({})
+const isUpdate = ref(false)
 
-// const { data: exam, status, error, refresh } = await useFetch('/api/exam', {
-//     method: 'GET',
-// });
+const { data: question, status, error, refresh } = await useFetch(`/api/question/${route.id}`, {
+    method: 'GET',
+});
 
-// /* Exam */
-// const submitExam = async (data) => {
-//     try {
-//         if (!isUpdate.value) {
-//             const response = await createExam(data);
-//             setToast('success', response.message)
-//         } else {
-//             delete data.status;
-//             const response = await updateExam(data, data.exam_id)
-//             setToast('success', response.message)
-//         }
-//         refresh();
-//         resetInstance();
-//     } catch (error) {
-//         console.log(error)
-//         setToast('error', error.statusMessage || 'An error occurred');
-//     }
-// }
+/* Question */
+const submitQuestion = async (data) => {
+    try {
 
-
-// const editExam = (response) => {
-//     data.value = response
-//     isUpdate.value = true
-// }
-
-// const removeExam = (id) => {
-//     setAlert('warning', 'Are you sure you want to delete?', '', 'Confirm delete').then(
-//         async (result) => {
-//             if (result.isConfirmed) {
-//                 try {
-//                     const response = await deleteExam(id);
-//                     setToast('success', response.message);
-//                     refresh();
-//                 } catch (error) {
-//                     setToast('error', error.statusMessage || 'An error occurred');
-//                 }
-//             }
-//         }
-//     )
-// }
+        if (!isUpdate.value) {
+            const reqBody = {
+                ...data,
+                exam_id: Number(route.id)
+            }
+            const response = await createQuestion(reqBody);
+            setToast('success', response.message)
+        } else {
+            delete data.status;
+            const response = await updateQuestion(data, data.exam_id)
+            setToast('success', response.message)
+        }
+        refresh();
+        resetInstance();
+    } catch (error) {
+        console.log(error)
+        setToast('error', error.statusMessage || 'An error occurred');
+    }
+}
 
 
-// const resetInstance = () => {
-//     isUpdate.value = false
-//     data.value = {}
-// }
+const edit = (response) => {
+    data.value = response
+    isUpdate.value = true
+}
+
+const remove = (id) => {
+    setAlert('warning', 'Are you sure you want to delete?', '', 'Confirm delete').then(
+        async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await deleteQuestion(id);
+                    setToast('success', response.message);
+                    refresh();
+                } catch (error) {
+                    setToast('error', error.statusMessage || 'An error occurred');
+                }
+            }
+        }
+    )
+}
+
+
+const resetInstance = () => {
+    isUpdate.value = false
+    data.value = {}
+}
 
 
 

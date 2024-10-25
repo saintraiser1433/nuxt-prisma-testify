@@ -1,24 +1,19 @@
 export const useQuestion = () => {
-  const createQuestion = async (
-    Question: QuestionModel
-  ): Promise<ApiResponse> => {
+  const createQuestion = async (Question: QuestionModel) => {
     return await $fetch(`/api/question`, {
       method: "POST",
       body: Question,
     });
   };
 
-  const updateQuestion = async (
-    Question: QuestionModel,
-    id: number
-  ): Promise<ApiResponse> => {
+  const updateQuestion = async (Question: QuestionModel, id: number) => {
     return await $fetch(`/api/question/${id}`, {
       method: "PUT",
       body: Question,
     });
   };
 
-  const deleteQuestion = async (id: number): Promise<ApiResponse> => {
+  const deleteQuestion = async (id: number) => {
     return await $fetch(`/api/question/${id}`, {
       method: "DELETE",
     });
