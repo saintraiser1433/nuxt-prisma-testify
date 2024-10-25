@@ -1,8 +1,6 @@
-import { type Course } from "~/types/types";
-
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
-  const body = await readBody<Course>(event);
+  const body = await readBody(event);
   return prisma.$transaction(async (tx) => {
     const { error, value } = courseValidation.update(body);
 

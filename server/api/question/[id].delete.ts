@@ -2,27 +2,27 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
 
   return prisma.$transaction(async (tx) => {
-    const examinee = await tx.examinee.findFirst({
+    const question = await tx.question.findFirst({
       where: {
-        examinee_id: Number(id),
+        question_id: Number(id),
       },
     });
 
-    if (!examinee) {
+    if (!question) {
       throw createError({
         statusCode: 404,
-        statusMessage: "Student not found",
+        statusMessage: "Question not found",
       });
     }
 
-    await prisma.examinee.delete({
+    await prisma.question.delete({
       where: {
-        examinee_id: parseInt(id as string),
+        question_id: Number(id),
       },
     });
     return {
       statusCode: 200,
-      message: "Student updated successfully",
+      message: "Question deleted successfully",
     };
   });
 });

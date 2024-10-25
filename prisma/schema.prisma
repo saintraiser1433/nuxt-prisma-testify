@@ -41,7 +41,7 @@ model Exam {
   description    String        @db.VarChar(255)
   time_limit     Int
   question_limit Int
-  status         Boolean
+  status         Boolean       @default(true)
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   Question       Question[]
@@ -51,6 +51,7 @@ model Exam {
 
 model Question {
   question_id Int       @id @default(autoincrement())
+  question    String    @db.VarChar(255)
   examList    Exam      @relation(fields: [exam_id], references: [exam_id])
   exam_id     Int
   createdAt   DateTime  @default(now())

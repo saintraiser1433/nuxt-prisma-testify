@@ -2,7 +2,7 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
   const body = await readBody(event);
   return prisma.$transaction(async (tx) => {
-    const { error, value } = examineeValidation.update(body);
+    const { error, value } = departmentValidation.validate(body);
 
     if (error) {
       throw createError({
@@ -11,28 +11,28 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const examinee = await tx.examinee.findFirst({
+    const department = await tx.department.findFirst({
       where: {
-        examinee_id: Number(id),
+        department_id: Number(id),
       },
     });
 
-    if (!examinee) {
+    if (!department) {
       throw createError({
         statusCode: 404,
-        statusMessage: "Examinee not found",
+        statusMessage: "Department not found",
       });
     }
 
-    const response = await tx.examinee.update({
+    const response = await tx.department.update({
       where: {
-        examinee_id: Number(id),
+        department_id: Number(id),
       },
       data: value,
     });
     return {
       statusCode: 200,
-      message: "Examinee updated successfully",
+      message: "Department updated successfully",
       data: response,
     };
   });

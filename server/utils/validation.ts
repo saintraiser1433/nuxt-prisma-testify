@@ -1,8 +1,16 @@
-import { Course, type Examinee } from "~/types/types";
+import { Question } from "@prisma/client";
 import Joi from "joi";
+import {
+  ChoicesModel,
+  CourseModel,
+  DepartmentModel,
+  ExamineeModel,
+  ExamModel,
+  QuestionModel,
+} from "~/types/types";
 
 export const examineeValidation = {
-  insert: (data: Examinee) => {
+  insert: (data: ExamineeModel) => {
     const schema = Joi.object({
       first_name: Joi.string().min(3).required().messages({
         "string.base": `First Name should be a type of 'text'`,
@@ -29,7 +37,7 @@ export const examineeValidation = {
     return schema.validate(data);
   },
 
-  update: (data: Examinee) => {
+  update: (data: ExamineeModel) => {
     const schema = Joi.object({
       examinee_id: Joi.number().optional(),
       first_name: Joi.string().min(3).empty().optional(),
@@ -43,7 +51,7 @@ export const examineeValidation = {
 };
 
 export const courseValidation = {
-  insert: (data: Course) => {
+  insert: (data: CourseModel) => {
     const schema = Joi.object({
       description: Joi.string().required().messages({
         "string.empty": `Course cannot be empty`,
@@ -57,7 +65,7 @@ export const courseValidation = {
     });
     return schema.validate(data);
   },
-  update: (data: Course) => {
+  update: (data: CourseModel) => {
     const schema = Joi.object({
       course_id: Joi.number().optional(),
       description: Joi.string().empty().optional().messages({
@@ -68,6 +76,126 @@ export const courseValidation = {
         "string.empty": `Score cannot be empty`,
       }),
     });
+    return schema.validate(data);
+  },
+};
+
+export const departmentValidation = {
+  validate: (data: DepartmentModel) => {
+    const schema = Joi.object({
+      department_id: Joi.number().optional(),
+      department_name: Joi.string().required().messages({
+        "string.empty": `Department Name cannot be empty`,
+        "any.required": `Department Name cannot be null or empty`,
+      }),
+      status: Joi.boolean().optional(),
+    });
+    return schema.validate(data);
+  },
+};
+
+export const examValidation = {
+  insert: (data: ExamModel) => {
+    const schema = Joi.object({
+      exam_title: Joi.string().required().messages({
+        "string.empty": `Question cannot be empty`,
+        "any.required": `Question cannot be null or empty`,
+      }),
+      description: Joi.string().required().messages({
+        "string.empty": `Exam Title cannot be empty`,
+        "any.required": `Exam Title cannot be null or empty`,
+      }),
+      time_limit: Joi.number().required().messages({
+        "string.empty": `Time Limit cannot be empty`,
+        "any.required": `Time Limit cannot be null or empty`,
+      }),
+      question_limit: Joi.number().required().messages({
+        "string.empty": `Question Limit cannot be empty`,
+        "any.required": `Question Limit cannot be null or empty`,
+      }),
+    });
+    return schema.validate(data);
+  },
+  update: (data: ExamModel) => {
+    const schema = Joi.object({
+      exam_title: Joi.string().min(1).empty().optional().messages({
+        "string.min": `Exam Title should have a minimum length of {#limit}`,
+        "string.empty": `Exam Title cannot be empty`,
+      }),
+      description: Joi.string().min(1).empty().optional().messages({
+        "string.min": `Exam description cannot be empty`,
+      }),
+      time_limit: Joi.number().min(1).empty().optional().messages({
+        "number.min": `Time Limit cannot be empty`,
+      }),
+      question_limit: Joi.number().min(1).empty().optional().messages({
+        "number.min": `Question Limit cannot be empty`,
+      }),
+      exam_id: Joi.number().min(1).empty().optional(),
+    });
+    return schema.validate(data);
+  },
+};
+
+export const questionValidation = {
+  insert: (data: QuestionModel) => {
+    const schema = Joi.object({
+      question: Joi.string().required().messages({
+        "string.empty": `Question cannot be empty`,
+        "any.required": `Question cannot be null or empty`,
+      }),
+      exam_id: Joi.number().required().messages({
+        "number.empty": `Exam cannot be empty`,
+        "number.required": `Exam cannot be null or empty`,
+      }),
+    });
+    return schema.validate(data);
+  },
+  update: (data: QuestionModel) => {
+    const schema = Joi.object({
+      question: Joi.string().required().messages({
+        "string.empty": `Question cannot be empty`,
+        "any.required": `Question cannot be null or empty`,
+      }),
+      question_id: Joi.number().optional(),
+    });
+    return schema.validate(data);
+  },
+};
+
+export const choicesValidation = {
+  insert: (data: ChoicesModel) => {
+    const schema = Joi.array()
+      .items({
+        description: Joi.string().required().messages({
+          "string.empty": `Choice cannot be empty`,
+          "any.required": `Choice cannot be null or empty`,
+        }),
+        question_id: Joi.number().required().messages({
+          "number.empty": `Question cannot be empty`,
+          "any.required": `Question cannot be null or empty`,
+        }),
+        status: Joi.boolean().optional(),
+      })
+      .min(1)
+      .messages({
+        "array.min": "At least one choice is required",
+      });
+    return schema.validate(data);
+  },
+  update: (data: ChoicesModel) => {
+    const schema = Joi.object({
+      description: Joi.string().required().messages({
+        "string.empty": `Choice cannot be empty`,
+        "any.required": `Choice cannot be null or empty`,
+      }),
+      choices_id: Joi.number().optional(),
+      status: Joi.boolean().optional(),
+    })
+      .min(1)
+      .messages({
+        "array.min": "At least one choice is required",
+      });
     return schema.validate(data);
   },
 };

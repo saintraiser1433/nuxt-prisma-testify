@@ -1,106 +1,112 @@
 // Base Timestamp Interface
+
 interface Timestamped {
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ApiResponse {
+  message: string;
 }
 
 // Examinee Model
-export interface Examinee extends Timestamped {
-  examinee_id: number;
+export interface ExamineeModel extends Timestamped {
+  examinee_id?: number;
   first_name: string;
   last_name: string;
   middle_name: string;
   username: string;
   password: string;
-  Answers?: Answers[]; // Optional relationship
-  ExamAttempt?: ExamAttempt[]; // Optional relationship
+  Answers?: AnswersModel[]; // Optional relationship
+  ExamAttempt?: ExamAttemptModel[]; // Optional relationship
 }
 
 // Course Model
-export interface Course extends Timestamped {
-  course_id: number;
+export interface CourseModel extends Timestamped {
+  course_id?: number;
   description: string;
   score: string;
-  AssignDeans?: AssignDeans[]; // Optional relationship
+  AssignDeans?: AssignDeansModel[]; // Optional relationship
 }
 
 // Exam Model
-export interface Exam extends Timestamped {
-  exam_id: number;
+export interface ExamModel extends Timestamped {
+  exam_id?: number;
   exam_title: string;
   description: string;
   time_limit: number;
   question_limit: number;
   status: boolean;
-  Question?: Question[]; // Optional relationship
-  Answers?: Answers[]; // Optional relationship
-  ExamAttempt?: ExamAttempt[]; // Optional relationship
+  Question?: QuestionModel[]; // Optional relationship
+  Answers?: AnswersModel[]; // Optional relationship
+  ExamAttempt?: ExamAttemptModel[]; // Optional relationship
 }
 
 // Question Model
-export interface Question extends Timestamped {
-  question_id: number;
-  exam_id: number;
-  examList?: Exam; // Optional relationship
-  Choices?: Choices[]; // Optional relationship
-  Answers?: Answers[]; // Optional relationship
+export interface QuestionModel extends Timestamped {
+  question_id?: number;
+  question: string;
+  exam_id?: number;
+  Exam?: ExamModel[]; // Optional relationship
+  Choices?: ChoicesModel[]; // Optional relationship
+  Answers?: AnswersModel[]; // Optional relationship
 }
 
 // Choices Model
-export interface Choices extends Timestamped {
-  choices_id: number;
+export interface ChoicesModel extends Timestamped {
+  choices_id?: number;
   question_id: number;
-  questionList?: Question; // Optional relationship
+  questionList?: QuestionModel; // Optional relationship
   description: string;
   status: boolean;
-  Answers?: Answers[]; // Optional relationship
+  Answers?: AnswersModel[]; // Optional relationship
 }
 
 // Answers Model
-export interface Answers extends Timestamped {
+export interface AnswersModel extends Timestamped {
   examinee_id: number;
   exam_id: number;
   question_id: number;
   choices_id: number;
-  examineeList?: Examinee; // Optional relationship
-  examList?: Exam; // Optional relationship
-  questionList?: Question; // Optional relationship
-  choicesList?: Choices; // Optional relationship
+  examineeList?: ExamineeModel; // Optional relationship
+  examList?: ExamModel; // Optional relationship
+  questionList?: QuestionModel; // Optional relationship
+  choicesList?: ChoicesModel; // Optional relationship
 }
 
 // ExamAttempt Model
-export interface ExamAttempt extends Timestamped {
+export interface ExamAttemptModel extends Timestamped {
   examinee_id: number;
   exam_id: number;
-  examineeList?: Examinee; // Optional relationship
-  examList?: Exam; // Optional relationship
+  examineeList?: ExamineeModel; // Optional relationship
+  examList?: ExamModel; // Optional relationship
 }
 
 // Department Model
-export interface Department extends Timestamped {
-  department_id: number;
+export interface DepartmentModel extends Timestamped {
+  department_id?: number;
   department_name: string;
   status: boolean;
-  Deans?: Deans; // Optional relationship
+  Deans?: DeansModel; // Optional relationship
 }
 
 // Deans Model
-export interface Deans extends Timestamped {
-  deans_id: number;
+export interface DeansModel extends Timestamped {
+  deans_id?: number;
   first_name: string;
   last_name: string;
   middle_name: string;
   username: string;
   password: string;
   department_id: number; // Unique
-  department?: Department; // Optional relationship
-  AssignDeans?: AssignDeans[]; // Optional relationship
+  department?: DepartmentModel; // Optional relationship
+  AssignDeans?: AssignDeansModel[]; // Optional relationship
 }
 
 // AssignDeans Model
-export interface AssignDeans extends Timestamped {
+export interface AssignDeansModel extends Timestamped {
   deans_id: number;
   course_id: number;
-  deans?: Deans; // Optional relationship
-  course?: Course; // Optional relationship
+  deans?: DeansModel; // Optional relationship
+  course?: CourseModel; // Optional relationship
 }

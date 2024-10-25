@@ -33,6 +33,9 @@ export default defineNuxtConfig({
       baseURL: process.env.NUXT_PUBLIC_BASE_URL,
     },
   },
+  imports: {
+    dirs: ["types/*.ts", "store/*.ts", "types/**/*.ts"],
+  },
 
   vite: {
     plugins: [

@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const response = await prisma.course.delete({
+    await prisma.course.delete({
       where: {
         course_id: Number(id),
       },
@@ -23,7 +23,6 @@ export default defineEventHandler(async (event) => {
     return {
       statusCode: 201,
       message: "Course deleted successfully",
-      data: response,
     };
   });
 });

@@ -3,7 +3,7 @@
 
     <div class="grid grid-cols-5 gap-5">
         <div class="col-span-5 lg:col-span-1 ">
-            <UICard title="Examinee Information">
+            <UICard title="Course Information">
                 <template #default>
                     <CourseForm :isUpdate="isUpdate" :formData="data" @dataCourse="submitCourse" @reset="resetInstance">
                     </CourseForm>
@@ -12,7 +12,7 @@
 
         </div>
         <div class="col-span-5 lg:col-span-4 ">
-            <UICard title="List of Examinee's">
+            <UICard title="List of Course's">
                 <template #default>
                     <CourseList :courseData="course" @update="editCourse" @delete="removeCourse">
                     </CourseList>
@@ -22,29 +22,29 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const { setToast } = useToast()
 const { setAlert } = useAlert()
 const { createCourse, updateCourse, deleteCourse } = useCourse()
 const data = ref({})
 const isUpdate = ref(false)
-const { data: course, status, error, refresh } = await useFetch<Course>('/api/course', {
+const { data: course, status, error, refresh } = await useFetch('/api/course', {
     method: 'GET',
-    lazy: true,
-    transform: (_course) => {
-        return _course.map((course) => {
-            return {
-                course_id: course.course_id,
-                description: course.description,
-                score: course.score
-            }
-        })
-    }
+    // lazy: true,
+    // transform: (_course) => {
+    //     return _course.map((course) => {
+    //         return {
+    //             course_id: course.course_id,
+    //             description: course.description,
+    //             score: course.score
+    //         }
+    //     })
+    // }
 
 });
 
 /* Course */
-const submitCourse = async (data: Course) => {
+const submitCourse = async (data) => {
     try {
         if (!isUpdate.value) {
             const response = await createCourse(data);
@@ -61,15 +61,15 @@ const submitCourse = async (data: Course) => {
 }
 
 
-const editCourse = (response: Course) => {
+const editCourse = (response) => {
 
     console.log(response);
     data.value = response
     isUpdate.value = true
 }
 
-const removeCourse = (id: Number) => {
-    setAlert('warning', 'Are you sure you want to delete?', null, 'Confirm delete').then(
+const removeCourse = (id) => {
+    setAlert('warning', 'Are you sure you want to delete?', '', 'Confirm delete').then(
         async (result) => {
             if (result.isConfirmed) {
                 try {

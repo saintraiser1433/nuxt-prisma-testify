@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   return prisma.$transaction(async (tx) => {
-    const { error, value } = courseValidation.insert(body);
+    const { error, value } = departmentValidation.validate(body);
 
     if (error) {
       throw createError({
@@ -10,25 +10,25 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const course = await tx.course.findFirst({
+    const department = await tx.department.findFirst({
       where: {
-        description: value.description,
+        department_name: value.department_name,
       },
     });
 
-    if (course) {
+    if (department) {
       throw createError({
         statusCode: 409,
-        statusMessage: "Course already exist",
+        statusMessage: "Department already exist",
       });
     }
 
-    const response = await tx.course.create({
+    const response = await tx.department.create({
       data: value,
     });
     return {
       statusCode: 201,
-      message: "Course created successfully",
+      message: "Department created successfully",
       data: response,
     };
   });

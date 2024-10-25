@@ -1,7 +1,5 @@
-import { type Examinee } from "~/types/types";
-
 export default defineEventHandler(async (event) => {
-  const body = await readBody<Examinee>(event);
+  const body = await readBody(event);
   return prisma.$transaction(async (tx) => {
     const { error, value } = examineeValidation.insert(body);
 
