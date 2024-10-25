@@ -1,39 +1,68 @@
+import { ChoicesModel, QuestionModel } from "~/types/types";
+
 export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, "id");
   const body = await readBody(event);
   return prisma.$transaction(async (tx) => {
-    const { error, value } = examineeValidation.update(body);
+    const { question, question_id, choices } = body;
 
-    if (error) {
+    const questBody: QuestionModel = {
+      question: question,
+      question_id: question_id,
+    };
+    //validate request
+    const { error: err, value } = questionValidation.update(questBody);
+    if (err) {
       throw createError({
         statusCode: 400,
-        statusMessage: error.details[0].message,
+        statusMessage: err.details[0].message,
       });
     }
 
-    const examinee = await tx.examinee.findFirst({
+    //validate if question is existing
+    const checkQuestionIsExist = await tx.question.findFirst({
       where: {
-        examinee_id: Number(id),
+        question_id: Number(value.question_id),
       },
     });
 
-    if (!examinee) {
+    if (!checkQuestionIsExist) {
       throw createError({
         statusCode: 404,
-        statusMessage: "Examinee not found",
+        statusMessage: "Question not found",
       });
     }
 
-    const response = await tx.examinee.update({
+    const choiceBody = choices.map((choice: ChoicesModel) => ({
+      description: choice.description,
+      question_id: response.question_id,
+      status: choice.status,
+    }));
+
+    const { error: errorChoice, value: choicesValue } =
+      choicesValidation.insert(choiceBody);
+
+    if (errorChoice) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: errorChoice.details[0].message,
+      });
+    }
+
+    //then update
+    const response = await tx.question.update({
       where: {
-        examinee_id: Number(id),
+        question_id: value.question_id,
       },
       data: value,
     });
+
+    await tx.choices.createMany({
+      data: choicesValue,
+    });
+
     return {
-      statusCode: 200,
-      message: "Examinee updated successfully",
-      data: response,
+      statusCode: 201,
+      message: "Updated successfully",
     };
   });
 });

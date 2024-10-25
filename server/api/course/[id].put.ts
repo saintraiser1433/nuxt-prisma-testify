@@ -11,6 +11,19 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    const course = await tx.course.findFirst({
+      where: {
+        course_id: Number(id),
+      },
+    });
+
+    if (!course) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: "Course not found",
+      });
+    }
+
     const response = await tx.course.update({
       where: {
         course_id: Number(id),
