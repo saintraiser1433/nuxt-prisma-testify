@@ -14,17 +14,18 @@
         </div>
 
         <div class="border-t border-colorBorder pt-2">
-            <UIButton type="submit" class="bg-primary">
-                {{ isUpdate ? 'Update' : 'Submit' }}
-            </UIButton>
-            <UIButton type="button" v-if="isUpdate" class="bg-danger ml-2" @click="reset">
+            <UIButton type="button" v-if="isUpdate" size="block" class="bg-danger mb-2" @click="reset">
                 Reset
             </UIButton>
+            <UIButton type="submit" class="bg-primary " size="block">
+                {{ isUpdate ? 'Update' : 'Submit' }}
+            </UIButton>
+
         </div>
     </form>
 </template>
 
-<script setup lang="ts">
+<script setup>
 
 const emits = defineEmits(['dataExaminee', 'reset'])
 const props = defineProps({
@@ -58,7 +59,7 @@ const submitExaminee = () => {
             ...formExaminee.value
         }
     }
-    console.log(data)
+
     emits('dataExaminee', data)
 }
 

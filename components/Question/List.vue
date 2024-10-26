@@ -17,7 +17,7 @@
                 <UIButton type="button" class="bg-success mr-1" size="small" @click="handleUpdate(item)">
                     <i-bx-edit></i-bx-edit>
                 </UIButton>
-                <UIButton type="button" class="bg-danger" size="small" @click="handleDelete(item)">
+                <UIButton type="button" class="bg-danger" size="small" @click="handleDelete(item.question_id)">
                     <i-icon-park-solid-people-delete></i-icon-park-solid-people-delete>
                 </UIButton>
             </td>

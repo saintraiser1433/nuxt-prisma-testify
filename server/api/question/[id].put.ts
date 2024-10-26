@@ -1,15 +1,14 @@
-import { ChoicesModel, QuestionModel } from "~/types/types";
+import { ChoicesModel } from "~/types/types";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   return prisma.$transaction(async (tx) => {
     const { question, question_id, choices } = body;
-
-    const questBody: QuestionModel = {
+    const questBody = {
       question: question,
       question_id: question_id,
     };
-    //validate request
+    // validate question
     const { error: err, value } = questionValidation.update(questBody);
     if (err) {
       throw createError({
@@ -18,6 +17,7 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    //end
     //validate if question is existing
     const checkQuestionIsExist = await tx.question.findFirst({
       where: {
@@ -31,16 +31,13 @@ export default defineEventHandler(async (event) => {
         statusMessage: "Question not found",
       });
     }
+    //end
 
-    const choiceBody = choices.map((choice: ChoicesModel) => ({
-      description: choice.description,
-      question_id: response.question_id,
-      status: choice.status,
-    }));
-
+    //choices validate
     const { error: errorChoice, value: choicesValue } =
-      choicesValidation.insert(choiceBody);
+      choicesValidation.update(choices);
 
+    // Check for validation errors
     if (errorChoice) {
       throw createError({
         statusCode: 400,
@@ -48,21 +45,60 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    //then update
-    const response = await tx.question.update({
+    const existingChoices = await tx.choices.findMany({
       where: {
         question_id: value.question_id,
       },
-      data: value,
     });
 
-    await tx.choices.createMany({
-      data: choicesValue,
+    //end
+    const newChoiceId = choices.map(
+      (choice: ChoicesModel) => choice.choices_id
+    );
+
+    const choicesToDelete = existingChoices
+      .filter(
+        (existingChoice) => !newChoiceId.includes(existingChoice.choices_id)
+      )
+      .map((item) => item.choices_id);
+
+    //deleted
+    await tx.choices.deleteMany({
+      where: {
+        choices_id: {
+          in: choicesToDelete,
+        },
+      },
     });
+
+    const createManyChoices = choicesValue.map((choice) => ({
+      description: choice.description,
+      status: choice.status,
+      choices_id: choice.choices_id,
+    }));
+
+    for (const ch of createManyChoices) {
+      await prisma.choices.upsert({
+        where: {
+          choices_id: ch.choices_id || -1,
+        },
+        update: {
+          description: ch.description,
+          status: ch.status,
+        },
+        create: {
+          description: ch.description,
+          status: ch.status,
+          question_id: question_id,
+        },
+      });
+    }
 
     return {
       statusCode: 201,
       message: "Updated successfully",
     };
   });
+
+  //end
 });

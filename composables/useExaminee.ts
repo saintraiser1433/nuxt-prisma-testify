@@ -1,3 +1,5 @@
+import type { ExamineeModel } from "#imports";
+
 export const useExaminee = () => {
   const createExaminee = async (examinee: ExamineeModel) => {
     return await $fetch(`/api/examinee`, {

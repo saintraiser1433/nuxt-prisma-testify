@@ -1,3 +1,5 @@
+import type { CourseModel } from "#imports";
+
 export const useCourse = () => {
   const createCourse = async (Course: CourseModel) => {
     return await $fetch(`/api/course`, {

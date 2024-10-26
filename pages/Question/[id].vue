@@ -1,13 +1,13 @@
 <template>
     <div class="grid grid-cols-12 gap-2">
-        <div class="col-span-12 lg:col-span-4 xl:col-span-4">
+        <div class="col-span-12 lg:col-span-4">
             <UICard title="Question Information">
                 <QuestionForm @dataQuestChoice="submitQuestion" :formData="data" :isUpdate="isUpdate"
                     @reset="resetInstance">
                 </QuestionForm>
             </UICard>
         </div>
-        <div class="col-span-12 lg:col-span-4 xl:col-span-8">
+        <div class="col-span-12 lg:col-span-8">
             <UICard title="Question List">
                 <QuestionList :questionData="question" @update="edit" @delete="remove"></QuestionList>
             </UICard>
@@ -32,21 +32,16 @@ const submitQuestion = async (data) => {
     try {
 
         if (!isUpdate.value) {
-            const reqBody = {
-                ...data,
-                exam_id: Number(route.id)
-            }
-            const response = await createQuestion(reqBody);
+            const response = await createQuestion(data);
             setToast('success', response.message)
         } else {
-            delete data.status;
-            const response = await updateQuestion(data, data.exam_id)
+            console.log(data);
+            const response = await updateQuestion(data, data.question_id)
             setToast('success', response.message)
         }
         refresh();
         resetInstance();
     } catch (error) {
-        console.log(error)
         setToast('error', error.statusMessage || 'An error occurred');
     }
 }
@@ -54,6 +49,7 @@ const submitQuestion = async (data) => {
 
 const edit = (response) => {
     data.value = response
+    console.log(response)
     isUpdate.value = true
 }
 

@@ -1,3 +1,5 @@
+import type { DepartmentModel } from "#imports";
+
 export const useDepartment = () => {
   const createDepartment = async (department: DepartmentModel) => {
     return await $fetch(`/api/department`, {

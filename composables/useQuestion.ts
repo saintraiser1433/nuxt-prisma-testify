@@ -1,3 +1,5 @@
+import type { QuestionModel } from "#imports";
+
 export const useQuestion = () => {
   const createQuestion = async (Question: QuestionModel) => {
     return await $fetch(`/api/question`, {

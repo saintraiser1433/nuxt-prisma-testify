@@ -5,7 +5,8 @@
         <!-- header -->
         <AppNavBar />
         <!-- main -->
-        <main :class="isOpen ? 'lg:ml-60' : 'lg:ml-20'" class="col-span-3 px-5 py-2 mt-16 transition-all ease-in-out">
+        <main :class="isOpen ? 'lg:ml-60' : 'lg:ml-20'"
+            class="col-span-3 px-5 pt-2 my-12 pb-8 transition-all ease-in-out">
             <div class="flex items-center flex-wrap justify-end pb-4">
                 <!-- <BaseBreadCrumbs></BaseBreadCrumbs> -->
             </div>
@@ -17,7 +18,11 @@
 
     </div>
 
-
+    <teleport to="body">
+        <div @click="toggle" :class="isOpen ? 'lg:hidden' : 'hidden lg:hidden'"
+            class="block h-screen w-screen bg-[#171925] opacity-50 z-20 fixed top-0">
+        </div>
+    </teleport>
 
 
 

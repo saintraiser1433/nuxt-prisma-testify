@@ -1,3 +1,5 @@
+import type { ExamModel } from "#imports";
+
 export const useExam = () => {
   const createExam = async (Exam: ExamModel) => {
     return await $fetch(`/api/exam`, {

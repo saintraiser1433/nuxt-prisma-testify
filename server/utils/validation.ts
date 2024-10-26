@@ -157,7 +157,7 @@ export const questionValidation = {
         "string.empty": `Question cannot be empty`,
         "any.required": `Question cannot be null or empty`,
       }),
-      question_id: Joi.number().optional(),
+      question_id: Joi.number().required(),
     });
     return schema.validate(data);
   },
@@ -184,14 +184,16 @@ export const choicesValidation = {
     return schema.validate(data);
   },
   update: (data: ChoicesModel) => {
-    const schema = Joi.object({
-      description: Joi.string().required().messages({
-        "string.empty": `Choice cannot be empty`,
-        "any.required": `Choice cannot be null or empty`,
-      }),
-      choices_id: Joi.number().optional(),
-      status: Joi.boolean().optional(),
-    })
+    const schema = Joi.array()
+      .items({
+        description: Joi.string().required().messages({
+          "string.empty": `Choice cannot be empty`,
+          "any.required": `Choice cannot be null or empty`,
+        }),
+        choices_id: Joi.number().optional(),
+        question_id: Joi.number().optional(),
+        status: Joi.boolean().optional(),
+      })
       .min(1)
       .messages({
         "array.min": "At least one choice is required",

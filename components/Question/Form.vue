@@ -1,15 +1,15 @@
 <template>
-    <form @submit.prevent="submitQuestion">
+    <form @submit.prevent="submitQuestionChoices">
         <div class="mb-2">
-            <label for="course">Exam Title:</label>
-            <UIInput type="text" id="course" />
+            <label for="exam">Exam Title:</label>
+            <UIInput class="capitalize" type="text" id="exam" :disabled="true" />
         </div>
         <div class="mb-2">
-            <label for="question">Exam Description:</label>
-            <UITextArea id="question" v-model="formExam.description" />
+            <label for="question">Question:</label>
+            <UITextArea id="question" v-model="question" />
         </div>
         <div class="flex mb-2 border-b border-colorBorder pb-2">
-            <UIButton type="button" class="ml-auto" variant="success" :isRounded="true" size="small"
+            <UIButton type="button" class="ml-auto" variant="success" :isRounded="false" size="small"
                 @click="addChoices">
                 <div class="flex justify-between items-center gap-2">
                     <i-mingcute-plus-fill></i-mingcute-plus-fill>
@@ -17,37 +17,36 @@
                 </div>
             </UIButton>
         </div>
+        <div class="overflow-y-auto max-h-[400px] custom-scrollbar px-2 py-2  ">
+            <div class=" flex flex-col gap-1 mb-4 py-1" v-for="(choices, index) in choicesList" :key="index">
+                <div class="flex items-center justify-between mb-1">
+                    <div class="flex items-center gap-2">
+                        <label :for="'choice_' + index">Choices {{ convertToLetter(index) }}:</label>
+                        <UICheckBox v-model="choices.status"></UICheckBox>
+                    </div>
 
-        <div class="flex flex-col gap-1 mb-4 py-1" v-for="(choices, index) in choicesList" :key="index">
-            <div class="flex items-center justify-between mb-1 ">
-                <div class="flex items-center gap-2">
-
-                    <label :for="'choice_' + index">Choices {{ convertToLetter(index) }}:</label>
-                    <UICheckBox v-model="choices.status" @change="updateChoiceState(index, choices.status)">
-                    </UICheckBox>
+                    <div class="flex gap-1">
+                        <UIButton type="button" class="ml-auto h-7 w-7 inline-flex items-center justify-center"
+                            @click="removeChoices(index)" variant="danger" :isRounded="true" size="small">
+                            <i-tabler-trash class="flex-shrink-0"></i-tabler-trash>
+                        </UIButton>
+                    </div>
                 </div>
-
-                <div class="flex gap-1">
-                    <UIButton class="ml-auto h-7 w-7 inline-flex items-center justify-center"
-                        @click="removeChoices(index)" variant="danger" :isRounded="true" size="small">
-                        <i-tabler-trash class="flex-shrink-0"></i-tabler-trash>
-                    </UIButton>
-                </div>
+                <UITextArea :id="'choice_' + index" v-model="choices.description" />
             </div>
-            <UITextArea :id="'choice_' + index" v-model="choices.description" />
-        </div>
 
+        </div>
+        <UIButton type="button" v-if="isUpdate" class="mb-2" variant="danger" size="block" @click="reset">Reset
+        </UIButton>
         <UIButton type="submit" variant="primary" size="block">{{
             isUpdate ? 'Update' : 'Submit'
-            }}</UIButton>
-        <UIButton type="button" v-if="isUpdate" class="bg-danger ml-2" @click="reset">Reset</UIButton>
+        }}</UIButton>
     </form>
 </template>
 
 <script setup>
+const { convertToLetter } = useConvertLetter()
 const emits = defineEmits(['dataQuestChoice', 'reset'])
-
-const { convertToLetter } = useConvertLetter();
 const props = defineProps({
     isUpdate: {
         type: Boolean,
@@ -58,59 +57,76 @@ const props = defineProps({
     }
 })
 
+const route = useRoute().params;
 const choicesList = ref([])
+const question = ref('')
+const questionId = ref(null)
 const { isUpdate, formData } = toRefs(props)
-const formExam = ref({
-    description: ''
-})
 
+// const examTitle = computed(() => route.meta.examTitle)
 
 const addChoices = () => {
-    choicesList.value.push({
-        choices: [{ description: '' }, { checked: false }],
-    })
+    choicesList.value.push({ description: '', status: false })
 }
 
-
-const removeChoices = (index) => {
+const removeChoices = async (index) => {
     if (index !== -1) {
         choicesList.value.splice(index, 1)
     }
 }
 
-
-const updateChoiceState = (index, checked) => {
-    choicesList.value[index].checked = checked;
-}
-
-const submitQuestion = () => {
-    const data = {
-        ...formExam.value,
-        choices: choicesList.value.map((choice) => ({
-            description: choice.description,
-            status: choice.checked ? true : false
-        }))
+const submitQuestionChoices = () => {
+    let data
+    if (!isUpdate.value) {
+        data = {
+            question: question.value,
+            exam_id: route.id,
+            choices: choicesList.value.map((choice) => {
+                return {
+                    description: choice.description,
+                    status: choice.status
+                }
+            })
+        }
+    } else {
+        data = {
+            question: question.value,
+            question_id: questionId.value,
+            choices: choicesList.value.map((choice) => {
+                return {
+                    choices_id: choice.choices_id,
+                    description: choice.description,
+                    status: choice.status
+                }
+            })
+        }
     }
     emits('dataQuestChoice', data)
-
 }
-
 
 //watchers
 
 watch(
     formData,
     (newData) => {
-        if (newData && JSON.stringify(formExam.value) !== JSON.stringify(formData)) {
-            formExam.value = { ...newData }
+        if (newData) {
+            const choicesData = (newData.Choices || []).map((item) => ({
+                choices_id: item.choices_id,
+                description: item.description,
+                status: item.status
+            }))
+            question.value = newData.question
+            questionId.value = newData.question_id
+            choicesList.value = choicesData
         }
     },
     { deep: true }
 )
 
 const reset = () => {
+    question.value = ''
+    choicesList.value = []
+    questionId.value = null
     emits('reset')
 }
-
-
 </script>
