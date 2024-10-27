@@ -114,6 +114,7 @@ model Deans {
   middle_name   String        @db.VarChar(100)
   username      String        @db.VarChar(100)
   password      String        @db.VarChar(100)
+  status        Boolean       @default(true)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   department    Department    @relation(fields: [department_id], references: [department_id])

@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   return prisma.$transaction(async (tx) => {
-    const { error, value } = courseValidation.insert(body);
+    const { error, value } = deansValidation.insert(body);
 
     if (error) {
       throw createError({
@@ -10,25 +10,25 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const course = await tx.course.findFirst({
+    const deans = await tx.deans.findFirst({
       where: {
-        description: value.description,
+        AND: [{ first_name: value.first_name }, { last_name: value.last_name }],
       },
     });
 
-    if (course) {
+    if (deans) {
       throw createError({
         statusCode: 409,
-        statusMessage: "Course already exist",
+        statusMessage: "This deans already existing",
       });
     }
 
-    const response = await tx.course.create({
+    const response = await tx.deans.create({
       data: value,
     });
     return {
       statusCode: 201,
-      message: "Course created successfully",
+      message: "Dean created successfully",
       data: response,
     };
   });

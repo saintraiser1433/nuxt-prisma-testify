@@ -20,6 +20,7 @@
             </UICard>
         </div>
     </div>
+    {{ deansInfo }}
 </template>
 
 <script setup>
@@ -28,6 +29,9 @@ const { setAlert } = useAlert()
 const { createCourse, updateCourse, deleteCourse } = useCourse()
 const data = ref({})
 const isUpdate = ref(false)
+
+
+
 const { data: course, status, error, refresh } = await useFetch('/api/course', {
     method: 'GET',
     // lazy: true,

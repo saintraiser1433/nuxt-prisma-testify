@@ -2,7 +2,7 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
   const body = await readBody(event);
   return prisma.$transaction(async (tx) => {
-    const { error, value } = courseValidation.update(body);
+    const { error, value } = deansValidation.update(body);
 
     if (error) {
       throw createError({
@@ -11,22 +11,22 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const course = await tx.course.findFirst({
+    const deans = await tx.deans.findFirst({
       where: {
-        course_id: Number(id),
+        deans_id: Number(id),
       },
     });
 
-    if (!course) {
+    if (!deans) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Course not found",
+        statusMessage: "Deans not found",
       });
     }
 
-    const response = await tx.course.update({
+    const response = await tx.deans.update({
       where: {
-        course_id: Number(id),
+        deans_id: Number(id),
       },
       data: value,
     });

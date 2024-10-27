@@ -18,18 +18,19 @@
         <div class="col-span-5 lg:col-span-1">
             <UICard title="Deans Information">
                 <template #default>
-                    <DeansForm :isUpdate="isUpdate" :formData="data" :DeansData="DeansData" @dataDeans="submitDeans"
-                        @reset="resetInstance"></DeansForm>
+                    <DeansForm :isUpdate="isUpdate" :formData="data" :departmentData="deansInfo.department"
+                        @dataDeans="submitDeans" @reset="resetInstance"></DeansForm>
                 </template>
+
             </UICard>
         </div>
         <div class="col-span-5 lg:col-span-4">
-            <BaseCard title="List of Dean's">
+            <UICard title="List of Dean's">
                 <template #default>
-                    <DeansList :deansData="deansData" :DeansData="DeansData" @assign="assignDeans" @update="editDeans">
+                    <DeansList :deansData="deansInfo.deans" @update="editDeans">
                     </DeansList>
                 </template>
-            </BaseCard>
+            </UICard>
         </div>
     </div>
 </template>
@@ -41,19 +42,16 @@ const { createDeans, updateDeans, deleteDeans } = useDeans()
 const data = ref({})
 const isUpdate = ref(false)
 
-const { data: Deans, status, error, refresh } = await useFetch('/api/deans', {
-    method: 'GET',
-    // transform: (_Deans) => {
-    //     return _Deans.map((item) => {
-    //         return {
-    //             Deans_id: item.Deans_id,
-    //             Deans_name: item.Deans_name,
-    //             status: item.status
-    //         }
-    //     })
-    // },
-    // lazy: true
-});
+const { data: deansInfo, refresh } = await useAsyncData('deansInfo', async () => {
+    const [deans, department] = await Promise.all([
+        $fetch('/api/deans'),
+        $fetch('/api/department/available')
+    ])
+
+    return { deans, department }
+}, {
+    lazy: false
+})
 
 /* Deans */
 const submitDeans = async (data) => {
@@ -75,6 +73,7 @@ const submitDeans = async (data) => {
 
 
 const editDeans = (response) => {
+    console.log(response);
     data.value = response
     isUpdate.value = true
 }

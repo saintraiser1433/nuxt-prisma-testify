@@ -3,6 +3,7 @@ import Joi from "joi";
 import {
   ChoicesModel,
   CourseModel,
+  DeansModel,
   DepartmentModel,
   ExamineeModel,
   ExamModel,
@@ -198,6 +199,67 @@ export const choicesValidation = {
       .messages({
         "array.min": "At least one choice is required",
       });
+    return schema.validate(data);
+  },
+};
+
+export const deansValidation = {
+  insert: (data: DeansModel) => {
+    const schema = Joi.object({
+      first_name: Joi.string().empty().required().messages({
+        "string.empty": `First Name cannot be empty`,
+        "any.required": `First Name cannot be null or empty`,
+      }),
+      last_name: Joi.string().empty().required().messages({
+        "string.empty": `Last Name cannot be empty`,
+        "any.required": `Last Name cannot be null or empty`,
+      }),
+      middle_name: Joi.string().empty().required().messages({
+        "string.empty": `Middle Name cannot be empty`,
+        "any.required": `Middle Name cannot be null or empty`,
+      }),
+      username: Joi.string().empty().required().messages({
+        "string.empty": `Username cannot be empty`,
+        "any.required": `Username cannot be null or empty`,
+      }),
+      password: Joi.string().empty().required().messages({
+        "string.empty": `Password cannot be empty`,
+        "any.required": `Password cannot be null or empty`,
+      }),
+      department_id: Joi.number().empty().required().messages({
+        "number.empty": `Department cannot be empty`,
+        "any.required": `Department cannot be null or empty`,
+      }),
+      status: Joi.boolean().optional(),
+    });
+    return schema.validate(data);
+  },
+  update: (data: DeansModel) => {
+    const schema = Joi.object({
+      deans_id: Joi.number().required().messages({
+        "number.empty": `Deans ID cannot be empty`,
+        "any.required": `Deans ID cannot be null or empty`,
+      }),
+      first_name: Joi.string().min(1).optional().messages({
+        "string.min": `First Name cannot be empty`,
+      }),
+      last_name: Joi.string().min(1).optional().messages({
+        "string.min": `Last Name cannot be empty`,
+      }),
+      middle_name: Joi.string().min(1).optional().messages({
+        "string.min": `Middle Name cannot be empty`,
+      }),
+      username: Joi.string().min(1).optional().messages({
+        "string.min": `Username cannot be empty`,
+      }),
+      password: Joi.string().min(1).optional().messages({
+        "string.min": `Password cannot be empty`,
+      }),
+      department_id: Joi.number().min(1).optional().messages({
+        "number.min": `Department cannot be empty`,
+      }),
+      status: Joi.boolean().optional(),
+    });
     return schema.validate(data);
   },
 };

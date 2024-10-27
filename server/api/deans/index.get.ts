@@ -1,13 +1,27 @@
 export default defineEventHandler(async (event) => {
-  const data = await prisma.course.findMany({
+  const data = await prisma.deans.findMany({
     select: {
-      course_id: true,
-      description: true,
-      score: true,
+      deans_id: true,
+      first_name: true,
+      last_name: true,
+      middle_name: true,
+      username: true,
+      status: true,
+      department: {
+        select: {
+          department_id: true,
+          department_name: true,
+        },
+      },
     },
-    orderBy: {
-      course_id: "asc",
-    },
+    orderBy: [
+      {
+        deans_id: "asc",
+      },
+      {
+        status: "desc",
+      },
+    ],
   });
   return data;
 });

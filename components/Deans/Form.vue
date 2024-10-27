@@ -31,8 +31,6 @@
 </template>
 
 <script setup>
-import { toRefs, ref, watch, computed } from 'vue'
-import { useGenerateRandom } from '@/composables/useGenerateRandom'
 const emits = defineEmits(['dataDeans', 'reset'])
 const props = defineProps({
   isUpdate: {
@@ -46,8 +44,9 @@ const props = defineProps({
     type: Object
   }
 })
-const { generateRandomString } = useGenerateRandom(8)
+
 const { isUpdate, formData, departmentData } = toRefs(props)
+const { $id } = useNuxtApp();
 
 const formDeans = ref({
   first_name: '',
@@ -59,7 +58,6 @@ const formDeans = ref({
 
 const departmentList = computed(() => {
   return departmentData.value
-    .filter((item) => item.status)
     .map((i) => {
       return {
         id: i.department_id,
@@ -73,8 +71,8 @@ const submitDeans = () => {
   if (!isUpdate.value) {
     data = {
       ...formDeans.value,
-      username: generateRandomString(),
-      password: generateRandomString()
+      username: $id,
+      password: $id
     }
   } else {
     data = {
