@@ -4,15 +4,17 @@
         'fixed bottom-0 col-span-2 col-start-2 w-full lg:px-5 text-center transition-all ease-in-out'
     ]">
         <div class="bg-darken py-2 rounded-md px-2">
-            <p class="text-sm">Developed by: {{ getFooter }}</p>
+            <p class="text-sm">Developed by: {{ footerName }}</p>
         </div>
     </footer>
 </template>
 
 <script setup>
 const store = useStore();
-const { getToggleState, getFooter } = storeToRefs(store)
-
+const { getToggleState } = storeToRefs(store)
+defineProps({
+    footerName: String
+})
 </script>
 
 <style scoped></style>

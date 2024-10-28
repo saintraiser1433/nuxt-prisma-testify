@@ -1,5 +1,5 @@
 export const useStore = defineStore("counter", {
-  state: () => ({ isOpen: true, footerName: "John Rey Decosta" }),
+  state: () => ({ isOpen: true }),
   getters: {
     getToggleState: (state) => state.isOpen,
     getFooter: (state) => state.footerName,

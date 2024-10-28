@@ -2,7 +2,7 @@
     <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
 
     <div class="grid grid-cols-5 gap-5">
-        <div class="col-span-5 lg:col-span-1 ">
+        <div class="col-span-5 lg:col-span-2 xl:col-span-1 ">
             <UICard title="Course Information">
                 <template #default>
                     <CourseForm :isUpdate="isUpdate" :formData="data" @dataCourse="submitCourse" @reset="resetInstance">
@@ -11,7 +11,7 @@
             </UICard>
 
         </div>
-        <div class="col-span-5 lg:col-span-4 ">
+        <div class="col-span-5 lg:col-span-3  xl:col-span-4 ">
             <UICard title="List of Course's">
                 <template #default>
                     <CourseList :courseData="course" @update="editCourse" @delete="removeCourse">
@@ -20,7 +20,6 @@
             </UICard>
         </div>
     </div>
-    {{ deansInfo }}
 </template>
 
 <script setup>
@@ -34,16 +33,6 @@ const isUpdate = ref(false)
 
 const { data: course, status, error, refresh } = await useFetch('/api/course', {
     method: 'GET',
-    // lazy: true,
-    // transform: (_course) => {
-    //     return _course.map((course) => {
-    //         return {
-    //             course_id: course.course_id,
-    //             description: course.description,
-    //             score: course.score
-    //         }
-    //     })
-    // }
 
 });
 

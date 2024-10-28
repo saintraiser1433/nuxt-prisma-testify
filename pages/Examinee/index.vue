@@ -2,7 +2,7 @@
   <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
 
   <div class="grid grid-cols-5 gap-5">
-    <div class="col-span-5 lg:col-span-1 ">
+    <div class="col-span-5 lg:col-span-2 xl:col-span-1">
       <UICard title="Examinee Information">
         <template #default>
           <ExamineeForm :isUpdate="isUpdate" :formData="data" @dataExaminee="submitExaminee" @reset="resetInstance">
@@ -11,7 +11,7 @@
       </UICard>
 
     </div>
-    <div class="col-span-5 lg:col-span-4 ">
+    <div class="col-span-5 lg:col-span-3 xl:col-span-4">
       <UICard title="List of Examinee's">
         <template #default>
           <ExamineeList :examineeData="examinee" @update="editExaminee" @delete="removeExaminee"></ExamineeList>

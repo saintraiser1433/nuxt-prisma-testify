@@ -2,7 +2,7 @@
   <UITable :data="deansData" :header="header">
     <template #row="{ item, index }">
       <td class="table__block">{{ index + 1 }}</td>
-      <td class="table__block">{{ item.first_name }}</td>
+      <td class="table__block">{{ fullname(item.first_name, item.last_name, item.middle_name) }}</td>
       <td class="table__block">{{ item.department.department_name }}</td>
       <td class="table__block">{{ item.username }}</td>
       <td class="table__block">
@@ -39,7 +39,17 @@ const props = defineProps({
   deansData: Object,
 })
 
+
+
+
 const { deansData } = toRefs(props)
+
+
+const fullname = (firstName, lastName, middleName) => {
+  return computed(() => {
+    return `${lastName} ${firstName}  ${middleName ? ' ' + middleName[0] + '.' : ''}`;
+  });
+};
 
 const assignDeans = (id) => {
   emits('assign', id)
