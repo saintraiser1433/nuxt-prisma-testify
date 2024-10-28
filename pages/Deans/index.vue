@@ -1,57 +1,91 @@
 <template>
     <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
-    <!-- <UIModal :open="isOpen" size="large" title="Add Assignee" @close="closeModal">
-        <template #default>
-            <div class="grid grid-cols-5 gap-5">
-                <div class="col-span-12 lg:col-span-2">
-                    <AssignForm :courseList="coursesList" :deansId="deansId" :formData="data"
-                        @dataAssign="submitAssignCourse" @reset="resetInstance"></AssignForm>
+    <div>
+        <UIModal :open="isOpen" size="large" title="Add Assignee" @close="closeModal">
+            <template #default>
+                <div class="grid grid-cols-12 gap-5">
+                    <div class="col-span-12 lg:col-span-4">
+                        <UICard>
+                            <template #default>
+                                <DeansAssignForm :courseList="assign.filteredCourses" :deansId="deansId"
+                                    @reset="resetInstance" @dataAssign="submitAssignCourse" />
+                            </template>
+                        </UICard>
+
+                    </div>
+                    <div class="col-span-12 lg:col-span-8">
+                        <UICard>
+                            <template #default>
+                                <DeansAssignList :assignData="assign.assignCourses" @delete="removeDeansCourse" />
+                            </template>
+                        </UICard>
+
+
+                    </div>
                 </div>
-                <div class="col-span-12 lg:col-span-3 ">
-                    <AssignList :assignData="assignDeanCourses" @delete="removeDeansCourse"></AssignList>
-                </div>
+            </template>
+        </UIModal>
+
+        <div class="grid grid-cols-5 gap-5">
+            <div class="col-span-5 lg:col-span-1">
+                <UICard title="Deans Information">
+                    <template #default>
+                        <DeansForm :isUpdate="isUpdate" :formData="data" :departmentData="deansInfo.department"
+                            @dataDeans="submitDeans" @reset="resetInstance"></DeansForm>
+                    </template>
+
+                </UICard>
             </div>
-        </template>
-</UIModal> -->
-
-    <div class="grid grid-cols-5 gap-5">
-        <div class="col-span-5 lg:col-span-1">
-            <UICard title="Deans Information">
-                <template #default>
-                    <DeansForm :isUpdate="isUpdate" :formData="data" :departmentData="deansInfo.department"
-                        @dataDeans="submitDeans" @reset="resetInstance"></DeansForm>
-                </template>
-
-            </UICard>
-        </div>
-        <div class="col-span-5 lg:col-span-4">
-            <UICard title="List of Dean's">
-                <template #default>
-                    <DeansList :deansData="deansInfo.deans" @update="editDeans">
-                    </DeansList>
-                </template>
-            </UICard>
+            <div class="col-span-5 lg:col-span-4">
+                <UICard title="List of Dean's">
+                    <template #default>
+                        <DeansList :deansData="deansInfo.deans" @assign="assignDeans" @update="editDeans">
+                        </DeansList>
+                    </template>
+                </UICard>
+            </div>
         </div>
     </div>
+
+
+
 </template>
 
 <script setup>
 const { setToast } = useToast()
 const { setAlert } = useAlert()
-const { createDeans, updateDeans, deleteDeans } = useDeans()
+const { createDeans, updateDeans, deleteAssignCourse } = useDeans()
 const data = ref({})
 const isUpdate = ref(false)
+const isOpen = ref(false)
+const deansId = ref(null)
 
-const { data: deansInfo, refresh } = await useAsyncData('deansInfo', async () => {
+
+//top level fetch for deans
+const { data: deansInfo, status, refresh } = await useAsyncData('deansInfo', async () => {
     const [deans, department] = await Promise.all([
         $fetch('/api/deans'),
-        $fetch('/api/department/available')
+        $fetch('/api/department')
     ])
-
     return { deans, department }
 }, {
     lazy: false
 })
+
+//top level fetch for assigning deans
+const { data: assign, refresh: refreshCourse } = await useAsyncData('assign', async () => {
+    const [assignCourses, filteredCourses] = await Promise.all([
+        $fetch(`/api/deans/assign/${deansId.value}`),
+        $fetch('/api/course/filtered')
+    ])
+    return { assignCourses, filteredCourses }
+}, {
+    immediate: false,
+    watch: false
+})
+
+
+//end
 
 /* Deans */
 const submitDeans = async (data) => {
@@ -60,33 +94,61 @@ const submitDeans = async (data) => {
             const response = await createDeans(data);
             setToast('success', response.message)
         } else {
-            const response = await updateDeans(data, data.Deans_id)
+            const response = await updateDeans(data, data.deans_id)
             setToast('success', response.message)
         }
         refresh();
         resetInstance();
     } catch (error) {
-        console.log(error)
         setToast('error', error.statusMessage || 'An error occurred');
     }
 }
 
-
 const editDeans = (response) => {
-    console.log(response);
-    data.value = response
+    data.value = {
+        deans_id: response.deans_id,
+        first_name: response.first_name,
+        middle_name: response.middle_name,
+        last_name: response.last_name,
+        department_id: response.department.department_id,
+        status: response.status
+    }
     isUpdate.value = true
 }
+//end
 
-const removeDeans = (id) => {
-    setAlert('warning', 'Are you sure you want to delete?', '', 'Confirm delete').then(
+//Assigning deans
+const assignDeans = async (id) => {
+    deansId.value = id;
+    await refreshCourse();
+    isOpen.value = true;
+
+};
+
+const submitAssignCourse = async (data) => {
+    try {
+        const response = await $fetch('/api/deans/assign', {
+            method: 'POST',
+            body: data
+        });
+        await refreshCourse();
+        setToast('success', response.message);
+    } catch (error) {
+        console.log(error);
+        setToast('error', error.statusMessage || 'An error occurred');
+    }
+};
+
+const removeDeansCourse = (item) => {
+    const deansId = item.deans.deans_id;
+    const courseId = item.course.course_id;
+    setAlert('warning', 'Are you sure you want to delete?', null, 'Confirm delete').then(
         async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await deleteDeans(id);
-                    console.log(response.data);
+                    const response = await deleteAssignCourse(deansId, courseId)
                     setToast('success', response.message);
-                    refresh();
+                    await refreshCourse();
                 } catch (error) {
                     setToast('error', error.statusMessage || 'An error occurred');
                 }
@@ -95,14 +157,15 @@ const removeDeans = (id) => {
     )
 }
 
+//end
+
+const closeModal = () => {
+    isOpen.value = false
+}
 
 const resetInstance = () => {
     isUpdate.value = false
     data.value = {}
 }
-
-
-
-
 
 </script>

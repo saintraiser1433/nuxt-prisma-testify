@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "unplugin-icons/nuxt",
     "@prisma/nuxt",
+    "@vueuse/nuxt",
   ],
   css: ["sweetalert2/dist/sweetalert2.min.css"],
   plugins: ["~/plugins/generateRandom"],

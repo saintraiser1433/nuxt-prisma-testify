@@ -15,8 +15,8 @@ export const useDeans = () => {
     });
   };
 
-  const deleteDeans = async (id: number) => {
-    return await $fetch(`/api/deans/${id}`, {
+  const deleteAssignCourse = async (deansId: number, courseId: number) => {
+    return await $fetch(`/api/deans/assign/${deansId}/${courseId}`, {
       method: "DELETE",
     });
   };
@@ -24,6 +24,6 @@ export const useDeans = () => {
   return {
     createDeans,
     updateDeans,
-    deleteDeans,
+    deleteAssignCourse,
   };
 };

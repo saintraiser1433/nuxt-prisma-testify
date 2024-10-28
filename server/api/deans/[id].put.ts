@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
     });
     return {
       statusCode: 201,
-      message: "Course updated successfully",
+      message: "Deans updated successfully",
       data: response,
     };
   });

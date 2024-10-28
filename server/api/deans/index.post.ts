@@ -23,6 +23,19 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    const checkAssociateDept = await tx.deans.findFirst({
+      where: {
+        department_id: Number(value.department_id),
+      },
+    });
+
+    if (checkAssociateDept) {
+      throw createError({
+        statusCode: 409,
+        statusMessage: "Already taken department",
+      });
+    }
+
     const response = await tx.deans.create({
       data: value,
     });
