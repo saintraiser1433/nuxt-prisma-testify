@@ -2,7 +2,7 @@
     <form @submit.prevent="submitExam">
         <div class="mb-2">
             <label class="text-sm" for="exam">Exam Title:</label>
-            <UIInput type="text" id="exam" v-model="formExam.exam_title" required />
+            <UIInput type="text" id="exam" v-model="formExam.exam_title" disabled required />
         </div>
         <div class="mb-2">
             <label class="text-sm" for="description">Exam Description:</label>
@@ -30,7 +30,7 @@
 import { toRefs, ref, watch } from 'vue'
 
 const emits = defineEmits(['dataExam', 'reset'])
-
+const store = useStore();
 const props = defineProps({
     isUpdate: {
         type: Boolean,

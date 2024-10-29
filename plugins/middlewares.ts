@@ -1,19 +1,18 @@
 const { setToast } = useToast();
 export default defineNuxtPlugin((event) => {
-  addRouteMiddleware(
-    "auth",
-    () => {
-      console.log(
-        "this global middleware was added in a plugin and will be run on every route change"
-      );
-    },
-    { global: true }
-  );
+  // addRouteMiddleware(
+  //   "auth",
+  //   () => {
+  //     console.log(
+  //       "this global middleware was added in a plugin and will be run on every route change"
+  //     );
+  //   },
+  //   { global: true }
+  // );
 
   addRouteMiddleware("checkExam", async (to, from) => {
     const id = Number(to.params.id);
     const { checkExistingExam } = useExam();
-    const store = useStore();
     const app = useNuxtApp();
 
     try {
@@ -29,12 +28,11 @@ export default defineNuxtPlugin((event) => {
             { property: "og:description", content: description },
           ],
         });
-        store.toggleExamTitle(title);
+        to.meta.examTitle = title;
         return;
       }
     } catch (error) {
-      console.log(error);
-      // return app.runWithContext(() => navigateTo({ name: "Exam" }));
+      return app.runWithContext(() => navigateTo({ name: "Exam" }));
     }
   });
 });

@@ -13,16 +13,17 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@nuxtjs/color-mode",
   ],
-  colorMode: {
-    classSuffix: "",
-  },
 
-  css: ["sweetalert2/dist/sweetalert2.min.css"],
-  plugins: ["~/plugins/generateRandom"],
-  ssr: true,
   app: {
     head: {
       title: "Testify",
+      link: [
+        {
+          rel: "icon",
+          type: "image/x-icon", // or 'image/x-icon' if using .ico
+          href: "/favicon.ico", // Update this path if using a different filename or format
+        },
+      ],
       meta: [
         {
           name: "viewport",
@@ -42,6 +43,15 @@ export default defineNuxtConfig({
   imports: {
     dirs: ["types/*.ts", "store/*.ts", "types/**/*.ts"],
   },
+  colorMode: {
+    classSuffix: "",
+    preference: "system",
+    fallback: "light",
+  },
+
+  css: ["sweetalert2/dist/sweetalert2.min.css"],
+  plugins: ["~/plugins/generateRandom"],
+  ssr: true,
 
   vite: {
     plugins: [

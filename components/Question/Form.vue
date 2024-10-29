@@ -2,7 +2,7 @@
     <form @submit.prevent="submitQuestionChoices">
         <div class="mb-2">
             <label for="exam">Exam Title:</label>
-            <UIInput class="capitalize" type="text" id="exam" :disabled="true" />
+            <UIInput class="capitalize" type="text" id="exam" :value="route.meta.examTitle" :disabled="true" />
         </div>
         <div class="mb-2">
             <label for="question">Question:</label>
@@ -34,18 +34,19 @@
                 </div>
                 <UITextArea :id="'choice_' + index" v-model="choices.description" />
             </div>
-
+            {{ }}
         </div>
         <UIButton type="button" v-if="isUpdate" class="mb-2" variant="danger" size="block" @click="reset">Reset
         </UIButton>
         <UIButton type="submit" variant="primary" size="block">{{
             isUpdate ? 'Update' : 'Submit'
-            }}</UIButton>
+        }}</UIButton>
     </form>
 </template>
 
 <script setup>
 const { convertToLetter } = useConvertLetter()
+// const store = useStore();
 const emits = defineEmits(['dataQuestChoice', 'reset'])
 const props = defineProps({
     isUpdate: {
@@ -57,7 +58,7 @@ const props = defineProps({
     }
 })
 
-const route = useRoute().params;
+const route = useRoute();
 const choicesList = ref([])
 const question = ref('')
 const questionId = ref(null)
@@ -80,7 +81,7 @@ const submitQuestionChoices = () => {
     if (!isUpdate.value) {
         data = {
             question: question.value,
-            exam_id: route.id,
+            exam_id: route.params.id,
             choices: choicesList.value.map((choice) => {
                 return {
                     description: choice.description,

@@ -24,6 +24,14 @@
 </template>
 
 <script setup>
+useHead({
+    title: 'Testify Department Module',
+    meta: [
+        { name: "description", content: 'CRUD for Department' },
+        { property: "og:title", content: 'Testify Department Module' },
+        { property: "og:description", content: 'CRUD for Department' },
+    ],
+});
 const { setToast } = useToast()
 const { setAlert } = useAlert()
 const { createDepartment, updateDepartment, deleteDepartment } = useDepartment()

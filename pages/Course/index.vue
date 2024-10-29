@@ -23,6 +23,14 @@
 </template>
 
 <script setup>
+useHead({
+    title: 'Testify Course Module',
+    meta: [
+        { name: "description", content: 'CRUD for Course' },
+        { property: "og:title", content: 'Testify Course Module' },
+        { property: "og:description", content: 'CRUD for Course' },
+    ],
+});
 const { setToast } = useToast()
 const { setAlert } = useAlert()
 const { createCourse, updateCourse, deleteCourse } = useCourse()

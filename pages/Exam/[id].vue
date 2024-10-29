@@ -12,7 +12,7 @@
                 <QuestionList :questionData="question" @update="edit" @delete="remove"></QuestionList>
             </UICard>
         </div>
-        {{ store.getExamTitle }}
+
     </div>
 
 </template>
@@ -20,19 +20,18 @@
 <script setup>
 definePageMeta({
     middleware: ['checkExam']
-
 })
+
 const { setToast } = useToast()
 const { setAlert } = useAlert()
 const { createQuestion, updateQuestion, deleteQuestion } = useQuestion()
 const route = useRoute().params;
 const data = ref({})
 const isUpdate = ref(false)
-const examTitle = ref('');
 const { data: question, status, error, refresh } = await useFetch(`/api/question/${route.id}`, {
     method: 'GET',
 });
-const store = useStore();
+
 
 
 /* Question */

@@ -1,10 +1,10 @@
 <template>
     <div class="pagination-component">
         <!-- Controls Section -->
-        <div class="flex justify-between items-center flex-col lg:flex-row">
-            <div class="flex mb-2 items-center gap-2 lg:text-sm">
+        <div class="flex justify-between items-center flex-col text-sm lg:flex-row lg:text-xs">
+            <div class="flex mb-2 items-center gap-2">
                 <span>Show</span>
-                <UISelector class="text-base mb-2" v-model="showEntries" :data="entries" />
+                <UISelector class=" mb-2" v-model="showEntries" :data="entries" />
                 <span>entries</span>
             </div>
 
@@ -17,10 +17,12 @@
         <!-- Table Section -->
         <div
             class="overflow-x-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300">
-            <table class="border-t border-colorBorder whitespace-nowrap w-100 min-w-full mx-auto">
-                <thead class="border-y bg-gray-200 dark:bg-darken dark:border-colorBorder text-left">
+            <table class="whitespace-nowrap w-100 min-w-full mx-auto">
+                <thead
+                    class="bg-gray-100 dark:bg-darken dark:border-y dark:border-colorBorder rounded-lg text-left text-sm lg:text-xs">
                     <tr>
-                        <th v-for="headerItem in header" :key="headerItem" class="table__block">
+                        <th v-for="headerItem in header" :key="headerItem"
+                            class="py-3 px-5 lg:px-2 font-semibold  capitalize">
                             {{ headerItem }}
                         </th>
                     </tr>

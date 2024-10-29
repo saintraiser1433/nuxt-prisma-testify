@@ -5,7 +5,14 @@
 </template>
 
 <script setup>
-
+useHead({
+    title: 'Testify Rankings Module',
+    meta: [
+        { name: "description", content: 'CRUD for Rankings' },
+        { property: "og:title", content: 'Testify Rankings Module' },
+        { property: "og:description", content: 'CRUD for Rankings' },
+    ],
+});
 </script>
 
 <style scoped></style>

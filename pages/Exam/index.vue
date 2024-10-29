@@ -24,10 +24,18 @@
 
 <script setup>
 definePageMeta({
-    title: 'Exam Module',
     breadcrumbs: 'Exam',
-
 })
+
+useHead({
+    title: 'Testify Exam Module',
+    meta: [
+        { name: "description", content: 'CRUD for Exam' },
+        { property: "og:title", content: 'Testify Exam Module' },
+        { property: "og:description", content: 'CRUD for Exam' },
+    ],
+});
+
 const { setToast } = useToast()
 const { setAlert } = useAlert()
 const { createExam, updateExam, deleteExam } = useExam()

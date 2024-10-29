@@ -26,6 +26,14 @@
 </template>
 
 <script setup>
+useHead({
+  title: 'Testify Examinee Module',
+  meta: [
+    { name: "description", content: 'CRUD for Examinee' },
+    { property: "og:title", content: 'Testify Examinee Module' },
+    { property: "og:description", content: 'CRUD for Examinee' },
+  ],
+});
 const { setToast } = useToast()
 const { setAlert } = useAlert()
 const { createExaminee, updateExaminee, deleteExaminee } = useExaminee()

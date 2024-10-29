@@ -13,9 +13,11 @@
                 </li>
                 <li><i-heroicons-language /></li>
                 <li class="flex items-center">
-                    <button @click="setColorTheme($colorMode.preference == 'dark' ? 'light' : 'dark')">
-                        <i-line-md-moon v-if="$colorMode.value === 'dark'" />
-                        <i-lucide-sun v-else></i-lucide-sun>
+                    <button @click="
+                        setColorTheme($colorMode.preference === 'dark' ? 'light' : 'dark')
+                        ">
+                        <i-line-md-moon v-if="colorMode.value === 'dark'" />
+                        <i-lucide-sun v-else />
                     </button>
                 </li>
                 <li><i-pixelarticons-add-grid /></li>
@@ -23,11 +25,11 @@
                 <li>
                     <div class="w-9 h-9 cursor-pointer relative group  ">
                         <img src="@/assets/images/avatar.png" class="w-full h-full rounded-full" alt="Avatar Logo" />
-                        <ul class="absolute right-0 p-1 text-sm rounded-md w-36 
+                        <ul class="profile absolute right-0 p-1 text-sm rounded-md w-36 
                               border  shadow-md hidden 
                              text-gray-500 bg-gray-100  dark:text-fontBase dark:bg-darken dark:border-colorBorder
                              group-hover:block">
-                            <li class="list__item-nav">
+                            <li class="list__item-nav ">
                                 <NuxtLink class="flex gap-2 items-center px-1" to="/">
                                     <i-iconamoon-profile-circle />Profile
                                 </NuxtLink>
@@ -52,11 +54,11 @@
 const store = useStore();
 const { getToggleState } = storeToRefs(store)
 
+const colorMode = useColorMode();
 
-
-const setColorTheme = (newTheme) => {
-    useColorMode().preference = newTheme
-}
+const setColorTheme = (theme) => {
+    colorMode.preference = theme;
+};
 
 
 </script>

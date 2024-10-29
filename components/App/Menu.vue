@@ -8,15 +8,34 @@
                 Testify</span>
         </div>
         <ul class="flex flex-col grow ">
-            <AppMenuList></AppMenuList>
+            <AppMenuList :menu-items="item"></AppMenuList>
         </ul>
 
     </aside>
 </template>
 
 <script setup>
+import Home from '~icons/lucide/home'
+import HugeiconsStudentCard from '~icons/hugeicons/student-card';
+import FluentMdl2PartyLeader from '~icons/fluent-mdl2/party-leader';
+import LucideBook from '~icons/lucide/book';
+import SubwayBook from '~icons/subway/book';
+import SolarPenLineDuotone from '~icons/solar/pen-line-duotone';
+import MdiChartLine from '~icons/mdi/chart-line';
 const store = useStore();
 const { getToggleState } = storeToRefs(store)
+
+const item = ref(
+    [
+        { label: 'Home', routerName: 'Home', icon: Home },
+        { label: 'Examinee', routerName: 'Examinee', icon: HugeiconsStudentCard },
+        { label: 'Deans', routerName: 'Deans', icon: FluentMdl2PartyLeader },
+        { label: 'Department', routerName: 'Department', icon: LucideBook },
+        { label: 'Course', routerName: 'Course', icon: SubwayBook },
+        { label: 'Exam', routerName: 'Exam', icon: SolarPenLineDuotone },
+        { label: 'Rankings', routerName: 'Rankings', icon: MdiChartLine },
+    ]
+)
 </script>
 
 <style scoped></style>

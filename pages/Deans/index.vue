@@ -52,6 +52,15 @@
 </template>
 
 <script setup>
+useHead({
+    title: 'Testify Deans Module',
+    meta: [
+        { name: "description", content: 'CRUD for Deans' },
+        { property: "og:title", content: 'Testify Deans Module' },
+        { property: "og:description", content: 'CRUD for Deans' },
+    ],
+});
+
 const { setToast } = useToast()
 const { setAlert } = useAlert()
 const { createDeans, updateDeans, deleteAssignCourse } = useDeans()
