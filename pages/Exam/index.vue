@@ -23,6 +23,11 @@
 </template>
 
 <script setup>
+definePageMeta({
+    title: 'Exam Module',
+    breadcrumbs: 'Exam',
+
+})
 const { setToast } = useToast()
 const { setAlert } = useAlert()
 const { createExam, updateExam, deleteExam } = useExam()

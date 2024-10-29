@@ -21,9 +21,14 @@ export const useExam = () => {
     });
   };
 
+  const checkExistingExam = async (id: number) => {
+    return await $fetch(`/api/exam/${id}`);
+  };
+
   return {
     createExam,
     updateExam,
     deleteExam,
+    checkExistingExam,
   };
 };

@@ -24,9 +24,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs } from 'vue'
-import { useRouter } from 'vue-router'
-const router = useRouter()
+
 const emits = defineEmits({
     update: Object,
     delete: Object

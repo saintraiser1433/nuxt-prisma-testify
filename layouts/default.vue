@@ -8,7 +8,7 @@
         <main :class="getToggleState ? 'lg:ml-60' : 'lg:ml-20'"
             class="col-span-3 px-5 pt-2 my-12 pb-8 transition-all ease-in-out">
             <div class="flex items-center flex-wrap justify-end pb-4">
-                <UIBreadCrumbs />
+                <!-- <UIBreadCrumbs /> -->
             </div>
             <slot />
         </main>
