@@ -1,6 +1,6 @@
 <template>
     <input :type="type" :id="id" :name="id"
-        class="rounded-sm py-1 px-2  text-sm bg-darken outline-none border w-full border-colorBorder focus:border-primary"
+        class="rounded-sm py-1 px-2  text-sm bg-white  dark:bg-darken outline-none border w-full border-slate-200 dark:border-colorBorder focus:border-primary"
         :placeholder="placeholder" :value="modelValue" @input="handleInput" />
 
 </template>

@@ -13,7 +13,7 @@
             <UIInput type="text" id="lastname" v-model="formExaminee.last_name" required />
         </div>
 
-        <div class="border-t border-colorBorder pt-2">
+        <div class="border-t dark:border-colorBorder pt-2">
             <UIButton type="button" v-if="isUpdate" size="block" class="bg-danger mb-2" @click="reset">
                 Reset
             </UIButton>

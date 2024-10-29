@@ -8,7 +8,7 @@
             <label for="question">Question:</label>
             <UITextArea id="question" v-model="question" />
         </div>
-        <div class="flex mb-2 border-b border-colorBorder pb-2">
+        <div class="flex mb-2 border-b dark:border-colorBorder pb-2">
             <UIButton type="button" class="ml-auto" variant="success" :isRounded="false" size="small"
                 @click="addChoices">
                 <div class="flex justify-between items-center gap-2">
@@ -40,7 +40,7 @@
         </UIButton>
         <UIButton type="submit" variant="primary" size="block">{{
             isUpdate ? 'Update' : 'Submit'
-        }}</UIButton>
+            }}</UIButton>
     </form>
 </template>
 

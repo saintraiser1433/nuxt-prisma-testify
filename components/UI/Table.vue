@@ -2,18 +2,10 @@
     <div class="pagination-component">
         <!-- Controls Section -->
         <div class="flex justify-between items-center flex-col lg:flex-row">
-            <div class="p-2 lg:text-sm">
+            <div class="flex mb-2 items-center gap-2 lg:text-sm">
                 <span>Show</span>
-                <select
-                    class="mx-2 rounded-sm py-1 px-2 bg-darken outline-none border border-colorBorder focus:border-primary"
-                    v-model="showEntries">
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                    <option value="40">40</option>
-                    <option value="50">50</option>
-                </select>
-                <span>Entries</span>
+                <UISelector class="text-base mb-2" v-model="showEntries" :data="entries" />
+                <span>entries</span>
             </div>
 
             <div class="flex justify-center items-center mb-2 lg:text-sm">
@@ -26,7 +18,7 @@
         <div
             class="overflow-x-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300">
             <table class="border-t border-colorBorder whitespace-nowrap w-100 min-w-full mx-auto">
-                <thead class="border-y border-colorBorder text-left">
+                <thead class="border-y bg-gray-200 dark:bg-darken dark:border-colorBorder text-left">
                     <tr>
                         <th v-for="headerItem in header" :key="headerItem" class="table__block">
                             {{ headerItem }}
@@ -34,12 +26,13 @@
                     </tr>
                 </thead>
                 <tbody v-if="paginatedData && paginatedData.length > 0">
-                    <tr class="border-b border-colorBorder text-xs" v-for="(item, index) in paginatedData" :key="index">
+                    <tr class="border-b dark:border-colorBorder text-xs" v-for="(item, index) in paginatedData"
+                        :key="index">
                         <slot name="row" :item="item" :index="index" />
                     </tr>
                 </tbody>
                 <tbody v-else>
-                    <tr class="border-b border-colorBorder">
+                    <tr class="border-b dark:border-colorBorder">
                         <td :colspan="header.length" class="text-center text-base p-2">No data found</td>
                     </tr>
                 </tbody>
@@ -92,7 +85,18 @@ const filteredTableData = computed(() => {
             val.toString().toLowerCase().includes(searchInput.value)
         )
     })
-})
+});
+
+const entries = [
+    {
+        id: 10,
+        value: 10
+    },
+    {
+        id: 20,
+        value: 20
+    }
+]
 
 const totalPages = computed(() => {
     return Math.ceil(filteredTableData.value.length / showEntries.value)
@@ -117,4 +121,6 @@ const prevPage = () => {
 const nextPage = () => {
     if (currentPage.value < totalPages.value) currentPage.value++
 }
+
+
 </script>

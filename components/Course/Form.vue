@@ -8,11 +8,11 @@
             <label class="text-sm" for="score">Score Attained:</label>
             <UIInput type="number" id="score" v-model.number="formCourse.score" required />
         </div>
-        <div class="border-t border-colorBorder pt-2">
+        <div class="border-t dark:border-colorBorder pt-2">
             <UIButton type="button" v-if="isUpdate" class="bg-danger mb-2" size="block" @click="reset">Reset</UIButton>
             <UIButton type="submit" class="bg-primary" size="block">{{
                 isUpdate ? 'Update' : 'Submit'
-                }}</UIButton>
+            }}</UIButton>
 
         </div>
     </form>

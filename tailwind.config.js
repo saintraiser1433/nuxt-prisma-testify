@@ -35,18 +35,23 @@ export default {
         warning: "#ff9f43",
         info: "#00bad1",
         dark: "#d7d8de",
-        body: "#25293c",
         darken: "#2d3249",
         fontBase: "#cfcde4",
         cardColor: "#2f3349",
-        colorBorder: "#44485e",
+
         secondaryHover: "rgba(225, 222, 245, 0.1)",
         modalColor: "#acabc1",
+
+        //darkmode
+        darkBody: "#25293c",
+        colorBorder: "#44485e",
+        //lightmode
       },
       fontSize: {
         "base-sm": "15px",
       },
     },
   },
+  darkMode: "class",
   plugins: [require("tailwind-scrollbar")],
 };

@@ -11,7 +11,12 @@ export default defineNuxtConfig({
     "unplugin-icons/nuxt",
     "@prisma/nuxt",
     "@vueuse/nuxt",
+    "@nuxtjs/color-mode",
   ],
+  colorMode: {
+    classSuffix: "",
+  },
+
   css: ["sweetalert2/dist/sweetalert2.min.css"],
   plugins: ["~/plugins/generateRandom"],
   ssr: true,
@@ -44,5 +49,13 @@ export default defineNuxtConfig({
         resolvers: [IconsResolver()],
       }),
     ],
+  },
+
+  tailwindcss: {
+    cssPath: "~/assets/css/tailwind.css",
+    configPath: "tailwind.config.js",
+    exposeConfig: false,
+    config: {},
+    viewer: true,
   },
 });

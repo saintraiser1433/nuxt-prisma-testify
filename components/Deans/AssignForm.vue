@@ -4,7 +4,7 @@
             <label class="text-sm" for="course">Course:</label>
             <UISelector id="course" class="text-base" v-model.number="courseId" :data="courseData"></UISelector>
         </div>
-        <div class="border-t border-colorBorder pt-2">
+        <div class="border-t dark:border-colorBorder pt-2">
             <UIButton type="submit" variant="primary" size="sm">Submit</UIButton>
         </div>
     </form>

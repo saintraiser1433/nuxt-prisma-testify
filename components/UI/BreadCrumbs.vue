@@ -6,7 +6,7 @@
             </div>
             <router-link class="underline" v-if="index !== breadcrumbs.length - 1" :to="getBreadcrumbPath(crumb)">{{
                 crumb.meta.breadcrumbs
-                }}</router-link>
+            }}</router-link>
             <span class="text-blue-100" v-else>{{ crumb.meta.breadcrumbs }}</span>
             <span class="flex items-center" v-if="index !== breadcrumbs.length - 1"> <i-iconamoon-arrow-right-2-bold />
             </span>
@@ -15,8 +15,7 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router'
-import { computed } from 'vue'
+
 
 // Get current route using useRoute
 const route = useRoute()
