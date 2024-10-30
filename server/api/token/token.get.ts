@@ -1,6 +1,6 @@
 import { getToken } from "#auth";
 
-export default eventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   const token = await getToken({ event });
   return token || "No token presented";
 });

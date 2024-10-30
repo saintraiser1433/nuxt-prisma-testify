@@ -56,7 +56,7 @@ export default defineNuxtConfig({
       gitClientID: process.env.GITHUB_CLIENT_ID,
     },
   },
-  ssr: true,
+  ssr: false,
 
   tailwindcss: {
     cssPath: "~/assets/css/tailwind.css",

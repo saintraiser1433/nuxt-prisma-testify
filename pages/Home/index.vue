@@ -1,15 +1,18 @@
 <template>
     <div>
-        <div>{{ token || 'no token present, are you logged in?' }}</div>
-        <div>{{ providers || 'no providers' }}</div>
+        <pre>{{ token }}</pre>
+        <div>Providers - {{ providers || 'no providers' }}</div>
+        <pre>{{session}}</pre>
     </div>
 
 </template>
 
-<script setup>
-const headers = useRequestHeaders(['cookie'])
+<script setup lang="ts">
+
+const headers = useRequestHeaders(['cookie']) as HeadersInit
 const { data: token } = await useFetch('/api/token/token', { headers })
 const { data: providers } = await useFetch('/api/auth/providers');
+const { data: session } = await useFetch('/api/me');
 useHead({
     title: 'Testify Home Page',
     meta: [
@@ -19,5 +22,4 @@ useHead({
     ],
 });
 </script>
-
 <style scoped></style>

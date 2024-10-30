@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-center items-center max-w-sm  lg:max-w-3xl mx-auto min-h-screen ">
-        <UICard class="py-0 px-0">
+        <div class="w-full rounded-lg shadow-lg bg-white dark:bg-cardColor">
             <form @submit.prevent="handleSignIn">
                 <div class="grid grid-cols-2">
                     <div class="col-span-2 lg:col-span-1 py-12 px-10">
@@ -8,7 +8,7 @@
                         <div class="">
                             <div class="mt-5">
                                 <label for="username" class="text-gray-600 font-semibold">Username:</label>
-                                <UIInput class="mt-1" type="text" id="username" v-model="email" required />
+                                <UIInput class="mt-1" type="text" id="username" v-model="username" required />
                             </div>
                             <div class="mt-5">
                                 <label for="password" class="text-gray-600 font-semibold">Password:</label>
@@ -22,7 +22,7 @@
                             </div>
                             <div class="mt-5">
                                 <UIButton type="submit" class="ml-auto" variant="danger" :isRounded="true" size="block">
-                                    Sign In
+                                    Sign Ins
                                 </UIButton>
                             </div>
                         </div>
@@ -35,7 +35,7 @@
 
 
             <button type="button" @click="handleSignInThruGitHub">Sign In as github</button>
-        </UICard>
+        </div>
 
     </div>
 
@@ -51,7 +51,7 @@ definePageMeta({
     }
 })
 
-const email = ref('');
+const username = ref('');
 const password = ref('');
 
 const { signIn } = useAuth()
@@ -63,7 +63,7 @@ const handleSignInThruGitHub = async () => {
 }
 
 const handleSignIn = async () => {
-    const credentials = { username: email.value, password: password.value }
+    const credentials = { username: username.value, password: password.value }
     await signIn('credentials', credentials)
 }
 

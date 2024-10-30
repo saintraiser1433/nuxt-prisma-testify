@@ -19,9 +19,9 @@
       </UICard>
     </div>
 
-
+    {{ s }}
   </div>
-
+  
 
 </template>
 
@@ -34,7 +34,14 @@ useHead({
     { property: "og:description", content: 'CRUD for Examinee' },
   ],
 });
-
+const {  status:s,
+  data:test,
+  lastRefreshedAt,
+  getCsrfToken,
+  getProviders,
+  getSession,
+  signIn,
+  signOut } = useAuth();
 const { setToast } = useToast()
 const { setAlert } = useAlert()
 const { createExaminee, updateExaminee, deleteExaminee } = useExaminee()

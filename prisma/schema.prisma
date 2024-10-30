@@ -13,6 +13,58 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// suggested prisma model for authentication
+model Account {
+  id                 String    @id @default(cuid())
+  userId             String
+  provider           String
+  providerAccountId  String
+  refreshToken       String?
+  accessToken        String?
+  accessTokenExpires DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  user               User      @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  expires      DateTime
+  sessionToken String   @unique
+  accessToken  String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model VerificationRequest {
+  id         String   @id @default(cuid())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, token])
+}
+
+//suggested prisma authentication model
+
 model Examinee {
   examinee_id Int           @id @default(autoincrement())
   first_name  String        @db.VarChar(100)
