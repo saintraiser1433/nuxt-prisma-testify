@@ -38,9 +38,9 @@
                                 <NuxtLink class="flex gap-2 items-center px-1" to="/"><i-fa-cogs />Settings</NuxtLink>
                             </li>
                             <li class="list__item-nav">
-                                <NuxtLink class="flex gap-2 items-center px-1" to="/">
+                                <button class="flex gap-2 items-center px-1" @click="handleSignOut()">
                                     <i-majesticons-logout-half-circle-line />Logout
-                                </NuxtLink>
+                                </button>
                             </li>
                         </ul>
                     </div>
@@ -60,7 +60,11 @@ const setColorTheme = (theme) => {
     colorMode.preference = theme;
 };
 
+const { signOut } = useAuth()
 
+const handleSignOut = async () => {
+    await signOut();
+}
 </script>
 
 <style scoped></style>

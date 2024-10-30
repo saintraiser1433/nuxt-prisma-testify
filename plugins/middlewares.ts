@@ -1,4 +1,3 @@
-const { setToast } = useToast();
 export default defineNuxtPlugin((event) => {
   // addRouteMiddleware(
   //   "auth",
@@ -32,7 +31,7 @@ export default defineNuxtPlugin((event) => {
         return;
       }
     } catch (error) {
-      return app.runWithContext(() => navigateTo({ name: "Exam" }));
+      return app.runWithContext(() => navigateTo({ name: "exam" }));
     }
   });
 });

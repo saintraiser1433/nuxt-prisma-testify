@@ -36,7 +36,7 @@ const { examData } = toRefs(props)
 const header = ref(['#', 'Exam Title', 'Description', 'Time Limit', 'Question Limit', 'Action'])
 
 const setSelect = async (id) => {
-    await navigateTo(`Exam/${id}`);
+    await navigateTo(`exam/${id}`);
 }
 
 const handleUpdate = (val) => {

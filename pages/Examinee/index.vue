@@ -34,6 +34,7 @@ useHead({
     { property: "og:description", content: 'CRUD for Examinee' },
   ],
 });
+
 const { setToast } = useToast()
 const { setAlert } = useAlert()
 const { createExaminee, updateExaminee, deleteExaminee } = useExaminee()

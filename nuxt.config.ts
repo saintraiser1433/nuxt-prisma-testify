@@ -1,19 +1,7 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+// // https://nuxt.com/docs/api/configuration/nuxt-config
 import ViteComponents from "unplugin-vue-components/vite";
 import IconsResolver from "unplugin-icons/resolver";
 export default defineNuxtConfig({
-  compatibilityDate: "2024-04-03",
-  devtools: { enabled: true },
-  modules: [
-    "@nuxtjs/tailwindcss",
-    "@nuxt/icon",
-    "@pinia/nuxt",
-    "unplugin-icons/nuxt",
-    "@prisma/nuxt",
-    "@vueuse/nuxt",
-    "@nuxtjs/color-mode",
-  ],
-
   app: {
     head: {
       title: "Testify",
@@ -35,31 +23,40 @@ export default defineNuxtConfig({
       ],
     },
   },
-  runtimeConfig: {
-    public: {
-      baseURL: process.env.NUXT_PUBLIC_BASE_URL,
-    },
+  auth: {
+    globalAppMiddleware: true,
   },
-  imports: {
-    dirs: ["types/*.ts", "store/*.ts", "types/**/*.ts"],
-  },
+  compatibilityDate: "2024-04-03",
   colorMode: {
     classSuffix: "",
     preference: "system",
     fallback: "light",
   },
-
   css: ["sweetalert2/dist/sweetalert2.min.css"],
-  plugins: ["~/plugins/generateRandom"],
-  ssr: true,
-
-  vite: {
-    plugins: [
-      ViteComponents({
-        resolvers: [IconsResolver()],
-      }),
-    ],
+  devtools: { enabled: true },
+  imports: {
+    dirs: ["types/*.ts", "store/*.ts", "types/**/*.ts"],
   },
+  modules: [
+    "@nuxtjs/tailwindcss",
+    "@nuxt/icon",
+    "@pinia/nuxt",
+    "unplugin-icons/nuxt",
+    "@prisma/nuxt",
+    "@vueuse/nuxt",
+    "@nuxtjs/color-mode",
+    "@sidebase/nuxt-auth",
+  ],
+  plugins: ["~/plugins/generateRandom"],
+
+  runtimeConfig: {
+    gitSecretKey: process.env.GITHUB_SECRET_KEY,
+    public: {
+      // baseURL: process.env.NUXT_PUBLIC_BASE_URL,
+      gitClientID: process.env.GITHUB_CLIENT_ID,
+    },
+  },
+  ssr: true,
 
   tailwindcss: {
     cssPath: "~/assets/css/tailwind.css",
@@ -67,5 +64,12 @@ export default defineNuxtConfig({
     exposeConfig: false,
     config: {},
     viewer: true,
+  },
+  vite: {
+    plugins: [
+      ViteComponents({
+        resolvers: [IconsResolver()],
+      }),
+    ],
   },
 });

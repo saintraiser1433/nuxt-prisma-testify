@@ -27,13 +27,13 @@ const { getToggleState } = storeToRefs(store)
 
 const item = ref(
     [
-        { label: 'Home', routerName: 'Home', icon: Home },
-        { label: 'Examinee', routerName: 'Examinee', icon: HugeiconsStudentCard },
-        { label: 'Deans', routerName: 'Deans', icon: FluentMdl2PartyLeader },
-        { label: 'Department', routerName: 'Department', icon: LucideBook },
-        { label: 'Course', routerName: 'Course', icon: SubwayBook },
-        { label: 'Exam', routerName: 'Exam', icon: SolarPenLineDuotone },
-        { label: 'Rankings', routerName: 'Rankings', icon: MdiChartLine },
+        { label: 'Home', routerName: 'home', icon: Home },
+        { label: 'Examinee', routerName: 'examinee', icon: HugeiconsStudentCard },
+        { label: 'Deans', routerName: 'deans', icon: FluentMdl2PartyLeader },
+        { label: 'Department', routerName: 'department', icon: LucideBook },
+        { label: 'Course', routerName: 'course', icon: SubwayBook },
+        { label: 'Exam', routerName: 'exam', icon: SolarPenLineDuotone },
+        { label: 'Rankings', routerName: 'rankings', icon: MdiChartLine },
     ]
 )
 </script>
