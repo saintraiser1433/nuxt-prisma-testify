@@ -1,4 +1,10 @@
+import { getServerSession } from "#auth";
+
 export default defineEventHandler(async (event) => {
+
+
+   
+
   const data = await prisma.deans.findMany({
     select: {
       deans_id: true,

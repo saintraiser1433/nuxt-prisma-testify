@@ -1,8 +1,7 @@
-import GithubProvider from "next-auth/providers/github";
+import GithubProvider from 'next-auth/providers/github'
 import { NuxtAuthHandler } from "#auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import bcrypt from "bcrypt";
 const config = useRuntimeConfig();
 
 export default NuxtAuthHandler({
@@ -11,24 +10,24 @@ export default NuxtAuthHandler({
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60,
+    maxAge: 30,
     updateAge: 24 * 60 * 60,
   },
-
+  // 
   adapter: PrismaAdapter(prisma),
   callbacks: {
     jwt: async ({ token, user }) => {
       const isSignIn = user ? true : false;
       if (isSignIn) {
-        token.id = user.id;
-        token.email = user.email;
+        token.id = user.id
+        token.role = user.role
       }
 
       return Promise.resolve(token);
     },
     session: async ({ session, token }) => {
       (session as any).id = token?.id;
-      (session as any).email = token?.email;
+      (session as any).role = token?.role;
       return Promise.resolve(session);
     },
   },
@@ -43,33 +42,27 @@ export default NuxtAuthHandler({
       name: "credentials",
 
       async authorize(credentials: any, req: any) {
-        const { email, password } = credentials;
+        try {
+          const user = await $fetch('/api/auth/login', {
+            method: 'POST',
+            body: JSON.stringify(credentials),
+            headers: { "Content-Type": "application/json" }
+          })
 
-        const user = await prisma.user.findFirst({
-          where: {
-            email: email,
-          },
-        });
+          if (user) {
+            return user;
+          }
 
-        if (!user || !user.hashedPassword) {
+          return null;
+        } catch (err: any) {
           throw createError({
-            statusCode: 401,
-            statusMessage: "Invalid Credentials",
-          });
+            statusCode: 500,
+            statusMessage: err.statusMessage
+          })
+
         }
 
-        const validatePassword = await bcrypt.compare(
-          password,
-          user?.hashedPassword
-        );
 
-        if (!validatePassword) {
-          throw createError({
-            statusCode: 401,
-            statusMessage: "Invalid Credentials",
-          });
-        }
-        return user;
       },
     }),
   ],

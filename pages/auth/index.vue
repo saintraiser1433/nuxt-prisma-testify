@@ -21,7 +21,6 @@
 
                             </div>
                             <div class="mt-5">
-                                {{ status }}
                                 <UIButton type="submit" class="ml-auto" variant="danger" :isRounded="true" size="block">
                                     Sign Ins
                                 </UIButton>
@@ -35,7 +34,7 @@
             </form>
 
 
-            <button type="button">Sign In as github</button>
+            <!-- <button type="button">Sign In as github</button> -->
         </div>
 
     </div>
@@ -44,7 +43,6 @@
 </template>
 
 <script setup lang="ts">
-
 definePageMeta({
     layout: 'empty',
     auth: {
@@ -52,21 +50,23 @@ definePageMeta({
         navigateAuthenticatedTo: '/home'
     }
 })
+const { setToast } = useToast();
 
 const username = ref('');
 const password = ref('');
 
-const { signIn, status } = useAuth()
-
-// const isLoggedIn = computed(() => status.value === 'authenticated')
-
-// const handleSignInThruGitHub = async () => {
-//     await signIn('github')
-// }
+const { signIn } = useAuth()
 
 const handleSignIn = async () => {
     const credentials = { email: username.value, password: password.value }
-    await signIn('credentials', { credentials, redirect: false })
+
+    const result = await signIn('credentials', { ...credentials, redirect: false });
+    if (result?.ok && !result.error) {
+        navigateTo('/home');
+    } else {
+        setToast('error', (result?.error as string))
+    }
+
 }
 
 

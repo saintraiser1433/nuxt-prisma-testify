@@ -15,17 +15,18 @@ datasource db {
 
 // suggested prisma model for authentication
 model User {
-  id             String    @id @default(cuid())
+  id             String          @id @default(cuid())
   name           String?
-  email          String   @unique
+  email          String          @unique
   emailVerified  DateTime?
   username       String?
   hashedPassword String?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
+  image          String?
+  role           String?
+  accounts       Account[]
+  sessions       Session[]
   // Optional for WebAuthn support
-  Authenticator Authenticator[]
+  Authenticator  Authenticator[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

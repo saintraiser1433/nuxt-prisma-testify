@@ -1,13 +1,4 @@
 export default defineNuxtPlugin((event) => {
-  // addRouteMiddleware(
-  //   "auth",
-  //   () => {
-  //     console.log(
-  //       "this global middleware was added in a plugin and will be run on every route change"
-  //     );
-  //   },
-  //   { global: true }
-  // );
 
   addRouteMiddleware("checkExam", async (to, from) => {
     const id = Number(to.params.id);
@@ -34,4 +25,12 @@ export default defineNuxtPlugin((event) => {
       return app.runWithContext(() => navigateTo({ name: "exam" }));
     }
   });
+
+  addRouteMiddleware("checkRole", async (to, from) => {
+    const { data ,getSession} = useAuth();
+    const res = await getSession();
+    
+  });
+
+
 });

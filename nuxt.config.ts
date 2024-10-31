@@ -25,6 +25,14 @@ export default defineNuxtConfig({
   },
   auth: {
     globalAppMiddleware: true,
+    isEnabled: true,
+    provider: {
+      type: 'authjs',
+    },
+    sessionRefresh: {
+      enablePeriodically: false,
+      enableOnWindowFocus: true,
+    }
   },
   compatibilityDate: "2024-04-03",
   colorMode: {
