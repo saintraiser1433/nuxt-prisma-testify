@@ -2,34 +2,33 @@ import GithubProvider from "next-auth/providers/github";
 import { NuxtAuthHandler } from "#auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-
+import bcrypt from "bcrypt";
 const config = useRuntimeConfig();
-
-const getMe = async(session: any) => {
-  return await $fetch('/api/me', {
-    method: 'POST',
-    body: {
-      email: session?.user?.email
-    }
-  })
-}
 
 export default NuxtAuthHandler({
   pages: {
     signIn: "/auth",
   },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60,
+    updateAge: 24 * 60 * 60,
+  },
+
   adapter: PrismaAdapter(prisma),
   callbacks: {
-    // jwt: async ({ token, user }) => {
-    //   const isSignIn = user ? true : false;
-    //   if (isSignIn) {
-    //     token.subscribed = user ? (user as any).subscribed || true : false;
-    //   }
-    //   return Promise.resolve(token);
-    // },
+    jwt: async ({ token, user }) => {
+      const isSignIn = user ? true : false;
+      if (isSignIn) {
+        token.id = user.id;
+        token.email = user.email;
+      }
+
+      return Promise.resolve(token);
+    },
     session: async ({ session, token }) => {
-      const me = await getMe(session);
-      (session as any).subscribed = me?.subscribed;
+      (session as any).id = token?.id;
+      (session as any).email = token?.email;
       return Promise.resolve(session);
     },
   },
@@ -41,21 +40,36 @@ export default NuxtAuthHandler({
 
     CredentialsProvider.default({
       // The name to display on the sign in form (e.g. "Sign in with...")
-      name: "Credentials",
+      name: "credentials",
 
       async authorize(credentials: any, req: any) {
-        const user = {
-          username: 'johnrey',
-          password: 'decosta'
+        const { email, password } = credentials;
+
+        const user = await prisma.user.findFirst({
+          where: {
+            email: email,
+          },
+        });
+
+        if (!user || !user.hashedPassword) {
+          throw createError({
+            statusCode: 401,
+            statusMessage: "Invalid Credentials",
+          });
         }
-        console.log(credentials)
-        if (credentials?.username === user.username && credentials?.password === user.password) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
-        } else {
-          console.log('error')
-          return null;
+
+        const validatePassword = await bcrypt.compare(
+          password,
+          user?.hashedPassword
+        );
+
+        if (!validatePassword) {
+          throw createError({
+            statusCode: 401,
+            statusMessage: "Invalid Credentials",
+          });
         }
+        return user;
       },
     }),
   ],

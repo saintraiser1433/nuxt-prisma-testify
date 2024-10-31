@@ -21,6 +21,7 @@
 
                             </div>
                             <div class="mt-5">
+                                {{ status }}
                                 <UIButton type="submit" class="ml-auto" variant="danger" :isRounded="true" size="block">
                                     Sign Ins
                                 </UIButton>
@@ -34,7 +35,7 @@
             </form>
 
 
-            <button type="button" @click="handleSignInThruGitHub">Sign In as github</button>
+            <button type="button">Sign In as github</button>
         </div>
 
     </div>
@@ -43,6 +44,7 @@
 </template>
 
 <script setup lang="ts">
+
 definePageMeta({
     layout: 'empty',
     auth: {
@@ -54,17 +56,17 @@ definePageMeta({
 const username = ref('');
 const password = ref('');
 
-const { signIn } = useAuth()
+const { signIn, status } = useAuth()
 
 // const isLoggedIn = computed(() => status.value === 'authenticated')
 
-const handleSignInThruGitHub = async () => {
-    await signIn('github')
-}
+// const handleSignInThruGitHub = async () => {
+//     await signIn('github')
+// }
 
 const handleSignIn = async () => {
-    const credentials = { username: username.value, password: password.value }
-    await signIn('credentials', credentials)
+    const credentials = { email: username.value, password: password.value }
+    await signIn('credentials', { credentials, redirect: false })
 }
 
 
