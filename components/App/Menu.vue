@@ -10,7 +10,6 @@
         <ul class="flex flex-col grow ">
             <AppMenuList :menu-items="item"></AppMenuList>
         </ul>
-
     </aside>
 </template>
 
@@ -27,13 +26,13 @@ const { getToggleState } = storeToRefs(store)
 
 const item = ref(
     [
-        { label: 'Home', routerName: 'home', icon: Home },
-        { label: 'Examinee', routerName: 'examinee', icon: HugeiconsStudentCard },
-        { label: 'Deans', routerName: 'deans', icon: FluentMdl2PartyLeader },
-        { label: 'Department', routerName: 'department', icon: LucideBook },
-        { label: 'Course', routerName: 'course', icon: SubwayBook },
-        { label: 'Exam', routerName: 'exam', icon: SolarPenLineDuotone },
-        { label: 'Rankings', routerName: 'rankings', icon: MdiChartLine },
+        { label: 'Home', routerName: 'admin-home', icon: Home },
+        { label: 'Examinee', routerName: 'admin-examinee', icon: HugeiconsStudentCard },
+        { label: 'Deans', routerName: 'admin-deans', icon: FluentMdl2PartyLeader },
+        { label: 'Department', routerName: 'admin-department', icon: LucideBook },
+        { label: 'Course', routerName: 'admin-course', icon: SubwayBook },
+        { label: 'Exam', routerName: 'admin-exam', icon: SolarPenLineDuotone },
+        { label: 'Rankings', routerName: 'admin-rankings', icon: MdiChartLine },
     ]
 )
 </script>

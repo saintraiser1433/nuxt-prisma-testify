@@ -1,5 +1,4 @@
 export default defineNuxtPlugin((event) => {
-
   addRouteMiddleware("checkExam", async (to, from) => {
     const id = Number(to.params.id);
     const { checkExistingExam } = useExam();
@@ -27,10 +26,32 @@ export default defineNuxtPlugin((event) => {
   });
 
   addRouteMiddleware("checkRole", async (to, from) => {
-    const { data ,getSession} = useAuth();
-    const res = await getSession();
-    
-  });
+    const { status, getSession } = useAuth();
+    const { setToast } = useToast();
+    const session = await getSession();
+    const requiredRole = to.meta.requiredRole;
+
+    if (status.value === "unauthenticated") {
+      if (to.name !== "auth") {
+        return navigateTo("/auth");
+      }
+    }
+
+    if (requiredRole !== "admin" && session.role !== "admin") {
+      setToast("error", "Unauthorized");
+      if (to.name !== "user") {
+        return navigateTo({ name: "user" });
+      }
+    }
 
 
+    if (session?.role !== "user") {
+      setToast("error", "Unauthorized");
+      if (to.name !== "admin-home") {
+        return navigateTo({ name: "admin-home" });
+      }
+    }
+
+  }
+  );
 });

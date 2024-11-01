@@ -19,13 +19,17 @@
       </UICard>
     </div>
 
-    {{ s }}
+
   </div>
-  
+
 
 </template>
 
 <script setup>
+definePageMeta({
+  requiredRole: 'admin',
+  middleware: ['checkRole']
+})
 useHead({
   title: 'Testify Examinee Module',
   meta: [
@@ -34,14 +38,7 @@ useHead({
     { property: "og:description", content: 'CRUD for Examinee' },
   ],
 });
-const {  status:s,
-  data:test,
-  lastRefreshedAt,
-  getCsrfToken,
-  getProviders,
-  getSession,
-  signIn,
-  signOut } = useAuth();
+
 const { setToast } = useToast()
 const { setAlert } = useAlert()
 const { createExaminee, updateExaminee, deleteExaminee } = useExaminee()

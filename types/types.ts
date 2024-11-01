@@ -5,6 +5,18 @@ interface Timestamped {
   updatedAt?: Date;
 }
 
+declare module "next-auth" {
+  interface User {
+    role: string; // Add role here
+  }
+}
+
+declare module "next-auth" {
+  interface Session {
+    role: string;
+  }
+}
+
 export interface ApiResponse {
   message: string;
 }

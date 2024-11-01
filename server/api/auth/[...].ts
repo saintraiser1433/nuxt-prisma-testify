@@ -1,4 +1,4 @@
-import GithubProvider from 'next-auth/providers/github'
+import GithubProvider from "next-auth/providers/github";
 import { NuxtAuthHandler } from "#auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -13,14 +13,14 @@ export default NuxtAuthHandler({
     maxAge: 30,
     updateAge: 24 * 60 * 60,
   },
-  // 
+  //
   adapter: PrismaAdapter(prisma),
   callbacks: {
     jwt: async ({ token, user }) => {
       const isSignIn = user ? true : false;
       if (isSignIn) {
-        token.id = user.id
-        token.role = user.role
+        token.id = user.id;
+        token.role = user.role;
       }
 
       return Promise.resolve(token);
@@ -38,16 +38,15 @@ export default NuxtAuthHandler({
     }),
 
     CredentialsProvider.default({
-      // The name to display on the sign in form (e.g. "Sign in with...")
       name: "credentials",
 
       async authorize(credentials: any, req: any) {
         try {
-          const user = await $fetch('/api/auth/login', {
-            method: 'POST',
+          const user = await $fetch("/api/auth/login", {
+            method: "POST",
             body: JSON.stringify(credentials),
-            headers: { "Content-Type": "application/json" }
-          })
+            headers: { "Content-Type": "application/json" },
+          });
 
           if (user) {
             return user;
@@ -57,12 +56,9 @@ export default NuxtAuthHandler({
         } catch (err: any) {
           throw createError({
             statusCode: 500,
-            statusMessage: err.statusMessage
-          })
-
+            statusMessage: err.statusMessage,
+          });
         }
-
-
       },
     }),
   ],

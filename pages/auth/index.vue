@@ -24,6 +24,7 @@
                                 <UIButton type="submit" class="ml-auto" variant="danger" :isRounded="true" size="block">
                                     Sign Ins
                                 </UIButton>
+
                             </div>
                         </div>
                     </div>
@@ -42,32 +43,50 @@
 
 </template>
 
-<script setup lang="ts">
-definePageMeta({
-    layout: 'empty',
-    auth: {
-        unauthenticatedOnly: true,
-        navigateAuthenticatedTo: '/home'
-    }
-})
+<script setup>
+const { signIn, getSession } = useAuth()
+const session = await getSession();
 const { setToast } = useToast();
 
 const username = ref('');
 const password = ref('');
 
-const { signIn } = useAuth()
+
+
+
+
+const routePath = computed(() => session.role === 'admin' ? 'admin/home' : 'user');
+
+definePageMeta({
+    layout: 'empty',
+    middleware: ['auth'],
+    auth: {
+        unauthenticatedOnly: true,
+        navigateAuthenticatedTo: '/user'
+    },
+})
+
+
+
+
+
 
 const handleSignIn = async () => {
     const credentials = { email: username.value, password: password.value }
-
     const result = await signIn('credentials', { ...credentials, redirect: false });
-    if (result?.ok && !result.error) {
-        navigateTo('/home');
+
+    if (result?.ok && !result?.error) {
+        if (session.role === 'user') {
+            return navigateTo({ name: routePath.value })
+        }
+        return navigateTo({ name: routePath.value });
+
     } else {
-        setToast('error', (result?.error as string))
+        setToast('error', (result?.error))
     }
 
 }
+
 
 
 </script>

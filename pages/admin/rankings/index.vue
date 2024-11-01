@@ -5,6 +5,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+    requiredRole: 'admin',
+    middleware: ['checkRole']
+})
 useHead({
     title: 'Testify Rankings Module',
     meta: [

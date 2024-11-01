@@ -14,7 +14,11 @@
 
 </template>
 
-<script setup lang="ts">
+<script setup>
+definePageMeta({
+    requiredRole: 'admin',
+    middleware: ['checkRole']
+})
 const { data } = useAuth();
 // const { data: session } = await useFetch('/api/me');
 useHead({
