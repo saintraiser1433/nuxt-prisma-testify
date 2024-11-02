@@ -26,32 +26,29 @@ export default defineNuxtPlugin((event) => {
   });
 
   addRouteMiddleware("checkRole", async (to, from) => {
-    const { status, getSession } = useAuth();
-    const { setToast } = useToast();
-    const session = await getSession();
+    const { status, data } = useAuthState()
     const requiredRole = to.meta.requiredRole;
 
-    if (status.value === "unauthenticated") {
-      if (to.name !== "auth") {
-        return navigateTo("/auth");
+    if (status.value === 'unauthenticated' && to.name !== "auth") {
+      return navigateTo("/auth");
+    }
+
+    if (status.value === "authenticated" && to.name === "auth") {
+      if (data.value?.role === "admin") {
+        return navigateTo("/admin/home");
+      }
+      if (data.value?.role === "user") {
+        return navigateTo("/user/home");
       }
     }
 
-    if (requiredRole !== "admin" && session.role !== "admin") {
-      setToast("error", "Unauthorized");
-      if (to.name !== "user") {
-        return navigateTo({ name: "user" });
-      }
+    if (requiredRole && requiredRole !== data.value?.role) {
+      return navigateTo("/error");
     }
 
 
-    if (session?.role !== "user") {
-      setToast("error", "Unauthorized");
-      if (to.name !== "admin-home") {
-        return navigateTo({ name: "admin-home" });
-      }
-    }
 
-  }
-  );
+
+
+  });
 });

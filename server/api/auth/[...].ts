@@ -3,14 +3,13 @@ import { NuxtAuthHandler } from "#auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 const config = useRuntimeConfig();
-
 export default NuxtAuthHandler({
   pages: {
     signIn: "/auth",
   },
   session: {
     strategy: "jwt",
-    maxAge: 30,
+    maxAge: 6000000,
     updateAge: 24 * 60 * 60,
   },
   //

@@ -20,7 +20,7 @@
 <script setup>
 definePageMeta({
     requiredRole: 'admin',
-    middleware: ['checkExam', 'checkRole']
+    middleware: ['checkExam', 'checkRole'],
 })
 
 const { setToast } = useToast()

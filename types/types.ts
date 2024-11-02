@@ -16,6 +16,11 @@ declare module "next-auth" {
     role: string;
   }
 }
+declare module "next-auth" {
+  interface appMiddleware {
+    role: string;
+  }
+}
 
 export interface ApiResponse {
   message: string;

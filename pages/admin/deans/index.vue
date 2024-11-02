@@ -54,7 +54,8 @@
 <script setup>
 definePageMeta({
     requiredRole: 'admin',
-    middleware: ['checkRole']
+    middleware: ['checkRole'],
+
 })
 useHead({
     title: 'Testify Deans Module',

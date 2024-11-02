@@ -1,10 +1,18 @@
-<script lang="ts" setup>
+<script setup>
+definePageMeta({
+    layout: 'empty',
+
+})
+
+const { status } = useAuth();
+
 
 </script>
 
 <template>
+
     <div>
-        Error
+        <pre>{{ status }}</pre>
     </div>
 </template>
 

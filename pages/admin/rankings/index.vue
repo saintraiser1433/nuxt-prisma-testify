@@ -7,7 +7,8 @@
 <script setup>
 definePageMeta({
     requiredRole: 'admin',
-    middleware: ['checkRole']
+    middleware: ['checkRole'],
+
 })
 useHead({
     title: 'Testify Rankings Module',

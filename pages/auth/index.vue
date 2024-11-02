@@ -33,9 +33,7 @@
                     </div>
                 </div>
             </form>
-
-
-            <!-- <button type="button">Sign In as github</button> -->
+            <!-- <button type="button" @click="handleGitHub">Sign In as github</button> -->
         </div>
 
     </div>
@@ -44,47 +42,34 @@
 </template>
 
 <script setup>
-const { signIn, getSession } = useAuth()
-const session = await getSession();
-const { setToast } = useToast();
+definePageMeta({
+    layout: 'empty',
+    middleware: ['checkRole']
+})
 
+const { signIn, data } = useAuth()
+
+
+const { setToast } = useToast();
 const username = ref('');
 const password = ref('');
 
-
-
-
-
-const routePath = computed(() => session.role === 'admin' ? 'admin/home' : 'user');
-
-definePageMeta({
-    layout: 'empty',
-    middleware: ['auth'],
-    auth: {
-        unauthenticatedOnly: true,
-        navigateAuthenticatedTo: '/user'
-    },
-})
-
-
-
-
+// const handleGitHub = async() => {
+//     await signIn('github');
+// }
 
 
 const handleSignIn = async () => {
     const credentials = { email: username.value, password: password.value }
     const result = await signIn('credentials', { ...credentials, redirect: false });
-
-    if (result?.ok && !result?.error) {
-        if (session.role === 'user') {
-            return navigateTo({ name: routePath.value })
+    if (result.ok && !result.error) {
+        if (data.value.role === 'admin') {
+            return navigateTo('admin/home');
         }
-        return navigateTo({ name: routePath.value });
-
+        return navigateTo('user/home'); 
     } else {
-        setToast('error', (result?.error))
+        setToast('error', result.error);
     }
-
 }
 
 
