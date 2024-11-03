@@ -6,7 +6,7 @@
         <!-- <div>Providers - {{ providers || 'no providers' }}</div>
         <pre>{{ session }}</pre> -->
         <!-- {{status}} -->
-   
+
 
     </div>
 
@@ -15,7 +15,7 @@
 <script setup>
 definePageMeta({
     requiredRole: 'admin',
-    middleware: ['checkRole'],
+    // middleware: ['checkRole'],
 })
 
 

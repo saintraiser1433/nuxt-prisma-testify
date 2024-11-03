@@ -25,7 +25,7 @@
 <script setup>
 definePageMeta({
     requiredRole: 'admin',
-    middleware: ['checkRole'],
+    // middleware: ['checkRole'],
     breadcrumbs: 'Exam',
 })
 
@@ -40,11 +40,11 @@ useHead({
 
 const { setToast } = useToast()
 const { setAlert } = useAlert()
-const { createExam, updateExam, deleteExam } = useExam()
 const data = ref({})
 const isUpdate = ref(false)
+const config = useRuntimeConfig()
 
-const { data: exam, status, error, refresh } = await useFetch('/api/exam', {
+const { data: exam, status, error, refresh } = await useFetch(`${config.public.baseURL}/exam`, {
     method: 'GET',
 });
 
@@ -62,8 +62,7 @@ const submitExam = async (data) => {
         refresh();
         resetInstance();
     } catch (error) {
-        console.log(error)
-        setToast('error', error.statusMessage || 'An error occurred');
+        setToast('error', error.data.error || 'An error occurred');
     }
 }
 
@@ -82,7 +81,7 @@ const removeExam = (id) => {
                     setToast('success', response.message);
                     refresh();
                 } catch (error) {
-                    setToast('error', error.statusMessage || 'An error occurred');
+                    setToast('error', error.data.error || 'An error occurred');
                 }
             }
         }

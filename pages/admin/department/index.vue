@@ -26,7 +26,7 @@
 <script setup>
 definePageMeta({
     requiredRole: 'admin',
-    middleware: ['checkRole']
+    // middleware: ['checkRole'],
 })
 useHead({
     title: 'Testify Department Module',
@@ -38,11 +38,10 @@ useHead({
 });
 const { setToast } = useToast()
 const { setAlert } = useAlert()
-const { createDepartment, updateDepartment, deleteDepartment } = useDepartment()
 const data = ref({})
 const isUpdate = ref(false)
-
-const { data: department, status, error, refresh } = await useFetch('/api/department', {
+const config = useRuntimeConfig();
+const { data: department, status, error, refresh } = await useFetch(`${config.public.baseURL}/department`, {
     method: 'GET',
     // transform: (_department) => {
     //     return _department.map((item) => {
@@ -69,8 +68,7 @@ const submitDepartment = async (data) => {
         refresh();
         resetInstance();
     } catch (error) {
-        console.log(error)
-        setToast('error', error.statusMessage || 'An error occurred');
+        setToast('error', error.data.error || 'An error occurred');
     }
 }
 
@@ -86,11 +84,10 @@ const removeDepartment = (id) => {
             if (result.isConfirmed) {
                 try {
                     const response = await deleteDepartment(id);
-                    console.log(response.data);
                     setToast('success', response.message);
                     refresh();
                 } catch (error) {
-                    setToast('error', error.statusMessage || 'An error occurred');
+                    setToast('error', error.data.error || 'An error occurred');
                 }
             }
         }

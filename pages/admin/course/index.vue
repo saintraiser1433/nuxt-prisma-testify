@@ -25,7 +25,7 @@
 <script setup>
 definePageMeta({
     requiredRole: 'admin',
-    middleware: ['checkRole'],
+    // middleware: ['checkRole'],
 })
 useHead({
     title: 'Testify Course Module',
@@ -37,13 +37,12 @@ useHead({
 });
 const { setToast } = useToast()
 const { setAlert } = useAlert()
-const { createCourse, updateCourse, deleteCourse } = useCourse()
 const data = ref({})
 const isUpdate = ref(false)
+const config = useRuntimeConfig();
 
 
-
-const { data: course, status, error, refresh } = await useFetch('/api/course', {
+const { data: course, status, error, refresh } = await useFetch(`${config.public.baseURL}/course`, {
     method: 'GET',
 
 });
@@ -61,14 +60,12 @@ const submitCourse = async (data) => {
         refresh();
         resetInstance();
     } catch (error) {
-        setToast('error', error.statusMessage || 'An error occurred');
+        setToast('error', error.data.error || 'An error occurred');
     }
 }
 
 
 const editCourse = (response) => {
-
-    console.log(response);
     data.value = response
     isUpdate.value = true
 }
@@ -82,7 +79,7 @@ const removeCourse = (id) => {
                     setToast('success', response.message);
                     refresh();
                 } catch (error) {
-                    setToast('error', error.statusMessage || 'An error occurred');
+                    setToast('error', error.data.error || 'An error occurred');
                 }
             }
         }

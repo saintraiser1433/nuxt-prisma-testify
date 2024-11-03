@@ -44,10 +44,10 @@
 <script setup>
 definePageMeta({
     layout: 'empty',
-    middleware: ['checkRole']
+    // middleware: ['checkRole'],
 })
 
-const { signIn, data } = useAuth()
+// const { signIn, data } = useAuth()
 
 
 const { setToast } = useToast();
@@ -60,16 +60,16 @@ const password = ref('');
 
 
 const handleSignIn = async () => {
-    const credentials = { email: username.value, password: password.value }
-    const result = await signIn('credentials', { ...credentials, redirect: false });
-    if (result.ok && !result.error) {
-        if (data.value.role === 'admin') {
-            return navigateTo('admin/home');
-        }
-        return navigateTo('user/home'); 
-    } else {
-        setToast('error', result.error);
-    }
+    // const credentials = { email: username.value, password: password.value }
+    // const result = await signIn('credentials', { ...credentials, redirect: false });
+    // if (result.ok && !result.error) {
+    //     if (data.value.role === 'admin') {
+    //         return navigateTo('admin/home');
+    //     }
+    //     return navigateTo('user/home'); 
+    // } else {
+    //     setToast('error', result.error);
+    // }
 }
 
 

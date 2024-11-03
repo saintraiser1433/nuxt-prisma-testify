@@ -1,13 +1,13 @@
 <script setup>
 definePageMeta({
     requiredRole: 'user',
-    middleware: ['checkRole']
+    // middleware: ['checkRole']
 })
-const { status, getSession } = useAuth();
+// const { status, getSession } = useAuth();
 </script>
 
 <template>
     <div>
-        {{ status }}
+        <!-- {{ status }} -->
     </div>
 </template>

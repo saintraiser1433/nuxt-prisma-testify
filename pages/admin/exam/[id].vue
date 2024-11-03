@@ -20,16 +20,16 @@
 <script setup>
 definePageMeta({
     requiredRole: 'admin',
-    middleware: ['checkExam', 'checkRole'],
+    // middleware: ['checkExam'],
 })
 
 const { setToast } = useToast()
 const { setAlert } = useAlert()
-const { createQuestion, updateQuestion, deleteQuestion } = useQuestion()
 const route = useRoute().params;
 const data = ref({})
 const isUpdate = ref(false)
-const { data: question, status, error, refresh } = await useFetch(`/api/question/${route.id}`, {
+const config = useRuntimeConfig();
+const { data: question, status, error, refresh } = await useFetch(`${config.public.baseURL}/question/${route.id}`, {
     method: 'GET',
 });
 
@@ -50,7 +50,7 @@ const submitQuestion = async (data) => {
         refresh();
         resetInstance();
     } catch (error) {
-        setToast('error', error.statusMessage || 'An error occurred');
+        setToast('error', error.data.error || 'An error occurred');
     }
 }
 
@@ -70,7 +70,7 @@ const remove = (id) => {
                     setToast('success', response.message);
                     refresh();
                 } catch (error) {
-                    setToast('error', error.statusMessage || 'An error occurred');
+                    setToast('error', error.data.error || 'An error occurred');
                 }
             }
         }

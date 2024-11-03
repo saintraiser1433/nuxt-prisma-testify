@@ -54,7 +54,7 @@
 <script setup>
 definePageMeta({
     requiredRole: 'admin',
-    middleware: ['checkRole'],
+    // middleware: ['checkRole'],
 
 })
 useHead({
@@ -68,18 +68,17 @@ useHead({
 
 const { setToast } = useToast()
 const { setAlert } = useAlert()
-const { createDeans, updateDeans, deleteAssignCourse } = useDeans()
 const data = ref({})
 const isUpdate = ref(false)
 const isOpen = ref(false)
 const deansId = ref(null)
-
+const config = useRuntimeConfig();
 
 //top level fetch for deans
 const { data: deansInfo, status, refresh } = await useAsyncData('deansInfo', async () => {
     const [deans, department] = await Promise.all([
-        $fetch('/api/deans'),
-        $fetch('/api/department')
+        $fetch(`${config.public.baseURL}/deans`),
+        $fetch(`${config.public.baseURL}/department`)
     ])
     return { deans, department }
 }, {
@@ -89,8 +88,8 @@ const { data: deansInfo, status, refresh } = await useAsyncData('deansInfo', asy
 //top level fetch for assigning deans
 const { data: assign, refresh: refreshCourse } = await useAsyncData('assign', async () => {
     const [assignCourses, filteredCourses] = await Promise.all([
-        $fetch(`/api/deans/assign/${deansId.value}`),
-        $fetch('/api/course/filtered')
+        $fetch(`${config.public.baseURL}/deans/assign/${deansId.value}`),
+        $fetch(`${config.public.baseURL}/course/filtered`)
     ])
     return { assignCourses, filteredCourses }
 }, {
@@ -114,7 +113,7 @@ const submitDeans = async (data) => {
         refresh();
         resetInstance();
     } catch (error) {
-        setToast('error', error.statusMessage || 'An error occurred');
+        setToast('error', error.data.error || 'An error occurred');
     }
 }
 
@@ -141,15 +140,14 @@ const assignDeans = async (id) => {
 
 const submitAssignCourse = async (data) => {
     try {
-        const response = await $fetch('/api/deans/assign', {
+        const response = await $fetch(`${config.public.baseURL}/deans/assign`, {
             method: 'POST',
             body: data
         });
         await refreshCourse();
         setToast('success', response.message);
     } catch (error) {
-        console.log(error);
-        setToast('error', error.statusMessage || 'An error occurred');
+        setToast('error', error.data.error || 'An error occurred');
     }
 };
 
@@ -164,7 +162,7 @@ const removeDeansCourse = (item) => {
                     setToast('success', response.message);
                     await refreshCourse();
                 } catch (error) {
-                    setToast('error', error.statusMessage || 'An error occurred');
+                    setToast('error', error.data.error || 'An error occurred');
                 }
             }
         }

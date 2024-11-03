@@ -2,7 +2,7 @@
     <form @submit.prevent="submitExam">
         <div class="mb-2">
             <label class="text-sm" for="exam">Exam Title:</label>
-            <UIInput type="text" id="exam" v-model="formExam.exam_title" disabled required />
+            <UIInput type="text" id="exam" v-model="formExam.exam_title"  required />
         </div>
         <div class="mb-2">
             <label class="text-sm" for="description">Exam Description:</label>

@@ -2,6 +2,7 @@
 import ViteComponents from "unplugin-vue-components/vite";
 import IconsResolver from "unplugin-icons/resolver";
 export default defineNuxtConfig({
+  compatibilityDate: "2024-04-03",
   routeRules: {
     '/': { redirect: '/auth' },
   },
@@ -28,16 +29,38 @@ export default defineNuxtConfig({
   },
   auth: {
     // globalAppMiddleware: true,
-    isEnabled: true,
-    provider: {
-      type: "authjs",
-    },
-    sessionRefresh: {
-      enablePeriodically: false,
-      enableOnWindowFocus: true,
-    },
+    // baseURL: process.env.BASE_API_URL,
+    // provider: {
+    //   type: 'local',
+    //   endpoints: {
+    //     signIn: { path: '/login', method: 'post' },
+    //     signOut: { path: '/logout', method: 'post' },
+    //     signUp: { path: '/register', method: 'post' },
+    //     getSession: { path: '/session', method: 'get' },
+    //   },
+    //   pages: {
+    //     login: '/auth',
+    //   },
+    //   token: {
+    //     signInResponseTokenPointer: '/token',
+    //     type: 'Bearer',
+    //     cookieName: 'auth.token',
+    //     headerName: 'Authorization',
+    //     maxAgeInSeconds: 1800,
+    //     cookieDomain: 'sidebase.io',
+    //     secureCookieAttribute: false,
+    //     httpOnlyCookieAttribute: false,
+    //   },
+    // },
+
+    // sessionRefresh: {
+    //   enablePeriodically: true,
+    //   enableOnWindowFocus: true,
+    // }
+
+
   },
-  compatibilityDate: "2024-04-03",
+
   colorMode: {
     classSuffix: "",
     preference: "system",
@@ -46,14 +69,13 @@ export default defineNuxtConfig({
   css: ["sweetalert2/dist/sweetalert2.min.css"],
   devtools: { enabled: true },
   imports: {
-    dirs: ["types/*.ts", "store/*.ts", "types/**/*.ts"],
+    dirs: ["types/*.ts", "store/*.ts", "lib/api/*.ts"],
   },
   modules: [
     "@nuxtjs/tailwindcss",
     "@nuxt/icon",
     "@pinia/nuxt",
     "unplugin-icons/nuxt",
-    "@prisma/nuxt",
     "@vueuse/nuxt",
     "@nuxtjs/color-mode",
     "@sidebase/nuxt-auth",
@@ -62,7 +84,10 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     gitSecretKey: process.env.GITHUB_SECRET_KEY,
+    accessTokenSecret: process.env.NUXT_ACCESS_TOKEN_SECRET,
+    refreshTokenSecret: process.env.NUXT_REFRESH_TOKEN_SECRET,
     public: {
+      baseURL: process.env.BASE_API_URL,
       // baseURL: process.env.NUXT_PUBLIC_BASE_URL,
       gitClientID: process.env.GITHUB_CLIENT_ID,
     },

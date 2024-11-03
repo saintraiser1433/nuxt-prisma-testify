@@ -26,9 +26,10 @@
 </template>
 
 <script setup>
+
 definePageMeta({
   requiredRole: 'admin',
-  middleware: ['checkRole'],
+  // middleware: ['checkRole'],
 
 })
 useHead({
@@ -43,10 +44,10 @@ useHead({
 
 const { setToast } = useToast()
 const { setAlert } = useAlert()
-const { createExaminee, updateExaminee, deleteExaminee } = useExaminee()
 const data = ref({})
 const isUpdate = ref(false)
-const { data: examinee, status, error, refresh } = await useFetch('/api/examinee', {
+const config = useRuntimeConfig()
+const { data: examinee, status, error, refresh } = await useFetch(`${config.public.baseURL}/examinee`, {
   method: 'GET',
   transform: (_examinee) => {
     return _examinee.map((examinee) => {
@@ -75,8 +76,7 @@ const submitExaminee = async (data) => {
     refresh();
     resetInstance();
   } catch (error) {
-    console.log(error)
-    setToast('error', error.statusMessage || 'An error occurred');
+    setToast('error', error.data.error || 'An error occurred');
   }
 }
 
@@ -101,7 +101,7 @@ const removeExaminee = (id) => {
           setToast('success', response.message);
           refresh();
         } catch (error) {
-          setToast('error', error.statusMessage || 'An error occurred');
+          setToast('error', error.data.error || 'An error occurred');
         }
       }
     }

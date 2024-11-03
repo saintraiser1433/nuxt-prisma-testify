@@ -60,10 +60,10 @@ const setColorTheme = (theme) => {
     colorMode.preference = theme;
 };
 
-const { signOut } = useAuth()
+// const { signOut } = useAuth()
 
 const handleSignOut = async () => {
-    await signOut();
+    // await signOut();
 }
 </script>
 

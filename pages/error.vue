@@ -4,7 +4,7 @@ definePageMeta({
 
 })
 
-const { status } = useAuth();
+// const { status } = useAuth();
 
 
 </script>
@@ -12,7 +12,7 @@ const { status } = useAuth();
 <template>
 
     <div>
-        <pre>{{ status }}</pre>
+        <!-- <pre>{{ status }}</pre> -->
     </div>
 </template>
 
