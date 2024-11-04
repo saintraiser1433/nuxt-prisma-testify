@@ -24,29 +24,32 @@ export default defineNuxtPlugin((event) => {
   //   } catch (error) {
   //     return app.runWithContext(() => navigateTo({ name: "exam" }));
   //   }
-  });
-
-  // addRouteMiddleware("checkRole", async (to, from) => {
-  //   const { status, data } = useAuthState()
-  //   const requiredRole = to.meta.requiredRole;
-
-  //   if (status.value === 'unauthenticated' && to.name !== "auth") {
-  //     return navigateTo("/auth");
-  //   }
-
-  //   if (status.value === "authenticated" && to.name === "auth") {
-  //     if (data.value?.role === "admin") {
-  //       return navigateTo("/admin/home");
-  //     }
-  //     if (data.value?.role === "user") {
-  //       return navigateTo("/user/home");
-  //     }
-  //   }
-
-  //   if (requiredRole && requiredRole !== data.value?.role) {
-  //     return navigateTo("/error");
-  //   }
   // });
 
 
-// });
+  addRouteMiddleware("auth", async (to, from) => {
+    const { getStatus } = useAuthentication()
+    const { user, status } = await getStatus();
+    // to.meta.id = user;
+
+    if (status === 'unauthenticated' && to.name !== "auth") {
+      return navigateTo("/auth");
+    }
+    if (status === "authenticated" && to.name === "auth") {
+      if (user.role === 'admin') {
+        return navigateTo({ name: 'admin-home' });
+      } else if (user.role === 'examinee') {
+        return navigateTo({ name: 'user-home' });
+      }
+    }
+
+  }, {
+    global: true
+  }
+
+  )
+
+
+
+
+});

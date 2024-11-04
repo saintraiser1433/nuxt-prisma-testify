@@ -8,6 +8,7 @@ definePageMeta({
 
 <template>
     <div>
+        User
         <!-- {{ status }} -->
     </div>
 </template>

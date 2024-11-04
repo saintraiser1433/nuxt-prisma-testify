@@ -4,7 +4,6 @@ export const useStore = defineStore("counter", {
   }),
   getters: {
     getToggleState: (state) => state.isOpen,
-    getFooter: (state) => state.footerName,
   },
   actions: {
     toggleState() {

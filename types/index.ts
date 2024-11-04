@@ -5,22 +5,34 @@ interface Timestamped {
     updatedAt?: Date;
 }
 
-// declare module "next-auth" {
-//     interface User {
-//         role: string; // Add role here
-//     }
-// }
+export interface Token {
+    token: TokenDetail,
+    user: User
 
-// declare module "next-auth" {
-//     interface Session {
-//         role: string;
-//     }
-// }
-// declare module "next-auth" {
-//     interface appMiddleware {
-//         role: string;
-//     }
-// }
+}
+
+export interface TokenDetail {
+    accessToken: string;
+    refreshToken: string;
+}
+
+export interface User {
+    id?: string,
+    email?: string,
+    password?: string,
+    accessToken?: string,
+    refreshToken?: string,
+    role?: 'admin' | 'examinee';
+}
+
+export interface TokenStatus {
+    user?: any;
+    message?: string
+    status: string
+}
+
+
+
 
 export interface ApiResponse {
     message: string;
