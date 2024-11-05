@@ -1,12 +1,5 @@
 <template>
     <div>
-        <!-- <pre>{{ token }}</pre>
-        <pre>{{ providers }}</pre> -->
-        <!-- <pre>{{ session }}</pre> -->
-        <!-- <div>Providers - {{ providers || 'no providers' }}</div>
-        <pre>{{ session }}</pre> -->
-        <!-- {{status}} -->
-
 
     </div>
 
@@ -19,6 +12,7 @@ definePageMeta({
 })
 
 
+
 // const { data: session } = await useFetch('/api/me');
 useHead({
     title: 'Testify Home Page',
@@ -28,9 +22,6 @@ useHead({
         { property: "og:description", content: 'Testify Analytics' },
     ],
 });
-
-
-// console.log(refreshToken)
 
 </script>
 <style scoped></style>

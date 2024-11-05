@@ -30,12 +30,8 @@ export default defineNuxtPlugin((event) => {
 
   addRouteMiddleware("auth", async (to, from) => {
     const { token, signOut } = useAuthentication()
-
-    const config = useRuntimeConfig()
-    // const status = ref('');
-    // const role = ref<Role>('');
-    // const store: any = storeUser();
-
+    const store = storeUser()
+    
     if (!token) {
 
       if (to.name !== 'auth') {
@@ -48,17 +44,17 @@ export default defineNuxtPlugin((event) => {
 
     try {
       const decodedToken = jwtDecode<DecodeJWT>(token);
-
-      // You can check for expiration here if needed
       const currentTime = Date.now();
       const isExpired = decodedToken.exp !== undefined && (decodedToken.exp * 1000 < currentTime);
       if (isExpired) {
+        store.setUser(null);
+        await signOut(decodedToken.id)
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
         return navigateTo({ name: 'auth' });
       }
 
-      // Check user role and navigate accordingly
+
       if (decodedToken.role === 'admin' && to.meta.requiredRole !== 'admin') {
         return navigateTo({ name: 'admin-home' });
       } else if (decodedToken.role === 'examinee' && to.meta.requiredRole !== 'examinee') {
@@ -66,8 +62,8 @@ export default defineNuxtPlugin((event) => {
       } else if (decodedToken.role === 'deans' && to.meta.requiredRole !== 'deans') {
         return navigateTo({ name: 'deans-home' });
       }
+
     } catch (error) {
-      console.error("Token decoding failed:", error);
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
       return navigateTo({ name: 'auth' });

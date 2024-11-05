@@ -16,6 +16,10 @@ export interface TokenDetail {
     refreshToken: string;
 }
 
+export interface refreshTokenModel {
+    accessToken: string
+}
+
 export interface User {
     id?: string,
     email?: string,
@@ -27,12 +31,12 @@ export interface User {
 
 export type Role = 'admin' | 'examinee' | 'deans' | '';
 
-export interface DecodeJWT{
-    id?:string,
-    email?:string,
-    role?:string,
-    iat?:number,
-    exp?:number
+export interface DecodeJWT {
+    id?: string,
+    email?: string,
+    role?: string,
+    iat?: number,
+    exp?: number
 }
 
 
