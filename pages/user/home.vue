@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({
-    requiredRole: 'user',
+    requiredRole: 'examinee',
     // middleware: ['checkRole']
 })
 // const { status, getSession } = useAuth();

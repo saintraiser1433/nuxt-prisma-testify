@@ -1,7 +1,7 @@
 <template>
   <div
     :class="
-      getToggleState
+      store.getToggleState
         ? ' lg:w-[calc(100%-15rem)] lg:left-60'
         : 'lg:w-[calc(100%-5rem)] lg:left-20'
     "
@@ -67,11 +67,10 @@
 </template>
 
 <script setup>
+
 const store = useStore();
-const { getToggleState } = storeToRefs(store);
-
+const userStore = storeUser();
 const colorMode = useColorMode();
-
 const setColorTheme = (theme) => {
   colorMode.preference = theme;
 };
@@ -79,7 +78,8 @@ const setColorTheme = (theme) => {
 const { signOut } = useAuthentication();
 
 const handleSignOut = async () => {
-  await signOut();
+  await signOut(userStore.getUser.id)
+  return navigateTo({ name: 'auth' })
 };
 </script>
 

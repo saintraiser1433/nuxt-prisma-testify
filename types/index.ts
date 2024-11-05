@@ -22,8 +22,19 @@ export interface User {
     password?: string,
     accessToken?: string,
     refreshToken?: string,
-    role?: 'admin' | 'examinee';
+    role?: Role
 }
+
+export type Role = 'admin' | 'examinee' | 'deans' | '';
+
+export interface DecodeJWT{
+    id?:string,
+    email?:string,
+    role?:string,
+    iat?:number,
+    exp?:number
+}
+
 
 export interface TokenStatus {
     user?: any;

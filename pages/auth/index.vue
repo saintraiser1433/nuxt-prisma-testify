@@ -79,12 +79,25 @@ const username = ref("");
 const password = ref("");
 const config = useRuntimeConfig();
 const { signIn, token } = useAuthentication();
+const store = storeUser();
 const handleSignIn = async () => {
   try {
-    await signIn({
+    const result = await signIn({
       email: username.value,
       password: password.value,
     });
+    
+    store.setUser(result.user);
+    if (result?.user?.role) {
+      if (result.user.role === "admin") {
+        return navigateTo({ name: "admin-home" });
+      } else if (result.user.role === "examinee") {
+        return navigateTo({ name: "user-home" });
+      } else if (result.user.role === "deans") {
+        return navigateTo({ name: "deans-home" });
+      }
+    }
+    return navigateTo({ name: "auth" });
   } catch (err: any) {
     setToast("error", err.data?.error || "An error occurred");
   }

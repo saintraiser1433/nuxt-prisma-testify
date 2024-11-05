@@ -1,4 +1,5 @@
-
+import type { DecodeJWT } from "~/types";
+import { jwtDecode } from 'jwt-decode';
 export default defineNuxtPlugin((event) => {
   // addRouteMiddleware("checkExam", async (to, from) => {
   //   const id = Number(to.params.id);
@@ -28,28 +29,50 @@ export default defineNuxtPlugin((event) => {
 
 
   addRouteMiddleware("auth", async (to, from) => {
-    const { getStatus } = useAuthentication()
-    const { user, status } = await getStatus();
-    // to.meta.id = user;
+    const { token, signOut } = useAuthentication()
 
-    if (status === 'unauthenticated' && to.name !== "auth") {
-      return navigateTo("/auth");
-    }
-    if (status === "authenticated" && to.name === "auth") {
-      if (user.role === 'admin') {
-        return navigateTo({ name: 'admin-home' });
-      } else if (user.role === 'examinee') {
-        return navigateTo({ name: 'user-home' });
+    const config = useRuntimeConfig()
+    // const status = ref('');
+    // const role = ref<Role>('');
+    // const store: any = storeUser();
+
+    if (!token) {
+
+      if (to.name !== 'auth') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        return navigateTo({ name: 'auth' });
       }
+      return;
     }
 
+    try {
+      const decodedToken = jwtDecode<DecodeJWT>(token);
+
+      // You can check for expiration here if needed
+      const currentTime = Date.now();
+      const isExpired = decodedToken.exp !== undefined && (decodedToken.exp * 1000 < currentTime);
+      if (isExpired) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        return navigateTo({ name: 'auth' });
+      }
+
+      // Check user role and navigate accordingly
+      if (decodedToken.role === 'admin' && to.meta.requiredRole !== 'admin') {
+        return navigateTo({ name: 'admin-home' });
+      } else if (decodedToken.role === 'examinee' && to.meta.requiredRole !== 'examinee') {
+        return navigateTo({ name: 'user-home' });
+      } else if (decodedToken.role === 'deans' && to.meta.requiredRole !== 'deans') {
+        return navigateTo({ name: 'deans-home' });
+      }
+    } catch (error) {
+      console.error("Token decoding failed:", error);
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      return navigateTo({ name: 'auth' });
+    }
   }, {
     global: true
-  }
-
-  )
-
-
-
-
+  });
 });
