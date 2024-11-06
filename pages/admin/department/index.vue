@@ -70,13 +70,13 @@ const { data: department, status, error, refresh } = await useFetch<DepartmentMo
 const submitDepartment = async (data: DepartmentModel) => {
     try {
         if (!isUpdate.value) {
-            const response = await useFetchApi<ApiResponse<DepartmentModel>>(
+            const response = await useFetchApi<ApiResponse<DepartmentModel>, DepartmentModel>(
                 `${config.public.baseURL}/department`,
                 Method.POST,
                 data);
             setToast('success', response.message)
         } else {
-            const response = await useFetchApi<ApiResponse<DepartmentModel>>(
+            const response = await useFetchApi<ApiResponse<DepartmentModel>, DepartmentModel>(
                 `${config.public.baseURL}/department/${data.department_id}`,
                 Method.PUT,
                 data);
@@ -101,7 +101,7 @@ const removeDepartment = (id: number) => {
         async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await useFetchApi<ApiResponse<DepartmentModel>>(
+                    const response = await useFetchApi<ApiResponse<DepartmentModel>, DepartmentModel>(
                         `${config.public.baseURL}/department/${id}`,
                         Method.DELETE);
                     setToast('success', response.message);

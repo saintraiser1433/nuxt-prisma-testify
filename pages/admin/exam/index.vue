@@ -66,13 +66,13 @@ const { data: exam, status, error, refresh } = await useFetch<ExamModel[]>(`${co
 const submitExam = async (data: ExamModel) => {
     try {
         if (!isUpdate.value) {
-            const response = await useFetchApi<ApiResponse<ExamModel>>(
+            const response = await useFetchApi<ApiResponse<ExamModel>, ExamModel>(
                 `${config.public.baseURL}/department`,
                 Method.POST,
                 data);
             setToast('success', response.message)
         } else {
-            const response = await useFetchApi<ApiResponse<ExamModel>>(
+            const response = await useFetchApi<ApiResponse<ExamModel>, ExamModel>(
                 `${config.public.baseURL}/department/${data.exam_id}`,
                 Method.PUT,
                 data);
@@ -97,10 +97,9 @@ const removeExam = (id: number) => {
         async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await useFetchApi<ApiResponse<ExamModel>>(
+                    const response = await useFetchApi<ApiResponse<ExamModel>, ExamModel>(
                         `${config.public.baseURL}/department/${id}`,
-                        Method.DELETE,
-                        data);
+                        Method.DELETE);
                     setToast('success', response.message);
                     refresh();
                 } catch (error: any) {

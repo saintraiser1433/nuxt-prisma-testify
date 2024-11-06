@@ -45,6 +45,8 @@ const data = ref<CourseModel>({
 const isUpdate = ref(false);
 const config = useRuntimeConfig();
 const { token } = useAuthentication()
+
+
 const {
   data: course,
   status,
@@ -55,27 +57,32 @@ const {
   headers: {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}`,
-  }
-});
+  },
+  lazy: true
+},
+
+);
 
 /* Course */
-const submitCourse = async (data: CourseModel) => {
+const submitCourse = async (data: CourseModel): Promise<void> => {
   try {
+
     if (!isUpdate.value) {
-      const response = await useFetchApi<ApiResponse<CourseModel>>(
+
+      const response = await useFetchApi<ApiResponse<CourseModel>, CourseModel>(
         `${config.public.baseURL}/course`,
         Method.POST,
         data);
       setToast("success", response.message);
     } else {
-      const response = await useFetchApi<ApiResponse<CourseModel>>(
+      const response = await useFetchApi<ApiResponse<CourseModel>, CourseModel>(
         `${config.public.baseURL}/course/${data.course_id}`,
         Method.PUT,
         data);
+
       setToast("success", response.message);
     }
-    refresh();
-    resetInstance();
+
   } catch (error: any) {
     setToast("error", error.data.error || "An error occurred");
   }
@@ -95,12 +102,12 @@ const removeCourse = (id: number) => {
   ).then(async (result) => {
     if (result.isConfirmed) {
       try {
-        const response = await useFetchApi<ApiResponse<CourseModel>>(
+        const response = await useFetchApi<ApiResponse<CourseModel>, CourseModel>(
           `${config.public.baseURL}/course/${id}`,
           Method.DELETE,
         );
         setToast("success", response.message);
-        refresh();
+        await refresh();
       } catch (error: any) {
         setToast("error", error.data.error || "An error occurred");
       }
