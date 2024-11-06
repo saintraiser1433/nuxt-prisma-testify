@@ -2,7 +2,7 @@
     <form @submit.prevent="submitExam">
         <div class="mb-2">
             <label class="text-sm" for="exam">Exam Title:</label>
-            <UIInput type="text" id="exam" v-model="formExam.exam_title"  required />
+            <UIInput type="text" id="exam" v-model="formExam.exam_title" required />
         </div>
         <div class="mb-2">
             <label class="text-sm" for="description">Exam Description:</label>
@@ -26,28 +26,30 @@
     </form>
 </template>
 
-<script setup>
-import { toRefs, ref, watch } from 'vue'
+<script setup lang="ts">
 
-const emits = defineEmits(['dataExam', 'reset'])
-const store = useStore();
+const emits = defineEmits<{
+    (e: 'dataExam', payload: ExamModel): void;
+    (e: 'reset'): void;
+}>();
 const props = defineProps({
     isUpdate: {
         type: Boolean,
         default: false
     },
     formData: {
-        type: Object
+        type: Object as PropType<ExamModel>,
+        required: true
     }
 })
 
 const { isUpdate, formData } = toRefs(props)
 
-const formExam = ref({
+const formExam = ref<ExamModel>({
     exam_title: '',
     description: '',
-    time_limit: null,
-    question_limit: null
+    time_limit: 0,
+    question_limit: 0
 })
 
 watch(

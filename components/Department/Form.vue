@@ -12,30 +12,35 @@
             <UIButton type="button" v-if="isUpdate" class="bg-danger mb-2" size="block" @click="reset">Reset</UIButton>
             <UIButton type="submit" class="bg-primary" size="block">{{
                 isUpdate ? 'Update' : 'Submit'
-                }}</UIButton>
+            }}</UIButton>
 
         </div>
     </form>
 </template>
 
-<script setup>
-import { toRefs, ref, watch } from 'vue'
+<script setup lang="ts">
 
-const emits = defineEmits(['dataDepartment', 'reset'])
+const emits = defineEmits<{
+    (e: 'dataDepartment', payload: DepartmentModel): void;
+    (e: 'reset'): void;
+}>();
+
 const props = defineProps({
     isUpdate: {
         type: Boolean,
         default: false
     },
     formData: {
-        type: Object
+        type: Object as PropType<DepartmentModel>,
+        required: true
+
     }
 })
 
 const { isUpdate, formData } = toRefs(props)
 
 // Reactive form object
-const formDepartment = ref({
+const formDepartment = ref<DepartmentModel>({
     department_name: '',
     status: true
 })

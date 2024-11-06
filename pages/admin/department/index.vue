@@ -15,7 +15,8 @@
         <div class="col-span-5 lg:col-span-4 ">
             <UICard title="List of Department's">
                 <template #default>
-                    <DepartmentList :departmentData="department" @update="editDepartment" @delete="removeDepartment">
+                    <DepartmentList :departmentData="department ?? []" @update="editDepartment"
+                        @delete="removeDepartment">
                     </DepartmentList>
                 </template>
             </UICard>
@@ -23,7 +24,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 definePageMeta({
     requiredRole: 'admin',
     // middleware: ['checkRole'],
@@ -38,11 +39,21 @@ useHead({
 });
 const { setToast } = useToast()
 const { setAlert } = useAlert()
-const data = ref({})
+const data = ref<DepartmentModel>({
+    department_id: 0,
+    department_name: '',
+    status: false,
+
+})
 const isUpdate = ref(false)
 const config = useRuntimeConfig();
-const { data: department, status, error, refresh } = await useFetch(`${config.public.baseURL}/department`, {
+const { token } = useAuthentication()
+const { data: department, status, error, refresh } = await useFetch<DepartmentModel[]>(`${config.public.baseURL}/department`, {
     method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+    }
     // transform: (_department) => {
     //     return _department.map((item) => {
     //         return {
@@ -56,37 +67,47 @@ const { data: department, status, error, refresh } = await useFetch(`${config.pu
 });
 
 /* Department */
-const submitDepartment = async (data) => {
+const submitDepartment = async (data: DepartmentModel) => {
     try {
         if (!isUpdate.value) {
-            const response = await createDepartment(data);
+            const response = await useFetchApi<ApiResponse<DepartmentModel>>(
+                `${config.public.baseURL}/department`,
+                Method.POST,
+                data);
             setToast('success', response.message)
         } else {
-            const response = await updateDepartment(data, data.department_id)
+            const response = await useFetchApi<ApiResponse<DepartmentModel>>(
+                `${config.public.baseURL}/department/${data.department_id}`,
+                Method.PUT,
+                data);
             setToast('success', response.message)
         }
         refresh();
         resetInstance();
-    } catch (error) {
+    } catch (error: any) {
+        console.error(error)
         setToast('error', error.data.error || 'An error occurred');
     }
 }
 
 
-const editDepartment = (response) => {
+const editDepartment = (response: DepartmentModel) => {
     data.value = response
     isUpdate.value = true
 }
 
-const removeDepartment = (id) => {
+const removeDepartment = (id: number) => {
     setAlert('warning', 'Are you sure you want to delete?', '', 'Confirm delete').then(
         async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await deleteDepartment(id);
+                    const response = await useFetchApi<ApiResponse<DepartmentModel>>(
+                        `${config.public.baseURL}/department/${id}`,
+                        Method.DELETE);
                     setToast('success', response.message);
                     refresh();
-                } catch (error) {
+                } catch (error: any) {
+                    console.error(error)
                     setToast('error', error.data.error || 'An error occurred');
                 }
             }
@@ -97,7 +118,11 @@ const removeDepartment = (id) => {
 
 const resetInstance = () => {
     isUpdate.value = false
-    data.value = {}
+    data.value = {
+        department_id: 0,
+        department_name: '',
+        status: true,
+    }
 }
 
 

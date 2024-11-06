@@ -29,7 +29,18 @@ export interface User {
     role?: Role
 }
 
-export type Role = 'admin' | 'examinee' | 'deans' | '';
+export type Role = 'admin' | 'examinee' | 'deans';
+
+export enum Method {
+    GET = "GET",
+    POST = "POST",
+    PUT = "PUT",
+    DELETE = "DELETE",
+    PATCH = "PATCH"
+}
+
+
+
 
 export interface DecodeJWT {
     id?: string,
@@ -46,11 +57,9 @@ export interface TokenStatus {
     status: string
 }
 
-
-
-
-export interface ApiResponse {
-    message: string;
+export interface ApiResponse<T> {
+    message: string,
+    data?: T,
 }
 
 // Examinee Model
@@ -69,7 +78,7 @@ export interface ExamineeModel extends Timestamped {
 export interface CourseModel extends Timestamped {
     course_id?: number;
     description: string;
-    score: string;
+    score: number;
     AssignDeans?: AssignDeansModel[]; // Optional relationship
 }
 
@@ -80,7 +89,7 @@ export interface ExamModel extends Timestamped {
     description: string;
     time_limit: number;
     question_limit: number;
-    status: boolean;
+    status?: boolean;
     Question?: QuestionModel[]; // Optional relationship
     Answers?: AnswersModel[]; // Optional relationship
     ExamAttempt?: ExamAttemptModel[]; // Optional relationship
@@ -130,7 +139,7 @@ export interface ExamAttemptModel extends Timestamped {
 export interface DepartmentModel extends Timestamped {
     department_id?: number;
     department_name: string;
-    status: boolean;
+    status?: boolean;
     Deans?: DeansModel; // Optional relationship
 }
 

@@ -5,9 +5,6 @@ export const useAuthentication = () => {
     const token = localStorage.getItem('token');
     const rToken = localStorage.getItem('refreshToken');
 
-    const store = storeUser();
-
-
     const signIn = async (data: User) => {
         const result = await $fetch<Token>(`${config.public.baseURL}/auth/signIn`, {
             method: "POST",
@@ -16,6 +13,7 @@ export const useAuthentication = () => {
                 password: data.password,
             },
         });
+        const store = storeUser();
         const decodedToken = jwtDecode<DecodeJWT>(result.token.accessToken);
         store.setUser(decodedToken);
         localStorage.setItem('token', result.token.accessToken);

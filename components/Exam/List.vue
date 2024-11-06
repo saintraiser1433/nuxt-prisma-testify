@@ -23,27 +23,31 @@
     </UITable>
 </template>
 
-<script setup>
+<script setup lang="ts">
+const emits = defineEmits<{
+    (e: 'update', payload: ExamModel): void
+    (e: 'delete', id: number): void
+}>();
 
-const emits = defineEmits({
-    update: Object,
-    delete: Object
-})
 const props = defineProps({
-    examData: Object
+    examData: {
+        type: Object as PropType<ExamModel[]>,
+        required: true
+    }
 })
-const { examData } = toRefs(props)
-const header = ref(['#', 'Exam Title', 'Description', 'Time Limit', 'Question Limit', 'Action'])
 
-const setSelect = async (id) => {
+const { examData } = toRefs(props)
+const header = ref<string[]>(['#', 'Exam Title', 'Description', 'Time Limit', 'Question Limit', 'Action'])
+
+const setSelect = async (id: number) => {
     await navigateTo(`exam/${id}`);
 }
 
-const handleUpdate = (val) => {
+const handleUpdate = (val: ExamModel) => {
     emits('update', val)
 }
-const handleDelete = (val) => {
-    emits('delete', val)
+const handleDelete = (id:number) => {
+    emits('delete', id)
 }
 
 

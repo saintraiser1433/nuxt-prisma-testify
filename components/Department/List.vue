@@ -20,27 +20,27 @@
     </UITable>
 </template>
 
-<script setup>
-import { computed, ref, toRefs } from 'vue'
+<script setup lang="ts">
 
 const props = defineProps({
     departmentData: {
-        type: Object,
+        type: Object as PropType<DepartmentModel[]>,
         required: true
     }
 })
-const emits = defineEmits({
-    update: Object,
-    delete: Object
-})
-const header = ref(['#', 'Department', 'Status', 'Action'])
+
+const emits = defineEmits<{
+    (e: 'update', payload: DepartmentModel): void
+    (e: 'delete', id: number): void
+}>();
+const header = ref<string[]>(['#', 'Department', 'Status', 'Action'])
 const { departmentData } = toRefs(props)
 
 
-const handleUpdate = (val) => {
+const handleUpdate = (val: DepartmentModel) => {
     emits('update', val)
 }
-const handleDelete = (val) => {
-    emits('delete', val)
+const handleDelete = (id: number) => {
+    emits('delete', id)
 }
 </script>

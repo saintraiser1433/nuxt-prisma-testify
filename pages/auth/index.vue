@@ -1,6 +1,4 @@
-import { Token } from "~/types/index";
 
-import { Token } from "~/types/index";
 
 <template>
   <div class="flex justify-center items-center max-w-sm lg:max-w-3xl mx-auto min-h-screen">
@@ -9,16 +7,17 @@ import { Token } from "~/types/index";
         <div class="grid grid-cols-2">
           <div class="col-span-2 lg:col-span-1 py-12 px-10">
             <h1 class="text-2xl font-semibold uppercase text-gray-600">
-              Login as Admin
+              Wellcome Back
             </h1>
+            <span class="text-xs">Please enter login details below</span>
             <div class="">
               <div class="mt-5">
                 <label for="username" class="text-gray-600 font-semibold">Username:</label>
-                <UIInput class="mt-1" type="text" id="username" v-model="username" required />
+                <UIInput class="mt-1 py-1" type="text" id="username" v-model="username" required />
               </div>
-              <div class="mt-5">
+              <div class="mt-3">
                 <label for="password" class="text-gray-600 font-semibold">Password:</label>
-                <UIInput class="mt-1 rounded-full" type="password" id="password" v-model="password" required />
+                <UIInput class="mt-1 rounded-full  py-1" type="password" id="password" v-model="password" required />
               </div>
               <div class="flex items-center gap-2 mt-5">
                 <UICheckBox id="view"></UICheckBox>

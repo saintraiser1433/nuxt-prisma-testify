@@ -16,23 +16,29 @@
     </UITable>
 </template>
 
-<script setup>
-import { ref, toRefs } from 'vue'
+<script setup lang="ts">
 
-const emits = defineEmits({
-    update: Object,
-    delete: Object
-})
+const emits = defineEmits<{
+    (e: 'update', payload: CourseModel): void;
+    (e: 'delete', id: number): void;
+}>();
 
 const props = defineProps({
-    courseData: Object
+    courseData: {
+        type: Array as PropType<CourseModel[]>,
+        required: true,
+        default: () => [],
+    }
 })
+
 const { courseData } = toRefs(props)
-const header = ref(['#', 'Course', 'Score Attained', 'Action'])
-const handleUpdate = (val) => {
+
+const header = ref<string[]>(['#', 'Course', 'Score Attained', 'Action'])
+
+const handleUpdate = (val: CourseModel) => {
     emits('update', val)
 }
-const handleDelete = (val) => {
+const handleDelete = (val: number) => {
     emits('delete', val)
 }
 
