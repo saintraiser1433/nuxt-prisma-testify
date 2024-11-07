@@ -2,7 +2,7 @@
   <UITable :data="deansData" :header="header">
     <template #row="{ item, index }">
       <td class="table__block">{{ index + 1 }}</td>
-      <td class="table__block">{{ fullname(item.first_name, item.last_name, item.middle_name) }}</td>
+      <td class="table__block">{{ item.fullname }}</td>
       <td class="table__block">{{ item.department.department_name }}</td>
       <td class="table__block">{{ item.username }}</td>
       <td class="table__block">
@@ -32,30 +32,36 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs } from 'vue'
-const header = ref(['#', 'Fullname', 'Department', 'Username', 'Status', 'Action'])
-const emits = defineEmits(['update', 'delete', 'assign'])
+const header = ref<string[]>(['#', 'Fullname', 'Department', 'Username', 'Status', 'Action'])
+// const emits = defineEmits(['update', 'delete', 'assign'])
+const emits = defineEmits<{
+  (e: 'update', payload: DeansModel): void,
+  (e: 'delete', id: number): void,
+  (e: 'assign', id: number): void,
+}>()
 const props = defineProps({
-  deansData: Object,
+  deansData: {
+    type: Array as PropType<DeansModel[]>,
+    required: true,
+    default: () => [],
+  },
+
 })
-
-
-
 
 const { deansData } = toRefs(props)
 
 
-const fullname = (firstName, lastName, middleName) => {
-  return computed(() => {
-    return `${lastName} ${firstName}  ${middleName ? ' ' + middleName[0] + '.' : ''}`;
-  });
-};
+// const fullname = (firstName, lastName, middleName) => {
+//   return computed(() => {
+//     return `${lastName} ${firstName}  ${middleName ? ' ' + middleName[0] + '.' : ''}`;
+//   });
+// };
 
-const assignDeans = (id) => {
+const assignDeans = (id: number) => {
   emits('assign', id)
 }
 
-const handleUpdate = (item) => {
+const handleUpdate = (item: DeansModel) => {
   emits('update', item)
 }
 </script>

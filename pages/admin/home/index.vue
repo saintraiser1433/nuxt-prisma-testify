@@ -5,7 +5,7 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts">
 definePageMeta({
     requiredRole: 'admin',
     // middleware: ['checkRole'],

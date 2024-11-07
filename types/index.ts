@@ -5,6 +5,11 @@ interface Timestamped {
     updatedAt?: Date;
 }
 
+export interface DeansInfoData {
+    deans: DeansModel[];
+    department: DepartmentModel[];
+}
+
 export interface Token {
     token: TokenDetail,
     user: User
@@ -151,6 +156,7 @@ export interface DeansModel extends Timestamped {
     first_name?: string;
     last_name?: string;
     middle_name?: string;
+    fullname?: string;
     username?: string;
     password?: string;
     status?: boolean
