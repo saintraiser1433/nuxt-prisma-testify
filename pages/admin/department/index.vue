@@ -40,30 +40,31 @@ useHead({
 const { setToast } = useToast()
 const { setAlert } = useAlert()
 const data = ref<DepartmentModel>({
-    department_id: 0,
     department_name: '',
     status: false,
 
 })
+
 const isUpdate = ref(false)
-const config = useRuntimeConfig();
+const shouldRefetch = ref(0)
+const nuxtApp = useNuxtApp()
+const config = useRuntimeConfig()
 const { token } = useAuthentication()
 const { data: department, status, error, refresh } = await useFetch<DepartmentModel[]>(`${config.public.baseURL}/department`, {
     method: 'GET',
     headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
+    },
+    watch: [shouldRefetch],
+    getCachedData(key) {
+        const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+        //if first time load it will load the data
+        if (!data) {
+            return
+        }
+        return data;
     }
-    // transform: (_department) => {
-    //     return _department.map((item) => {
-    //         return {
-    //             department_id: item.department_id,
-    //             department_name: item.department_name,
-    //             status: item.status
-    //         }
-    //     })
-    // },
-    // lazy: true
 });
 
 /* Department */
@@ -82,7 +83,7 @@ const submitDepartment = async (data: DepartmentModel) => {
                 data);
             setToast('success', response.message)
         }
-        refresh();
+        shouldRefetch.value++;
         resetInstance();
     } catch (error: any) {
         console.error(error)
@@ -105,7 +106,7 @@ const removeDepartment = (id: number) => {
                         `${config.public.baseURL}/department/${id}`,
                         Method.DELETE);
                     setToast('success', response.message);
-                    refresh();
+                    shouldRefetch.value++;
                 } catch (error: any) {
                     console.error(error)
                     setToast('error', error.data.error || 'An error occurred');
@@ -119,7 +120,6 @@ const removeDepartment = (id: number) => {
 const resetInstance = () => {
     isUpdate.value = false
     data.value = {
-        department_id: 0,
         department_name: '',
         status: true,
     }

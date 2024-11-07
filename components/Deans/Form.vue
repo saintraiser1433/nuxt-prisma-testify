@@ -30,35 +30,38 @@
   </form>
 </template>
 
-<script setup>
-const emits = defineEmits(['dataDeans', 'reset'])
+<script setup lang="ts">
+const emits = defineEmits<{
+  (e: 'dataDeans', payload: DeansModel): void;
+  (e: 'reset'): void;
+}>();
+
 const props = defineProps({
   isUpdate: {
     type: Boolean,
     default: false
   },
   formData: {
-    type: Object
+    type: Object as PropType<DeansModel>,
+    required: true,
   },
   departmentData: {
-    type: Object
+    type: Array as PropType<DepartmentModel[]>,
+    required: true,
   }
 })
 
 const { isUpdate, formData, departmentData } = toRefs(props)
 const { $id } = useNuxtApp();
 
-const formDeans = ref({
+const formDeans = ref<DeansModel>({
   first_name: '',
   middle_name: '',
-  last_name: '',
-  department_id: null,
-  status: true
+  last_name: ''
 })
 
 const departmentList = computed(() => {
-  return departmentData.value
-    .map((i) => {
+  return departmentData.value.map((i) => {
       return {
         id: i.department_id,
         value: i.department_name
@@ -67,7 +70,7 @@ const departmentList = computed(() => {
 })
 
 const submitDeans = () => {
-  let data
+  let data:DeansModel
   if (!isUpdate.value) {
     data = {
       ...formDeans.value,

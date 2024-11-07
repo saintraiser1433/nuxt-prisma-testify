@@ -29,6 +29,8 @@ export interface User {
     role?: Role
 }
 
+
+
 export type Role = 'admin' | 'examinee' | 'deans';
 
 export enum Method {
@@ -65,11 +67,11 @@ export interface ApiResponse<T> {
 // Examinee Model
 export interface ExamineeModel extends Timestamped {
     examinee_id?: number;
-    first_name: string;
-    last_name: string;
-    middle_name: string;
-    username: string;
-    password: string;
+    first_name?: string;
+    last_name?: string;
+    middle_name?: string;
+    username?: string;
+    password?: string;
     Answers?: AnswersModel[]; // Optional relationship
     ExamAttempt?: ExamAttemptModel[]; // Optional relationship
 }
@@ -85,10 +87,10 @@ export interface CourseModel extends Timestamped {
 // Exam Model
 export interface ExamModel extends Timestamped {
     exam_id?: number;
-    exam_title: string;
-    description: string;
-    time_limit: number;
-    question_limit: number;
+    exam_title?: string;
+    description?: string;
+    time_limit?: number;
+    question_limit?: number;
     status?: boolean;
     Question?: QuestionModel[]; // Optional relationship
     Answers?: AnswersModel[]; // Optional relationship
@@ -98,7 +100,7 @@ export interface ExamModel extends Timestamped {
 // Question Model
 export interface QuestionModel extends Timestamped {
     question_id?: number;
-    question: string;
+    question?: string;
     exam_id?: number;
     Exam?: ExamModel[]; // Optional relationship
     Choices?: ChoicesModel[]; // Optional relationship
@@ -108,10 +110,10 @@ export interface QuestionModel extends Timestamped {
 // Choices Model
 export interface ChoicesModel extends Timestamped {
     choices_id?: number;
-    question_id: number;
+    question_id?: number;
     questionList?: QuestionModel; // Optional relationship
-    description: string;
-    status: boolean;
+    description?: string;
+    status?: boolean;
     Answers?: AnswersModel[]; // Optional relationship
 }
 
@@ -146,12 +148,13 @@ export interface DepartmentModel extends Timestamped {
 // Deans Model
 export interface DeansModel extends Timestamped {
     deans_id?: number;
-    first_name: string;
-    last_name: string;
-    middle_name: string;
-    username: string;
-    password: string;
-    department_id: number; // Unique
+    first_name?: string;
+    last_name?: string;
+    middle_name?: string;
+    username?: string;
+    password?: string;
+    status?: boolean
+    department_id?: number; // Unique
     department?: DepartmentModel; // Optional relationship
     AssignDeans?: AssignDeansModel[]; // Optional relationship
 }

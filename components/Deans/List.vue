@@ -31,7 +31,7 @@
   </UITable>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, toRefs } from 'vue'
 const header = ref(['#', 'Fullname', 'Department', 'Username', 'Status', 'Action'])
 const emits = defineEmits(['update', 'delete', 'assign'])

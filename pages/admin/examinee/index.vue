@@ -14,7 +14,7 @@
     <div class="col-span-5 lg:col-span-3 xl:col-span-4">
       <UICard title="List of Examinee's">
         <template #default>
-          <ExamineeList :examineeData="examinee" @update="editExaminee" @delete="removeExaminee"></ExamineeList>
+          <ExamineeList :examineeData="examinee ?? []" @update="editExaminee" @delete="removeExaminee"></ExamineeList>
         </template>
       </UICard>
     </div>
@@ -25,7 +25,7 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 definePageMeta({
   requiredRole: 'admin',
@@ -47,41 +47,58 @@ const { setAlert } = useAlert()
 const data = ref({})
 const isUpdate = ref(false)
 const config = useRuntimeConfig()
-const { data: examinee, status, error, refresh } = await useFetch(`${config.public.baseURL}/examinee`, {
+const shouldRefetch = ref(0);
+const nuxtApp = useNuxtApp()
+const { data: examinee, status, error, refresh } = await useFetch<ExamineeModel[]>(`${config.public.baseURL}/examinee`, {
   method: 'GET',
   transform: (_examinee) => {
     return _examinee.map((examinee) => {
-      const fullname = examinee.first_name + ' ' + examinee.last_name + ' ' + examinee.middle_name[0] + '.';
+      const fullname = examinee.first_name + ' ' + examinee.last_name + ' ' + (examinee.middle_name ? ' ' + examinee.middle_name[0] + '.' : '');
       return {
         ...examinee,
         fullname
       }
     })
   },
+  watch: [shouldRefetch],
+  getCachedData(key) {
+    const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+    //if first time load it will load the data
+    if (!data) {
+      return
+    }
+    return data;
+  }
   // lazy: true
 });
 
 
 
 /* Examinee */
-const submitExaminee = async (data) => {
+const submitExaminee = async (data: ExamineeModel) => {
   try {
     if (!isUpdate.value) {
-      const response = await createExaminee(data);
+      const response = await useFetchApi<ApiResponse<ExamineeModel>, ExamineeModel>(
+        `${config.public.baseURL}/examinee`,
+        Method.POST,
+        data);
       setToast('success', response.message)
     } else {
-      const response = await updateExaminee(data, data.examinee_id)
+      const response = await useFetchApi<ApiResponse<ExamineeModel>, ExamineeModel>(
+        `${config.public.baseURL}/examinee/${data.examinee_id}`,
+        Method.PUT,
+        data);
       setToast('success', response.message)
     }
-    refresh();
+    shouldRefetch.value++;
     resetInstance();
-  } catch (error) {
+  } catch (error: any) {
     setToast('error', error.data.error || 'An error occurred');
   }
 }
 
 
-const editExaminee = (response) => {
+const editExaminee = (response: ExamineeModel) => {
   data.value = {
     examinee_id: response.examinee_id,
     first_name: response.first_name,
@@ -92,15 +109,17 @@ const editExaminee = (response) => {
   isUpdate.value = true
 }
 
-const removeExaminee = (id) => {
+const removeExaminee = (id: number) => {
   setAlert('warning', 'Are you sure you want to delete?', '', 'Confirm delete').then(
     async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await deleteExaminee(id);
+          const response = await useFetchApi<ApiResponse<ExamModel>, ExamModel>(
+            `${config.public.baseURL}/exam/${id}`,
+            Method.DELETE);
           setToast('success', response.message);
-          refresh();
-        } catch (error) {
+          shouldRefetch.value++;
+        } catch (error: any) {
           setToast('error', error.data.error || 'An error occurred');
         }
       }

@@ -45,23 +45,28 @@ const data = ref<CourseModel>({
 const isUpdate = ref(false);
 const config = useRuntimeConfig();
 const { token } = useAuthentication()
-
-
+const shouldRefetch = ref(0);
+const nuxtApp = useNuxtApp();
 const {
   data: course,
   status,
   error,
-  refresh,
 } = await useFetch<CourseModel[]>(`${config.public.baseURL}/course`, {
   method: "GET",
   headers: {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}`,
   },
-  lazy: true
-},
-
-);
+  watch: [shouldRefetch],
+  getCachedData(key) {
+    const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+    //if first time load it will load the data
+    if (!data) {
+      return
+    }
+    return data;
+  }
+});
 
 /* Course */
 const submitCourse = async (data: CourseModel): Promise<void> => {
@@ -82,8 +87,10 @@ const submitCourse = async (data: CourseModel): Promise<void> => {
 
       setToast("success", response.message);
     }
-
+    shouldRefetch.value++;
+    resetInstance();
   } catch (error: any) {
+    console.log(error);
     setToast("error", error.data.error || "An error occurred");
   }
 };
@@ -107,7 +114,7 @@ const removeCourse = (id: number) => {
           Method.DELETE,
         );
         setToast("success", response.message);
-        await refresh();
+        shouldRefetch.value++;
       } catch (error: any) {
         setToast("error", error.data.error || "An error occurred");
       }

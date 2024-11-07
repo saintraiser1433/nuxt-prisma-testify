@@ -25,24 +25,31 @@
     </UITable>
 </template>
 
-<script setup>
+<script setup lang="ts">
+
+
 const { convertToLetter } = useConvertLetter();
-const emits = defineEmits({
-    update: Object,
-    delete: Object
-})
+const emits = defineEmits<{
+    (e: 'update', payload: QuestionModel): void;
+    (e: 'delete', id: number): void;
+}>();
+
 const props = defineProps({
-    questionData: Object
+    questionData: {
+        type: Array as PropType<QuestionModel[]>,
+        required: true,
+        default: () => [],
+    }
 })
 
 const { questionData } = toRefs(props)
 
-const header = ref(['#', 'Questions', 'Action'])
-const handleUpdate = (val) => {
+const header = ref<string[]>(['#', 'Questions', 'Action'])
+const handleUpdate = (val: QuestionModel) => {
     emits('update', val)
 }
-const handleDelete = (val) => {
-    emits('delete', val)
+const handleDelete = (id: number) => {
+    emits('delete', id)
 }
 
 </script>

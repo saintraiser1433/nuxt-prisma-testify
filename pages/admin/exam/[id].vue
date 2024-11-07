@@ -9,7 +9,7 @@
         </div>
         <div class="col-span-12 lg:col-span-8">
             <UICard title="Question List">
-                <QuestionList :questionData="question" @update="edit" @delete="remove"></QuestionList>
+                <QuestionList :questionData="question ?? []" @update="edit" @delete="remove"></QuestionList>
             </UICard>
         </div>
 
@@ -17,7 +17,7 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts">
 definePageMeta({
     requiredRole: 'admin',
     // middleware: ['checkExam'],
@@ -25,51 +25,76 @@ definePageMeta({
 
 const { setToast } = useToast()
 const { setAlert } = useAlert()
-const route = useRoute().params;
-const data = ref({})
-const isUpdate = ref(false)
 const config = useRuntimeConfig();
-const { data: question, status, error, refresh } = await useFetch(`${config.public.baseURL}/question/${route.id}`, {
+const route = useRoute().params;
+const data = ref<QuestionModel>({})
+const isUpdate = ref(false)
+const nuxtApp = useNuxtApp()
+console.log(nuxtApp)
+const { token } = useAuthentication()
+
+const shouldRefetch = ref(0);
+const { data: question, status, error, refresh } = await useFetch<QuestionModel[]>(`${config.public.baseURL}/question/${route.id}`, {
     method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+    },
+    watch: [shouldRefetch],
+    getCachedData(key) {
+        const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+        //if first time load it will load the data
+        if (!data) {
+            return
+        }
+        return data;
+    }
 });
 
 
 
 /* Question */
-const submitQuestion = async (data) => {
+const submitQuestion = async (data: QuestionModel): Promise<void> => {
     try {
 
         if (!isUpdate.value) {
-            const response = await createQuestion(data);
+            const response = await useFetchApi<ApiResponse<QuestionModel>, QuestionModel>(
+                `${config.public.baseURL}/question`,
+                Method.POST,
+                data);
             setToast('success', response.message)
         } else {
-            console.log(data);
-            const response = await updateQuestion(data, data.question_id)
+            const response = await useFetchApi<ApiResponse<QuestionModel>, QuestionModel>(
+                `${config.public.baseURL}/question/${data.question_id}`,
+                Method.PUT,
+                data);
             setToast('success', response.message)
         }
-        refresh();
+        shouldRefetch.value++;
         resetInstance();
-    } catch (error) {
+    } catch (error: any) {
         setToast('error', error.data.error || 'An error occurred');
     }
 }
 
 
-const edit = (response) => {
+const edit = (response: QuestionModel) => {
     data.value = response
-    console.log(response)
     isUpdate.value = true
 }
 
-const remove = (id) => {
+const remove = (id: number) => {
     setAlert('warning', 'Are you sure you want to delete?', '', 'Confirm delete').then(
         async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await deleteQuestion(id);
+                    const response = await useFetchApi<ApiResponse<QuestionModel>, QuestionModel>(
+                        `${config.public.baseURL}/question/${id}`,
+                        Method.DELETE,
+                    );
                     setToast('success', response.message);
-                    refresh();
-                } catch (error) {
+                    shouldRefetch.value++;
+                } catch (error: any) {
                     setToast('error', error.data.error || 'An error occurred');
                 }
             }

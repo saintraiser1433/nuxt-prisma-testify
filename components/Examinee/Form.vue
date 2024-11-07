@@ -25,29 +25,34 @@
     </form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
-const emits = defineEmits(['dataExaminee', 'reset'])
+const emits = defineEmits<{
+    (e: 'dataExaminee', payload: ExamineeModel): void;
+    (e: 'reset'): void;
+}>()
+
 const props = defineProps({
     isUpdate: {
         type: Boolean,
         default: false
     },
     formData: {
-        type: Object
+        type: Object as PropType<ExamineeModel>,
+        required: true,
     }
 })
 
 const { isUpdate, formData } = toRefs(props)
 const { $id } = useNuxtApp();
-const formExaminee = ref({
+const formExaminee = ref<ExamineeModel>({
     first_name: '',
     middle_name: '',
     last_name: ''
 })
 
 const submitExaminee = () => {
-    let data
+    let data: ExamineeModel
     if (!isUpdate.value) {
         data = {
             ...formExaminee.value,
@@ -70,7 +75,7 @@ const reset = () => {
 watch(
     formData,
     (newData) => {
-        if (newData && JSON.stringify(formExaminee.value) !== JSON.stringify(newData)) {
+        if (newData) {
             formExaminee.value = { ...newData }
         }
     },

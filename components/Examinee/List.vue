@@ -16,25 +16,30 @@
     </UITable>
 </template>
 
-<script setup>
+<script setup lang="ts">
+const emits = defineEmits<{
+    (e: 'update', payload: ExamineeModel): void;
+    (e: 'delete', id: number): void;
+}>();
 
-const emits = defineEmits({
-    update: Object,
-    delete: Object
-})
+
 const props = defineProps({
-    examineeData: Object
+    examineeData: {
+        type: Array as PropType<ExamineeModel[]>,
+        required: true,
+        default: () => [],
+    }
 })
 
 const { examineeData } = toRefs(props)
 
-const header = ref(['#', 'Fullname', 'Username', 'Action'])
+const header = ref<string[]>(['#', 'Fullname', 'Username', 'Action'])
 
 
-const handleUpdate = (val) => {
+const handleUpdate = (val: ExamineeModel) => {
     emits('update', val)
 }
-const handleDelete = (val) => {
-    emits('delete', val)
+const handleDelete = (id: number) => {
+    emits('delete', id)
 }
 </script>

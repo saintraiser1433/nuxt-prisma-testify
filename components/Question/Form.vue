@@ -44,24 +44,28 @@
     </form>
 </template>
 
-<script setup>
+<script setup lang="ts">
+
 const { convertToLetter } = useConvertLetter()
-// const store = useStore();
-const emits = defineEmits(['dataQuestChoice', 'reset'])
+const emits = defineEmits<{
+    (e: 'dataQuestChoice', payload: QuestionModel): void;
+    (e: 'reset'): void;
+}>()
 const props = defineProps({
     isUpdate: {
         type: Boolean,
         default: false
     },
     formData: {
-        type: Object
+        type: Object as PropType<QuestionModel>,
+        required: true
     }
 })
 
 const route = useRoute();
-const choicesList = ref([])
-const question = ref('')
-const questionId = ref(null)
+const choicesList = ref<ChoicesModel[]>([])
+const question = ref<string | undefined>('')
+const questionId = ref(0)
 const { isUpdate, formData } = toRefs(props)
 
 // const examTitle = computed(() => route.meta.examTitle)
@@ -70,19 +74,19 @@ const addChoices = () => {
     choicesList.value.push({ description: '', status: false })
 }
 
-const removeChoices = async (index) => {
+const removeChoices = async (index: number) => {
     if (index !== -1) {
         choicesList.value.splice(index, 1)
     }
 }
 
 const submitQuestionChoices = () => {
-    let data
+    let data: QuestionModel
     if (!isUpdate.value) {
         data = {
             question: question.value,
-            exam_id: route.params.id,
-            choices: choicesList.value.map((choice) => {
+            exam_id: Number(route.params.id),
+            Choices: choicesList.value.map((choice: ChoicesModel) => {
                 return {
                     description: choice.description,
                     status: choice.status
@@ -93,7 +97,7 @@ const submitQuestionChoices = () => {
         data = {
             question: question.value,
             question_id: questionId.value,
-            choices: choicesList.value.map((choice) => {
+            Choices: choicesList.value.map((choice) => {
                 return {
                     choices_id: choice.choices_id,
                     description: choice.description,
@@ -111,13 +115,13 @@ watch(
     formData,
     (newData) => {
         if (newData) {
-            const choicesData = (newData.Choices || []).map((item) => ({
+            const choicesData: ChoicesModel[] = (newData.Choices || []).map((item) => ({
                 choices_id: item.choices_id,
                 description: item.description,
                 status: item.status
             }))
             question.value = newData.question
-            questionId.value = newData.question_id
+            questionId.value = newData.question_id || 0
             choicesList.value = choicesData
         }
     },
@@ -127,7 +131,7 @@ watch(
 const reset = () => {
     question.value = ''
     choicesList.value = []
-    questionId.value = null
+    questionId.value = 0
     emits('reset')
 }
 </script>

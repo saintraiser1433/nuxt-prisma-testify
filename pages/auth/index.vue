@@ -7,7 +7,7 @@
         <div class="grid grid-cols-2">
           <div class="col-span-2 lg:col-span-1 py-12 px-10">
             <h1 class="text-2xl font-semibold uppercase text-gray-600">
-              Wellcome Back
+              Welcome Back
             </h1>
             <span class="text-xs">Please enter login details below</span>
             <div class="">

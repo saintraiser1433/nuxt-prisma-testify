@@ -1,6 +1,6 @@
 export const storeUser = defineStore("user", {
     state: () => ({
-        user: [] as User | null,
+        user: [] as User,
     }),
     getters: {
         getUser: (state) => state.user,

@@ -40,45 +40,47 @@ useHead({
 
 const { setToast } = useToast()
 const { setAlert } = useAlert()
-const data = ref<ExamModel>(
-    {
-        exam_id: 0,
-        exam_title: '',
-        description: '',
-        time_limit: 0,
-        question_limit: 0,
-        status: false,
-    }
-)
+const data = ref<ExamModel>({})
 const isUpdate = ref(false)
 const config = useRuntimeConfig()
 const { token } = useAuthentication()
-
+const shouldRefetch = ref(0);
+const nuxtApp = useNuxtApp()
 const { data: exam, status, error, refresh } = await useFetch<ExamModel[]>(`${config.public.baseURL}/exam`, {
     method: 'GET',
     headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
+    },
+    watch: [shouldRefetch],
+    getCachedData(key) {
+        const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+        //if first time load it will load the data
+        if (!data) {
+            return
+        }
+        return data;
     }
 });
 /* Exam */
 
 const submitExam = async (data: ExamModel) => {
     try {
+
         if (!isUpdate.value) {
             const response = await useFetchApi<ApiResponse<ExamModel>, ExamModel>(
-                `${config.public.baseURL}/department`,
+                `${config.public.baseURL}/exam`,
                 Method.POST,
                 data);
             setToast('success', response.message)
         } else {
             const response = await useFetchApi<ApiResponse<ExamModel>, ExamModel>(
-                `${config.public.baseURL}/department/${data.exam_id}`,
+                `${config.public.baseURL}/exam/${data.exam_id}`,
                 Method.PUT,
                 data);
             setToast('success', response.message)
         }
-        refresh();
+        shouldRefetch.value++;
         resetInstance();
     } catch (error: any) {
         console.error(error);
@@ -98,10 +100,10 @@ const removeExam = (id: number) => {
             if (result.isConfirmed) {
                 try {
                     const response = await useFetchApi<ApiResponse<ExamModel>, ExamModel>(
-                        `${config.public.baseURL}/department/${id}`,
+                        `${config.public.baseURL}/exam/${id}`,
                         Method.DELETE);
                     setToast('success', response.message);
-                    refresh();
+                    shouldRefetch.value++;
                 } catch (error: any) {
                     console.error(error);
                     setToast('error', error.data.error || 'An error occurred');
@@ -114,14 +116,7 @@ const removeExam = (id: number) => {
 
 const resetInstance = () => {
     isUpdate.value = false
-    data.value = {
-        exam_id: 0,
-        exam_title: '',
-        description: '',
-        time_limit: 0,
-        question_limit: 0,
-        status: false,
-    }
+    data.value = {}
 }
 
 
