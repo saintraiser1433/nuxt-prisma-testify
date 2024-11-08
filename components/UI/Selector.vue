@@ -7,9 +7,9 @@
     </select>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const emits = defineEmits(['update:modelValue'])
-const props = defineProps({
+defineProps({
     data: {
         type: Object,
         required: true
@@ -18,7 +18,8 @@ const props = defineProps({
     modelValue: [String, Number]
 })
 
-const updateModel = (event) => {
-    emits('update:modelValue', event.target.value)
+const updateModel = (event: Event) => {
+    const target = event.target as HTMLInputElement
+    emits('update:modelValue', target.value)
 }
 </script>

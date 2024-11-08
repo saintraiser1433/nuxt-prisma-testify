@@ -37,7 +37,7 @@ const { data: question, status, error, refresh } = await useFetch<QuestionModel[
     method: 'GET',
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${token.value}`,
     },
     watch: [shouldRefetch],
     getCachedData(key) {

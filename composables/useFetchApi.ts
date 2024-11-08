@@ -1,17 +1,29 @@
-import type { Method } from "~/types";
+import type { UseFetchOptions } from "#app";
+import type { ApiResponse, Method } from "~/types";
+import type { FetchError } from 'ofetch'
 
-const token = () => localStorage.getItem('token');
 export const useFetchApi = async <T, B = undefined>(url: string, method?: Method, body?: B): Promise<T> => {
+    const { token } = useAuthentication();
     const requestBody = body ? JSON.stringify(body) : undefined
-    const tokes = token();
+
     return await $fetch<T>(url, {
         method,
         body: requestBody,
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${tokes}`
+            'Authorization': `Bearer ${token.value}`
         },
 
     })
 
+}
+
+export const useAPI = <T>(
+    url: string | (() => string),
+    options?: UseFetchOptions<T>,
+) => {
+    return useFetch<T, FetchError<ApiResponse<T>>>(url, {
+        ...options,
+        $fetch: useNuxtApp().$api
+    })
 }

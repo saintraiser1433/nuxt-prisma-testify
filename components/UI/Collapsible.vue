@@ -18,16 +18,16 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, toRefs, computed } from "vue";
 import { useRoute } from "vue-router";
 
-const props = defineProps({
+defineProps({
     title: String,
     children: Object
 })
 const route = useRoute();
-const { data } = toRefs(props);
+
 
 
 

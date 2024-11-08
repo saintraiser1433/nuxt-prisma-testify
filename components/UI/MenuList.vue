@@ -8,16 +8,13 @@
 </template>
 
 <script setup>
-import { toRefs, computed } from 'vue';
+
 const isOpen = computed(() => store.getters.getToggleState);
-
-
-
-const props = defineProps({
+defineProps({
     link: String,
     title: String
 });
 
-const { name, title } = toRefs(props);
+
 
 </script>

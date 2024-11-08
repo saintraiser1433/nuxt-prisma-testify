@@ -16,8 +16,8 @@
     </div>
 </template>
 
-<script setup>
-const props = defineProps({
+<script setup lang="ts">
+defineProps({
     title: {
         type: String,
         default: ''

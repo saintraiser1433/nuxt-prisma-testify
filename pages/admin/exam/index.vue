@@ -50,7 +50,7 @@ const { data: exam, status, error, refresh } = await useFetch<ExamModel[]>(`${co
     method: 'GET',
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${token.value}`,
     },
     watch: [shouldRefetch],
     getCachedData(key) {

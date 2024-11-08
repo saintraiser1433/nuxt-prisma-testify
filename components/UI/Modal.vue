@@ -24,7 +24,7 @@
     </teleport>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const emits = defineEmits(['close'])
 defineProps({
     open: Boolean,

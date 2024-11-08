@@ -1,7 +1,7 @@
 <template>
     <loading-overlay :active="isLoading" :is-full-page="true" :loader="loader" :backgroundColor="bgOverlayColor" />
 </template>
-<script setup>
+<script setup lang="ts">
 import { toRefs } from 'vue'
 const props = defineProps({
     isLoading: {

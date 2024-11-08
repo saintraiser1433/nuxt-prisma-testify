@@ -52,6 +52,10 @@ const nuxtApp = useNuxtApp()
 const { token } = useAuthentication()
 const { data: examinee, status, error, refresh } = await useFetch<ExamineeModel[]>(`${config.public.baseURL}/examinee`, {
   method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token.value}`,
+  },
   transform: (_examinee) => {
     return _examinee.map((examinee) => {
       const fullname = examinee.first_name + ' ' + examinee.last_name + ' ' + (examinee.middle_name ? ' ' + examinee.middle_name[0] + '.' : '');

@@ -11,7 +11,7 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 // Get the current route
 const route = useRoute()

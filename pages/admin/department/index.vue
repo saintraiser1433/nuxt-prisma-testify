@@ -54,7 +54,7 @@ const { data: department, status, error, refresh } = await useFetch<DepartmentMo
     method: 'GET',
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${token.value}`,
     },
     watch: [shouldRefetch],
     getCachedData(key) {

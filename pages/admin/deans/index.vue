@@ -89,7 +89,7 @@ const { token } = useAuthentication()
 const { data: deans, error, refresh } = await useFetch<DeansModel[]>(`${config.public.baseURL}/deans`, {
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${token.value}`,
     },
     transform: (input) => {
         return input.map((item) => ({
@@ -111,7 +111,7 @@ const { data: deans, error, refresh } = await useFetch<DeansModel[]>(`${config.p
 const { data: department } = await useFetch<DepartmentModel[]>(`${config.public.baseURL}/department`, {
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${token.value}`,
     },
     getCachedData(key) {
         const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
