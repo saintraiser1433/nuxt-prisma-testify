@@ -2,24 +2,35 @@
     <form @submit.prevent="submitCourse">
         <div class="py-5">
             <label class="text-sm" for="course">Course:</label>
-            <UISelector id="course" class="text-base" v-model.number="courseId" :data="courseData"></UISelector>
+            <UISelector id="course" class="text-base" v-model="courseId" :data="courseData"></UISelector>
         </div>
         <div class="border-t dark:border-colorBorder pt-2">
             <UIButton type="submit" variant="primary" size="sm">Submit</UIButton>
         </div>
+
     </form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 const props = defineProps({
-    deansId: Number,
-    courseList: Object
+    deansId: {
+        type: Number,
+        required: true
+    },
+    courseList: {
+        type: Array as PropType<CourseModel[]>,
+        required: true
+
+    }
 })
 const { deansId, courseList } = toRefs(props)
 
-const emits = defineEmits(['dataAssign', 'reset'])
-const courseId = ref(null);
+const emits = defineEmits<{
+    (e: 'dataAssign', payload: AssignDeansModel): void,
+    (e: 'reset'): void,
+}>()
+const courseId = ref<number | string>('');
 
 
 const courseData = computed(() => {
@@ -33,10 +44,10 @@ const courseData = computed(() => {
 const submitCourse = () => {
     const data = {
         deans_id: deansId.value,
-        course_id: courseId.value
+        course_id: Number(courseId.value)
     }
-    emits('dataAssign', { ...data })
-    courseId.value = null
+    emits('dataAssign', data)
+    courseId.value = 0
 }
 
 

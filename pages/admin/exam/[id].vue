@@ -2,14 +2,14 @@
     <div class="grid grid-cols-12 gap-2">
         <div class="col-span-12 lg:col-span-4">
             <UICard title="Question Information">
-                <QuestionForm @dataQuestChoice="submitQuestion" :formData="data" :isUpdate="isUpdate"
+                <QuestionForm @data-quest-choice="submitQuestion" :form-data="data" :is-update="isUpdate"
                     @reset="resetInstance">
                 </QuestionForm>
             </UICard>
         </div>
         <div class="col-span-12 lg:col-span-8">
             <UICard title="Question List">
-                <QuestionList :questionData="question ?? []" @update="edit" @delete="remove"></QuestionList>
+                <QuestionList :question-data="question ?? []" @update="edit" @delete="remove"></QuestionList>
             </UICard>
         </div>
 
@@ -30,7 +30,6 @@ const route = useRoute().params;
 const data = ref<QuestionModel>({})
 const isUpdate = ref(false)
 const nuxtApp = useNuxtApp()
-console.log(nuxtApp)
 const { token } = useAuthentication()
 
 const shouldRefetch = ref(0);

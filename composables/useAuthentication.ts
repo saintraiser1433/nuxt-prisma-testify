@@ -2,9 +2,9 @@ import type { DecodeJWT, refreshTokenModel } from "~/types";
 import { jwtDecode } from 'jwt-decode';
 export const useAuthentication = () => {
     const config = useRuntimeConfig()
+
     const token = localStorage.getItem('token');
     const rToken = localStorage.getItem('refreshToken');
-
     const signIn = async (data: User) => {
         const result = await $fetch<Token>(`${config.public.baseURL}/auth/signIn`, {
             method: "POST",
@@ -18,9 +18,9 @@ export const useAuthentication = () => {
         store.setUser(decodedToken);
         localStorage.setItem('token', result.token.accessToken);
         localStorage.setItem('refreshToken', result.token.refreshToken);
-        return;
 
     }
+
 
 
     const signOut = async (id: string | undefined) => {
@@ -44,9 +44,6 @@ export const useAuthentication = () => {
         })
         localStorage.setItem('token', result.accessToken)
     }
-
-
-
 
 
 

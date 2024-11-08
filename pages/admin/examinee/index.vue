@@ -5,7 +5,7 @@
     <div class="col-span-5 lg:col-span-2 xl:col-span-1">
       <UICard title="Examinee Information">
         <template #default>
-          <ExamineeForm :isUpdate="isUpdate" :formData="data" @dataExaminee="submitExaminee" @reset="resetInstance">
+          <ExamineeForm :is-update="isUpdate" :form-data="data" @data-examinee="submitExaminee" @reset="resetInstance">
           </ExamineeForm>
         </template>
       </UICard>
@@ -14,7 +14,7 @@
     <div class="col-span-5 lg:col-span-3 xl:col-span-4">
       <UICard title="List of Examinee's">
         <template #default>
-          <ExamineeList :examineeData="examinee ?? []" @update="editExaminee" @delete="removeExaminee"></ExamineeList>
+          <ExamineeList :examinee-data="examinee ?? []" @update="editExaminee" @delete="removeExaminee"></ExamineeList>
         </template>
       </UICard>
     </div>
@@ -49,6 +49,7 @@ const isUpdate = ref(false)
 const config = useRuntimeConfig()
 const shouldRefetch = ref(0);
 const nuxtApp = useNuxtApp()
+const { token } = useAuthentication()
 const { data: examinee, status, error, refresh } = await useFetch<ExamineeModel[]>(`${config.public.baseURL}/examinee`, {
   method: 'GET',
   transform: (_examinee) => {

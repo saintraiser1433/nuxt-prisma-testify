@@ -5,7 +5,7 @@
         <div class="col-span-5 lg:col-span-1 ">
             <UICard title="Department Information">
                 <template #default>
-                    <DepartmentForm :isUpdate="isUpdate" :formData="data" @dataDepartment="submitDepartment"
+                    <DepartmentForm :is-update="isUpdate" :form-data="data" @data-department="submitDepartment"
                         @reset="resetInstance">
                     </DepartmentForm>
                 </template>
@@ -15,7 +15,7 @@
         <div class="col-span-5 lg:col-span-4 ">
             <UICard title="List of Department's">
                 <template #default>
-                    <DepartmentList :departmentData="department ?? []" @update="editDepartment"
+                    <DepartmentList :department-data="department ?? []" @update="editDepartment"
                         @delete="removeDepartment">
                     </DepartmentList>
                 </template>

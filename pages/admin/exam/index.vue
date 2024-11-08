@@ -5,7 +5,7 @@
         <div class="col-span-5 lg:col-span-1 ">
             <UICard title="Exam Information">
                 <template #default>
-                    <ExamForm :isUpdate="isUpdate" :formData="data" @dataExam="submitExam" @reset="resetInstance">
+                    <ExamForm :is-update="isUpdate" :form-data="data" @data-exam="submitExam" @reset="resetInstance">
                     </ExamForm>
                 </template>
             </UICard>
@@ -14,7 +14,7 @@
         <div class="col-span-5 lg:col-span-4 ">
             <UICard title="List of Exam's">
                 <template #default>
-                    <ExamList :examData="exam ?? []" @update="editExam" @delete="removeExam">
+                    <ExamList :exam-data="exam ?? []" @update="editExam" @delete="removeExam">
                     </ExamList>
                 </template>
             </UICard>

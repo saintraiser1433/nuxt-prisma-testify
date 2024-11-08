@@ -28,7 +28,7 @@
 const store = useStore();
 const user = storeUser();
 const { refreshToken, signOut } = useAuthentication();
-const { idle } = useIdle(5 * 10 * 1000);
+const { idle } = useIdle(50 * 10 * 1000);
 
 watch(idle, async (newValue: boolean) => {
   if (newValue) {

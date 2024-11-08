@@ -10,6 +10,11 @@ export interface DeansInfoData {
     department: DepartmentModel[];
 }
 
+export interface AssignDeansInfoData {
+    assignCourses: AssignDeansModel[];
+    filteredCourses: CourseModel[];
+}
+
 export interface Token {
     token: TokenDetail,
     user: User

@@ -48,10 +48,12 @@ export default defineNuxtPlugin((event) => {
       const isExpired = decodedToken.exp !== undefined && (decodedToken.exp * 1000 < currentTime);
       if (isExpired) {
         store.setUser({});
+        signOut(store.getUser?.id)
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
         return navigateTo({ name: 'auth' });
       }
+      console.log(token);
       store.setUser(decodedToken);
       if (decodedToken.role === 'admin' && to.meta.requiredRole !== 'admin') {
         return navigateTo({ name: 'admin-home' });

@@ -5,7 +5,7 @@
     <div class="col-span-5 lg:col-span-2 xl:col-span-1">
       <UICard title="Course Information">
         <template #default>
-          <CourseForm :isUpdate="isUpdate" :formData="data" @dataCourse="submitCourse" @reset="resetInstance">
+          <CourseForm :is-update="isUpdate" :form-data="data" @data-course="submitCourse" @reset="resetInstance">
           </CourseForm>
         </template>
       </UICard>
@@ -13,7 +13,7 @@
     <div class="col-span-5 lg:col-span-3 xl:col-span-4">
       <UICard title="List of Course's">
         <template #default>
-          <CourseList :courseData="course ?? []" @update="editCourse" @delete="removeCourse">
+          <CourseList :course-data="course ?? []" @update="editCourse" @delete="removeCourse">
           </CourseList>
         </template>
       </UICard>
@@ -38,15 +38,16 @@ useHead({
 });
 const { setToast } = useToast();
 const { setAlert } = useAlert();
-const data = ref<CourseModel>({
-  description: '',
-  score: 0,
-});
+
 const isUpdate = ref(false);
 const config = useRuntimeConfig();
 const { token } = useAuthentication()
 const shouldRefetch = ref(0);
 const nuxtApp = useNuxtApp();
+const data = ref<CourseModel>({
+  description: '',
+  score: 0,
+});
 const {
   data: course,
   status,
