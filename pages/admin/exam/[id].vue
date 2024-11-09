@@ -19,7 +19,7 @@
                         <h1 class="text-2xl lg:text-lg">Question List</h1>
                     </UICardHeader>
                 </template>
-                <QuestionList :question-data="question ?? []" @update="edit" @delete="remove"/>
+                <QuestionList :question-data="question ?? []" @update="edit" @delete="remove" />
             </UICard>
         </div>
 
@@ -30,7 +30,7 @@
 <script setup lang="ts">
 definePageMeta({
     requiredRole: 'admin',
-    // middleware: ['checkExam'],
+
 })
 
 const { setToast } = useToast()

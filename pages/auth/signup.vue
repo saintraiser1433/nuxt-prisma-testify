@@ -44,6 +44,7 @@
 <script setup>
 definePageMeta({
     layout: 'empty',
+    
     // middleware: ['checkRole'],
 })
 

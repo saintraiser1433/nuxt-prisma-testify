@@ -3,9 +3,9 @@ import ViteComponents from "unplugin-vue-components/vite";
 import IconsResolver from "unplugin-icons/resolver";
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
-  routeRules: {
-    '/': { redirect: '/auth' },
-  },
+  // routeRules: {
+  //   '/': { redirect: '/auth' },
+  // },
   app: {
     head: {
       title: "Testify",

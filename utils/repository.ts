@@ -92,7 +92,12 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
 
     //end
 
-    //department
+    //exam
+    async getExamId(id:number): Promise<ExamModel> {
+        return fetch<ExamModel>(`/exam/${id}`)
+    },
+
+
     async addExam(body: ExamModel): Promise<T> {
         return fetch<T>('/exam', {
             method: 'POST',
@@ -139,15 +144,15 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
     //end
 
     //examinee
-    async addExaminee(body: QuestionModel): Promise<T> {
+    async addExaminee(body: ExamineeModel): Promise<T> {
         return fetch<T>('/examinee', {
             method: 'POST',
             body: body
         })
     },
 
-    async updateExaminee(body: QuestionModel): Promise<T> {
-        return fetch<T>(`/examinee/${body.exam_id}`, {
+    async updateExaminee(body: ExamineeModel): Promise<T> {
+        return fetch<T>(`/examinee/${body.examinee_id}`, {
             method: 'PUT',
             body: body
         })
@@ -161,95 +166,6 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
 
     //end
 
-
-
-    // async addCourse(body: CourseModel): Promise<T> {
-    //     return fetch<T>('/course', {
-    //         method: 'POST',
-    //         body: body
-    //     })
-    // },
-
-    // async updateCourse(body: CourseModel): Promise<T> {
-    //     return fetch<T>(`/course/${body.course_id}`, {
-    //         method: 'PUT',
-    //         body: body
-    //     })
-    // },
-
-    // async deleteCourse(id:number): Promise<T> {
-    //     return fetch<T>(`/course/${id}`, {
-    //         method: 'DELETE',
-    //     })
-    // },
-
-    // //end
-
-    // async addCourse(body: CourseModel): Promise<T> {
-    //     return fetch<T>('/course', {
-    //         method: 'POST',
-    //         body: body
-    //     })
-    // },
-
-    // async updateCourse(body: CourseModel): Promise<T> {
-    //     return fetch<T>(`/course/${body.course_id}`, {
-    //         method: 'PUT',
-    //         body: body
-    //     })
-    // },
-
-    // async deleteCourse(id:number): Promise<T> {
-    //     return fetch<T>(`/course/${id}`, {
-    //         method: 'DELETE',
-    //     })
-    // },
-
-    // //end
-
-    // async addCourse(body: CourseModel): Promise<T> {
-    //     return fetch<T>('/course', {
-    //         method: 'POST',
-    //         body: body
-    //     })
-    // },
-
-    // async updateCourse(body: CourseModel): Promise<T> {
-    //     return fetch<T>(`/course/${body.course_id}`, {
-    //         method: 'PUT',
-    //         body: body
-    //     })
-    // },
-
-    // async deleteCourse(id:number): Promise<T> {
-    //     return fetch<T>(`/course/${id}`, {
-    //         method: 'DELETE',
-    //     })
-    // },
-
-    // //end
-
-
-    // async addCourse(body: CourseModel): Promise<T> {
-    //     return fetch<T>('/course', {
-    //         method: 'POST',
-    //         body: body
-    //     })
-    // },
-
-    // async updateCourse(body: CourseModel): Promise<T> {
-    //     return fetch<T>(`/course/${body.course_id}`, {
-    //         method: 'PUT',
-    //         body: body
-    //     })
-    // },
-
-    // async deleteCourse(id:number): Promise<T> {
-    //     return fetch<T>(`/course/${id}`, {
-    //         method: 'DELETE',
-    //     })
-    // }
-    //end
 
 
 })
