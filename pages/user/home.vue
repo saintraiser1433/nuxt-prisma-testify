@@ -1,14 +1,21 @@
+<template>
+    <div>
+        <div class="grid grid-cols-12">
+            <div class="col-span-6">
+                <UICard>
+                    
+                </UICard>
+            </div>
+            <div class="col-span-6">
+
+            </div>
+        </div>
+    </div>
+</template>
+
 <script setup>
 definePageMeta({
     requiredRole: 'examinee',
-    // middleware: ['checkRole']
+    layout: 'user'
 })
-// const { status, getSession } = useAuth();
 </script>
-
-<template>
-    <div>
-        User
-        <!-- {{ status }} -->
-    </div>
-</template>

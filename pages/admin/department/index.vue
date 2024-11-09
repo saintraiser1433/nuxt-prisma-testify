@@ -3,21 +3,31 @@
 
     <div class="grid grid-cols-5 gap-5">
         <div class="col-span-5 lg:col-span-1 ">
-            <UICard title="Department Information">
-                <template #default>
-                    <DepartmentForm :is-update="isUpdate" :form-data="data" @data-department="submitDepartment"
-                        @reset="resetInstance">
-                    </DepartmentForm>
+            <UICard>
+                <template #header>
+                    <UICardHeader>
+                        <div class="">
+                            <h1 class="text-2xl lg:text-lg">Department Information</h1>
+                        </div>
+                    </UICardHeader>
                 </template>
+                <DepartmentForm :is-update="isUpdate" :form-data="data" @data-department="submitDepartment"
+                    @reset="resetInstance" />
             </UICard>
 
         </div>
         <div class="col-span-5 lg:col-span-4 ">
-            <UICard title="List of Department's">
+            <UICard>
+                <template #header>
+                    <UICardHeader>
+                        <div class="">
+                            <h1 class="text-2xl lg:text-lg">List of Department's</h1>
+                        </div>
+                    </UICardHeader>
+                </template>
                 <template #default>
                     <DepartmentList :department-data="department ?? []" @update="editDepartment"
-                        @delete="removeDepartment">
-                    </DepartmentList>
+                        @delete="removeDepartment"/>
                 </template>
             </UICard>
         </div>
@@ -44,45 +54,33 @@ const data = ref<DepartmentModel>({
     status: false,
 
 })
-
 const isUpdate = ref(false)
 const shouldRefetch = ref(0)
 const nuxtApp = useNuxtApp()
-const config = useRuntimeConfig()
-const { token } = useAuthentication()
-const { data: department, status, error, refresh } = await useFetch<DepartmentModel[]>(`${config.public.baseURL}/department`, {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token.value}`,
-    },
+const departmentRepo = repository<ApiResponse<DepartmentModel>>(nuxtApp.$api)
+
+
+const { data: department } = await useAPI<DepartmentModel[]>('/department', {
     watch: [shouldRefetch],
     getCachedData(key) {
         const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
-        //if first time load it will load the data
         if (!data) {
             return
         }
         return data;
     }
-});
+})
 
 /* Department */
 const submitDepartment = async (data: DepartmentModel) => {
     try {
+        let response;
         if (!isUpdate.value) {
-            const response = await useFetchApi<ApiResponse<DepartmentModel>, DepartmentModel>(
-                `${config.public.baseURL}/department`,
-                Method.POST,
-                data);
-            setToast('success', response.message)
+            response = await departmentRepo.addDepartment(data);
         } else {
-            const response = await useFetchApi<ApiResponse<DepartmentModel>, DepartmentModel>(
-                `${config.public.baseURL}/department/${data.department_id}`,
-                Method.PUT,
-                data);
-            setToast('success', response.message)
+            response = await departmentRepo.updateDepartment(data);
         }
+        setToast('success', response.message)
         shouldRefetch.value++;
         resetInstance();
     } catch (error: any) {
@@ -102,9 +100,7 @@ const removeDepartment = (id: number) => {
         async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await useFetchApi<ApiResponse<DepartmentModel>, DepartmentModel>(
-                        `${config.public.baseURL}/department/${id}`,
-                        Method.DELETE);
+                    const response = await departmentRepo.removeDepartment(id);
                     setToast('success', response.message);
                     shouldRefetch.value++;
                 } catch (error: any) {

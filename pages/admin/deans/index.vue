@@ -6,6 +6,7 @@
                 <div class="grid grid-cols-12 gap-5">
                     <div class="col-span-12 lg:col-span-4">
                         <UICard>
+
                             <template #default>
                                 <DeansAssignForm :course-list="assign?.filteredCourses ?? []" :deans-id="deansId"
                                     @reset="resetInstance" @data-assign="submitAssignCourse" />
@@ -29,20 +30,32 @@
 
         <div class="grid grid-cols-5 gap-5">
             <div class="col-span-5 lg:col-span-1">
-                <UICard title="Deans Information">
+                <UICard>
+                    <template #header>
+                        <UICardHeader>
+                            <div class="">
+                                <h1 class="text-2xl lg:text-lg">Deans Information</h1>
+                            </div>
+                        </UICardHeader>
+                    </template>
                     <template #default>
-
                         <DeansForm :isUpdate="isUpdate" :form-data="data" :department-data="department ?? []"
-                            @dataDeans="submitDeans" @reset="resetInstance"></DeansForm>
+                            @dataDeans="submitDeans" @reset="resetInstance"/>
                     </template>
 
                 </UICard>
             </div>
             <div class="col-span-5 lg:col-span-4">
-                <UICard title="List of Dean's">
+                <UICard>
+                    <template #header>
+                        <UICardHeader>
+                            <div class="">
+                                <h1 class="text-2xl lg:text-lg">List of Dean's</h1>
+                            </div>
+                        </UICardHeader>
+                    </template>
                     <template #default>
-                        <DeansList :deansData="deans ?? []" @assign="assignDeans" @update="editDeans">
-                        </DeansList>
+                        <DeansList :deansData="deans ?? []" @assign="assignDeans" @update="editDeans"/>
 
                     </template>
                 </UICard>
@@ -55,10 +68,6 @@
 </template>
 
 <script setup lang="ts">
-import { Method, type AssignDeansInfoData, type AssignDeansModel, type CourseModel, type DeansInfoData, type DeansModel } from '~/types';
-
-
-
 definePageMeta({
     requiredRole: 'admin',
     // middleware: ['checkRole'],
@@ -81,16 +90,12 @@ const isOpen = ref(false)
 const deansId = ref<number>(0)
 const shouldRefetch = ref(0);
 const shouldAssign = ref(0);
-const config = useRuntimeConfig();
 const nuxtApp = useNuxtApp();
-const { token } = useAuthentication()
+const repo = repository(nuxtApp.$api)
+const deansRepo = repository<ApiResponse<DeansModel>>(nuxtApp.$api)
+const assignDeansRepo = repository<ApiResponse<AssignDeansModel>>(nuxtApp.$api)
 //top level fetch for deans
-
-const { data: deans, error, refresh } = await useFetch<DeansModel[]>(`${config.public.baseURL}/deans`, {
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token.value}`,
-    },
+const { data: deans, status, error } = await useAPI<DeansModel[]>('/deans', {
     transform: (input) => {
         return input.map((item) => ({
             ...item,
@@ -99,84 +104,31 @@ const { data: deans, error, refresh } = await useFetch<DeansModel[]>(`${config.p
     },
     getCachedData(key) {
         const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
-        //if first time load it will load the data
         if (!data) {
             return
         }
         return data;
     },
     watch: [shouldRefetch],
-});
-
-const { data: department } = await useFetch<DepartmentModel[]>(`${config.public.baseURL}/department`, {
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token.value}`,
-    },
-    getCachedData(key) {
-        const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
-        if (!data) {
-            return
-        }
-        return data;
-    },
-});
-
-
-//top level fetch for assigning deans
-const { data: assign } = await useAsyncData<AssignDeansInfoData>('assign', async () => {
-    const [assignCourses, filteredCourses] = await Promise.all([
-        //     $fetch<AssignDeansModel[]>(`${config.public.baseURL}/deans/assign/${deansId.value}`, {
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             'Authorization': `Bearer ${token}`,
-        //         }
-        //     }),
-        //     $fetch<CourseModel[]>(`${config.public.baseURL}/course/filtered`, {
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             'Authorization': `Bearer ${token}`,
-        //         }
-        //     })
-        useFetchApi<AssignDeansModel[]>(
-            `${config.public.baseURL}/deans/assign/${deansId.value}`,
-        ),
-        useFetchApi<CourseModel[]>(
-            `${config.public.baseURL}/course/filtered`,
-        )
-    ])
-    return { assignCourses, filteredCourses }
-}, {
-    immediate: false,
-    watch: [shouldAssign]
 })
-
-//end
 
 /* Deans */
 const submitDeans = async (data: DeansModel) => {
     try {
+        let response;
         if (!isUpdate.value) {
-            const response = await useFetchApi<ApiResponse<DeansModel>, DeansModel>(
-                `${config.public.baseURL}/deans`,
-                Method.POST,
-                data
-            );
-            setToast('success', response.message)
+            response = await deansRepo.addDeans(data);
         } else {
-            const response = await useFetchApi<ApiResponse<DeansModel>, DeansModel>(
-                `${config.public.baseURL}/deans/${data.deans_id}`,
-                Method.PUT,
-                data
-            );
-            setToast('success', response.message)
+            response = await deansRepo.updateDeans(data);
         }
+        setToast('success', response.message)
         shouldRefetch.value++;
         resetInstance();
     } catch (error: any) {
         setToast('error', error?.data?.error || 'An error occurred');
     }
 }
+
 
 const editDeans = (response: DeansModel) => {
     data.value = {
@@ -191,6 +143,18 @@ const editDeans = (response: DeansModel) => {
 }
 //end
 
+//top level fetch for assigning deans
+const { data: assign } = await useAsyncData<AssignDeansInfoData>('assign', async () => {
+    const [assignCourses, filteredCourses] = await Promise.all([
+        repo.getAssignDeans(deansId.value),
+        repo.getCourseFiltered()
+    ])
+    return { assignCourses, filteredCourses }
+}, {
+    immediate: false,
+    watch: [shouldAssign]
+})
+
 //Assigning deans
 const assignDeans = async (id: number) => {
     deansId.value = id;
@@ -200,13 +164,8 @@ const assignDeans = async (id: number) => {
 };
 
 const submitAssignCourse = async (data: AssignDeansModel) => {
-
     try {
-        const response = await useFetchApi<ApiResponse<AssignDeansModel>, AssignDeansModel>(
-            `${config.public.baseURL}/deans/assign`,
-            Method.POST,
-            data
-        );
+        const response = await assignDeansRepo.addAssignCourse(data);
         shouldAssign.value++;
         setToast('success', response.message);
     } catch (error: any) {
@@ -222,10 +181,8 @@ const removeDeansCourse = (deansId: number, courseId: number) => {
         async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await useFetchApi<ApiResponse<AssignDeansModel>, AssignDeansModel>(
-                        `${config.public.baseURL}/deans/assign/${deansId}/${courseId}`,
-                        Method.DELETE
-                    );
+
+                    const response = await assignDeansRepo.removeAssignCourse(deansId, courseId);
                     shouldAssign.value++;
                     setToast('success', response.message);
                 } catch (error: any) {
@@ -235,6 +192,17 @@ const removeDeansCourse = (deansId: number, courseId: number) => {
         }
     )
 }
+
+//department
+const { data: department } = await useAPI<DepartmentModel[]>('/department', {
+    getCachedData(key) {
+        const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+        if (!data) {
+            return
+        }
+        return data;
+    },
+})
 
 //end
 

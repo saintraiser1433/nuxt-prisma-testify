@@ -3,16 +3,23 @@
 
   <div class="grid grid-cols-5 gap-5">
     <div class="col-span-5 lg:col-span-2 xl:col-span-1">
-      <UICard title="Examinee Information">
-        <template #default>
-          <ExamineeForm :is-update="isUpdate" :form-data="data" @data-examinee="submitExaminee" @reset="resetInstance">
-          </ExamineeForm>
+      <UICard>
+        <template #header>
+          <UICardHeader>
+            <h1 class="text-2xl lg:text-lg">Examinee Information</h1>
+          </UICardHeader>
         </template>
+        <ExamineeForm :is-update="isUpdate" :form-data="data" @data-examinee="submitExaminee" @reset="resetInstance" />
       </UICard>
 
     </div>
     <div class="col-span-5 lg:col-span-3 xl:col-span-4">
-      <UICard title="List of Examinee's">
+      <UICard>
+        <template #header>
+          <UICardHeader>
+            <h1 class="text-2xl lg:text-lg">List of Examinee's</h1>
+          </UICardHeader>
+        </template>
         <template #default>
           <ExamineeList :examinee-data="examinee ?? []" @update="editExaminee" @delete="removeExaminee"></ExamineeList>
         </template>
@@ -46,16 +53,12 @@ const { setToast } = useToast()
 const { setAlert } = useAlert()
 const data = ref({})
 const isUpdate = ref(false)
-const config = useRuntimeConfig()
 const shouldRefetch = ref(0);
 const nuxtApp = useNuxtApp()
-const { token } = useAuthentication()
-const { data: examinee, status, error, refresh } = await useFetch<ExamineeModel[]>(`${config.public.baseURL}/examinee`, {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token.value}`,
-  },
+const examineeRepo = repository<ApiResponse<ExamineeModel>>(nuxtApp.$api)
+
+
+const { data: examinee } = await useAPI<ExamineeModel[]>('/examinee', {
   transform: (_examinee) => {
     return _examinee.map((examinee) => {
       const fullname = examinee.first_name + ' ' + examinee.last_name + ' ' + (examinee.middle_name ? ' ' + examinee.middle_name[0] + '.' : '');
@@ -68,33 +71,25 @@ const { data: examinee, status, error, refresh } = await useFetch<ExamineeModel[
   watch: [shouldRefetch],
   getCachedData(key) {
     const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
-    //if first time load it will load the data
     if (!data) {
       return
     }
     return data;
   }
-  // lazy: true
-});
+})
 
 
 
 /* Examinee */
 const submitExaminee = async (data: ExamineeModel) => {
   try {
+    let response;
     if (!isUpdate.value) {
-      const response = await useFetchApi<ApiResponse<ExamineeModel>, ExamineeModel>(
-        `${config.public.baseURL}/examinee`,
-        Method.POST,
-        data);
-      setToast('success', response.message)
+      response = await examineeRepo.addExaminee(data)
     } else {
-      const response = await useFetchApi<ApiResponse<ExamineeModel>, ExamineeModel>(
-        `${config.public.baseURL}/examinee/${data.examinee_id}`,
-        Method.PUT,
-        data);
-      setToast('success', response.message)
+      response = await examineeRepo.updateExaminee(data)
     }
+    setToast('success', response.message)
     shouldRefetch.value++;
     resetInstance();
   } catch (error: any) {
@@ -119,9 +114,7 @@ const removeExaminee = (id: number) => {
     async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await useFetchApi<ApiResponse<ExamModel>, ExamModel>(
-            `${config.public.baseURL}/exam/${id}`,
-            Method.DELETE);
+          const response = await examineeRepo.removeExaminee(id);
           setToast('success', response.message);
           shouldRefetch.value++;
         } catch (error: any) {

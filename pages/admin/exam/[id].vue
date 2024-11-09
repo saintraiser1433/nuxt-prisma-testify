@@ -2,14 +2,24 @@
     <div class="grid grid-cols-12 gap-2">
         <div class="col-span-12 lg:col-span-4">
             <UICard title="Question Information">
+                <template #header>
+                    <UICardHeader>
+                        <h1 class="text-2xl lg:text-lg">Question Information</h1>
+                    </UICardHeader>
+                </template>
                 <QuestionForm @data-quest-choice="submitQuestion" :form-data="data" :is-update="isUpdate"
-                    @reset="resetInstance">
-                </QuestionForm>
+                    @reset="resetInstance" />
+
             </UICard>
         </div>
         <div class="col-span-12 lg:col-span-8">
             <UICard title="Question List">
-                <QuestionList :question-data="question ?? []" @update="edit" @delete="remove"></QuestionList>
+                <template #header>
+                    <UICardHeader>
+                        <h1 class="text-2xl lg:text-lg">Question List</h1>
+                    </UICardHeader>
+                </template>
+                <QuestionList :question-data="question ?? []" @update="edit" @delete="remove"/>
             </UICard>
         </div>
 
@@ -25,50 +35,36 @@ definePageMeta({
 
 const { setToast } = useToast()
 const { setAlert } = useAlert()
-const config = useRuntimeConfig();
 const route = useRoute().params;
 const data = ref<QuestionModel>({})
 const isUpdate = ref(false)
 const nuxtApp = useNuxtApp()
-const { token } = useAuthentication()
-
+const questionRepo = repository<ApiResponse<QuestionModel>>(nuxtApp.$api)
 const shouldRefetch = ref(0);
-const { data: question, status, error, refresh } = await useFetch<QuestionModel[]>(`${config.public.baseURL}/question/${route.id}`, {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token.value}`,
-    },
+
+const { data: question, status, error } = await useAPI<QuestionModel[]>(`/question/${route.id}`, {
     watch: [shouldRefetch],
     getCachedData(key) {
         const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
-        //if first time load it will load the data
         if (!data) {
             return
         }
         return data;
     }
-});
+})
 
 
 
 /* Question */
 const submitQuestion = async (data: QuestionModel): Promise<void> => {
     try {
-
+        let response;
         if (!isUpdate.value) {
-            const response = await useFetchApi<ApiResponse<QuestionModel>, QuestionModel>(
-                `${config.public.baseURL}/question`,
-                Method.POST,
-                data);
-            setToast('success', response.message)
+            response = await questionRepo.addQuestion(data);
         } else {
-            const response = await useFetchApi<ApiResponse<QuestionModel>, QuestionModel>(
-                `${config.public.baseURL}/question/${data.question_id}`,
-                Method.PUT,
-                data);
-            setToast('success', response.message)
+            response = await questionRepo.updateQuestion(data);
         }
+        setToast('success', response.message)
         shouldRefetch.value++;
         resetInstance();
     } catch (error: any) {
@@ -87,10 +83,7 @@ const remove = (id: number) => {
         async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await useFetchApi<ApiResponse<QuestionModel>, QuestionModel>(
-                        `${config.public.baseURL}/question/${id}`,
-                        Method.DELETE,
-                    );
+                    const response = await questionRepo.removeQuestion(id);
                     setToast('success', response.message);
                     shouldRefetch.value++;
                 } catch (error: any) {
