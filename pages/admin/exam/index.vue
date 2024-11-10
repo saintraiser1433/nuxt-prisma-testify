@@ -3,7 +3,7 @@
 
     <div class="grid grid-cols-5 gap-5">
         <div class="col-span-5 lg:col-span-1 ">
-            <UICard>
+            <UICard class="py-2 px-4">
                 <template #header>
                     <UICardHeader>
                         <h1 class="text-2xl lg:text-lg">Exam Information</h1>
@@ -14,7 +14,7 @@
 
         </div>
         <div class="col-span-5 lg:col-span-4 ">
-            <UICard>
+            <UICard class="py-2 px-4">
                 <template #header>
                     <UICardHeader>
                         <h1 class="text-2xl lg:text-lg">List of Exam's</h1>

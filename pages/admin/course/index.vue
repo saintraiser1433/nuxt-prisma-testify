@@ -3,7 +3,7 @@
 
   <div class="grid grid-cols-5 gap-5">
     <div class="col-span-5 lg:col-span-2 xl:col-span-1">
-      <UICard>
+      <UICard class="py-2 px-4">
         <template #header>
           <UICardHeader>
             <div class="">
@@ -12,12 +12,12 @@
           </UICardHeader>
         </template>
         <template #default>
-          <CourseForm :is-update="isUpdate" :form-data="data" @data-course="submitCourse" @reset="resetInstance"/>
+          <CourseForm :is-update="isUpdate" :form-data="data" @data-course="submitCourse" @reset="resetInstance" />
         </template>
       </UICard>
     </div>
     <div class="col-span-5 lg:col-span-3 xl:col-span-4">
-      <UICard>
+      <UICard class="py-2 px-4">
         <template #header>
           <UICardHeader>
             <div class="">
@@ -26,7 +26,7 @@
           </UICardHeader>
         </template>
         <template #default>
-          <CourseList :course-data="course ?? []" @update="editCourse" @delete="removeCourse"/>
+          <CourseList :course-data="course ?? []" @update="editCourse" @delete="removeCourse" />
         </template>
       </UICard>
     </div>

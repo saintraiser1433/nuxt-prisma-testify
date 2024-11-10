@@ -1,9 +1,7 @@
 <template>
-    <div class="w-full rounded-lg shadow-lg bg-white dark:bg-cardColor py-2 px-4">
+    <div class="w-full rounded-lg shadow-lg bg-white dark:bg-cardColor">
         <slot name="header"></slot>
-        <div>
-            <slot></slot>
-        </div>
+        <slot></slot>
     </div>
 </template>
 

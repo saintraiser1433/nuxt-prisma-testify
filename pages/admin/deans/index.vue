@@ -5,7 +5,7 @@
             <template #default>
                 <div class="grid grid-cols-12 gap-5">
                     <div class="col-span-12 lg:col-span-4">
-                        <UICard>
+                        <UICard class="py-2 px-4">
 
                             <template #default>
                                 <DeansAssignForm :course-list="assign?.filteredCourses ?? []" :deans-id="deansId"
@@ -15,7 +15,7 @@
 
                     </div>
                     <div class="col-span-12 lg:col-span-8">
-                        <UICard>
+                        <UICard class="py-2 px-4">
                             <template #default>
                                 <DeansAssignList :assign-data="assign?.assignCourses ?? []"
                                     @delete="removeDeansCourse" />
@@ -30,7 +30,7 @@
 
         <div class="grid grid-cols-5 gap-5">
             <div class="col-span-5 lg:col-span-1">
-                <UICard>
+                <UICard class="py-2 px-4">
                     <template #header>
                         <UICardHeader>
                             <div class="">
@@ -40,13 +40,13 @@
                     </template>
                     <template #default>
                         <DeansForm :isUpdate="isUpdate" :form-data="data" :department-data="department ?? []"
-                            @dataDeans="submitDeans" @reset="resetInstance"/>
+                            @dataDeans="submitDeans" @reset="resetInstance" />
                     </template>
 
                 </UICard>
             </div>
             <div class="col-span-5 lg:col-span-4">
-                <UICard>
+                <UICard class="py-2 px-4">
                     <template #header>
                         <UICardHeader>
                             <div class="">
@@ -55,7 +55,7 @@
                         </UICardHeader>
                     </template>
                     <template #default>
-                        <DeansList :deansData="deans ?? []" @assign="assignDeans" @update="editDeans"/>
+                        <DeansList :deansData="deans ?? []" @assign="assignDeans" @update="editDeans" />
 
                     </template>
                 </UICard>

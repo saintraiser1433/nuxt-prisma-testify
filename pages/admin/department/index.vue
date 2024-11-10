@@ -3,7 +3,7 @@
 
     <div class="grid grid-cols-5 gap-5">
         <div class="col-span-5 lg:col-span-1 ">
-            <UICard>
+            <UICard class="py-2 px-4">
                 <template #header>
                     <UICardHeader>
                         <div class="">
@@ -17,7 +17,7 @@
 
         </div>
         <div class="col-span-5 lg:col-span-4 ">
-            <UICard>
+            <UICard class="py-2 px-4">
                 <template #header>
                     <UICardHeader>
                         <div class="">

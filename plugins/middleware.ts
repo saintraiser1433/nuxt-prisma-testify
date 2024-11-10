@@ -49,10 +49,10 @@ export default defineNuxtPlugin((event) => {
           decodedToken.exp !== undefined &&
           decodedToken.exp * 1000 < currentTime;
         if (isExpired) {
-          store.setUser({});
           signOut(store.getUser?.id);
           localStorage.removeItem("token");
           localStorage.removeItem("refreshToken");
+          store.setUser({});
           return navigateTo({ name: "auth" });
         }
         store.setUser(decodedToken);

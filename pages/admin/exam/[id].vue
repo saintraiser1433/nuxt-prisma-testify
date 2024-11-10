@@ -1,7 +1,7 @@
 <template>
     <div class="grid grid-cols-12 gap-2">
         <div class="col-span-12 lg:col-span-4">
-            <UICard title="Question Information">
+            <UICard class="py-2 px-4">
                 <template #header>
                     <UICardHeader>
                         <h1 class="text-2xl lg:text-lg">Question Information</h1>
@@ -13,7 +13,7 @@
             </UICard>
         </div>
         <div class="col-span-12 lg:col-span-8">
-            <UICard title="Question List">
+            <UICard class="py-2 px-4">
                 <template #header>
                     <UICardHeader>
                         <h1 class="text-2xl lg:text-lg">Question List</h1>
