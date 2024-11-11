@@ -62,7 +62,7 @@ export default defineNuxtPlugin((event) => {
           decodedToken.role === "examinee" &&
           to.meta.requiredRole !== "examinee"
         ) {
-          return navigateTo({ name: "user-home" });
+          return navigateTo({ name: "user" });
         } else if (
           decodedToken.role === "deans" &&
           to.meta.requiredRole !== "deans"

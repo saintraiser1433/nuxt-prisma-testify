@@ -42,8 +42,12 @@
                     <template #default>
                         <div class="p-3">
                             <div class="flex items-center gap-2">
-                                <p>Legends:</p>
-                                <ul class="flex text-sm items-center gap-5">
+                                <div class="self-start">
+                                    <p>Legends:</p>
+                                </div>
+                                
+
+                                <ul class="flex text-sm items-center gap-5 flex-row flex-wrap">
                                     <li>
                                         <UIBadge variant="danger">
                                             POOR 50 Below %
@@ -67,7 +71,7 @@
                                 </ul>
 
                             </div>
-                            <UserList :exam-data="exam ?? []" />
+                            <UserHomeStatiscalList :exam-data="exam ?? []" />
 
 
 
@@ -81,43 +85,13 @@
                 <UICard class="overflow-hidden">
                     <template #header>
                         <div class="bg-[url('@/assets/images/bgheaders.png')] w-full h-20 bg-cover flex items-center px-3">
-                            <h2 class="text-2xl font-semibold text-white">MY STATISCAL DASHBOARD</h2>
+                            <h2 class="text-2xl font-semibold text-white">MY RECOMMENDED COURSES</h2>
                         </div>
                     </template>
                     <template #default>
                         <div class="p-3">
-                            <div class="flex items-center gap-2">
-                                <p>Legends:</p>
-                                <ul class="flex text-sm items-center gap-5">
-                                    <li>
-                                        <UIBadge variant="danger">
-                                            POOR 50 Below %
-                                        </UIBadge>
-                                    </li>
-                                    <li>
-                                        <UIBadge variant="primary">
-                                            GOOD 51-69 %
-                                        </UIBadge>
-                                    </li>
-                                    <li>
-                                        <UIBadge variant="info">
-                                            VERY GOOD 70 - 89%
-                                        </UIBadge>
-                                    </li>
-                                    <li>
-                                        <UIBadge variant="success">
-                                            EXCELLENT 90-100 %
-                                        </UIBadge>
-                                    </li>
-                                </ul>
-
-                            </div>
-                            <UserList :exam-data="exam ?? []" />
-
-
-
+                            <UserHomeCourseList :exam-data="exam ?? []" />
                         </div>
-
                     </template>
                 </UICard>
             </div>

@@ -31,6 +31,9 @@ const { idle } = useIdle(50 * 10 * 1000);
 watch(idle, async (newValue: boolean) => {
   if (newValue) {
     await signOut(user.getUser?.id);
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    user.setUser({});
     await navigateTo({ name: "auth" });
   }
 });

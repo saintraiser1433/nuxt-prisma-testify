@@ -64,7 +64,7 @@ const handleSignIn = async () => {
       if (userRole === "admin") {
         return navigateTo({ name: "admin-home" });
       } else if (userRole === "examinee") {
-        return navigateTo({ name: "user-home" });
+        return navigateTo({ name: "user" });
       } else if (userRole === "deans") {
         return navigateTo({ name: "deans-home" });
       }
