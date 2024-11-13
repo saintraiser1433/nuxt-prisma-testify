@@ -61,6 +61,8 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
         })
     },
 
+    
+
     async removeAssignCourse(deansId: number, courseId: number): Promise<T> {
         return fetch<T>(`/deans/assign/${deansId}/${courseId}`, {
             method: 'DELETE'

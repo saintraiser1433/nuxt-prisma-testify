@@ -45,7 +45,7 @@ useHead({
     ],
 });
 
-const { setToast } = useToast()
+const { setToast } = useToasts()
 const { setAlert } = useAlert()
 const data = ref<ExamModel>({})
 const isUpdate = ref(false)

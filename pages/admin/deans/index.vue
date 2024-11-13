@@ -82,7 +82,7 @@ useHead({
     ],
 });
 
-const { setToast } = useToast()
+const { setToast } = useToasts()
 const { setAlert } = useAlert()
 const data = ref<DeansModel>({})
 const isUpdate = ref(false)

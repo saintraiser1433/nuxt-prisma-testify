@@ -17,7 +17,7 @@
             <UIButton type="button" v-if="isUpdate" size="block" class="bg-danger mb-2" @click="reset">
                 Reset
             </UIButton>
-            <UIButton type="submit" class="bg-primary " size="block">
+            <UIButton type="submit" class="bg-primary" size="block">
                 {{ isUpdate ? 'Update' : 'Submit' }}
             </UIButton>
 

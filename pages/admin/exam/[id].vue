@@ -33,7 +33,7 @@ definePageMeta({
 
 })
 
-const { setToast } = useToast()
+const { setToast } = useToasts()
 const { setAlert } = useAlert()
 const route = useRoute().params;
 const data = ref<QuestionModel>({})

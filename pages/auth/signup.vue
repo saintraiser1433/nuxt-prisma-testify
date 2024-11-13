@@ -51,7 +51,7 @@ definePageMeta({
 
 
 
-const { setToast } = useToast();
+const { setToast } = useToasts();
 const username = ref('');
 const password = ref('');
 const config = useRuntimeConfig()

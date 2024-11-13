@@ -71,7 +71,7 @@
                                 </ul>
 
                             </div>
-                            <UserHomeStatiscalList :exam-data="exam ?? []" />
+                            <UserStatiscalList :exam-data="exam ?? []" />
 
 
 
@@ -90,7 +90,7 @@
                     </template>
                     <template #default>
                         <div class="p-3">
-                            <UserHomeCourseList :exam-data="exam ?? []" />
+                            <UserCourseList :exam-data="exam ?? []" />
                         </div>
                     </template>
                 </UICard>

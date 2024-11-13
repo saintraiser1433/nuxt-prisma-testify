@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-export const useToast = () => {
+export const useToasts = () => {
   const setToast = (icon: any, title: string, timer: number = 3000) => {
     const Toast = Swal.mixin({
       toast: true,

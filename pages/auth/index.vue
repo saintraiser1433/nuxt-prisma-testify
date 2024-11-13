@@ -46,7 +46,7 @@ definePageMeta({
   // middleware: ['checkRole'],
 });
 
-const { setToast } = useToast();
+const { setToast } = useToasts();
 const username = ref("");
 const password = ref("");
 const { signIn } = useAuthentication();

@@ -50,7 +50,7 @@ useHead({
     { property: "og:description", content: "CRUD for Course" },
   ],
 });
-const { setToast } = useToast();
+const { setToast } = useToasts();
 const { setAlert } = useAlert();
 const isUpdate = ref(false);
 const shouldRefetch = ref(0);

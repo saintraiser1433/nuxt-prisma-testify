@@ -82,6 +82,7 @@ export interface ExamineeModel extends Timestamped {
     middle_name?: string;
     username?: string;
     password?: string;
+    fullname?: string;
     Answers?: AnswersModel[]; // Optional relationship
     ExamAttempt?: ExamAttemptModel[]; // Optional relationship
 }
@@ -182,14 +183,14 @@ export interface AssignDeansModel extends Timestamped {
 import { format, parse, parseISO, getDay } from 'date-fns';
 
 declare module '#app' {
-  interface NuxtApp {
-    $datefns: {
-      format: typeof format;
-      parse: typeof parse;
-      parseISO: typeof parseISO;
-      getDay: typeof getDay;
-    };
-  }
+    interface NuxtApp {
+        $datefns: {
+            format: typeof format;
+            parse: typeof parse;
+            parseISO: typeof parseISO;
+            getDay: typeof getDay;
+        };
+    }
 }
 
 

@@ -47,7 +47,7 @@ useHead({
         { property: "og:description", content: 'CRUD for Department' },
     ],
 });
-const { setToast } = useToast()
+const { setToast } = useToasts()
 const { setAlert } = useAlert()
 const data = ref<DepartmentModel>({
     department_name: '',

@@ -6,6 +6,7 @@ export default defineNuxtConfig({
   // routeRules: {
   //   '/': { redirect: '/auth' },
   // },
+
   app: {
     head: {
       title: "Testify",
@@ -72,13 +73,11 @@ export default defineNuxtConfig({
     dirs: ["types/*.ts", "store/*.ts", "utils/*.ts"],
   },
   modules: [
-    "@nuxtjs/tailwindcss",
-    "@nuxt/icon",
     "@pinia/nuxt",
     "unplugin-icons/nuxt",
     "@vueuse/nuxt",
-    "@nuxtjs/color-mode",
     "@sidebase/nuxt-auth",
+    "@nuxt/ui",
   ],
   plugins: ["~/plugins/generateRandom"],
 
