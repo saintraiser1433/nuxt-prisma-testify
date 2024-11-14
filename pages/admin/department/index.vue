@@ -1,37 +1,37 @@
 <template>
     <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
+    <UModal v-model="isOpen">
+        <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+            <template #header>
+                <h1 class="text-2xl lg:text-lg">Department Information</h1>
+            </template>
+            <DepartmentForm :form-data="data" :is-update="isUpdate" @data-department="submitDepartment">
+            </DepartmentForm>
+        </UCard>
+    </UModal>
 
     <div class="grid grid-cols-5 gap-5">
-        <div class="col-span-5 lg:col-span-1 ">
-            <UICard class="py-2 px-4">
+        <div class="col-span-5">
+            <UCard class="w-full" :ui="{
+                base: '',
+                ring: '',
+                divide: 'divide-y divide-gray-200 dark:divide-gray-700',
+                header: { padding: 'px-4 py-5' },
+                body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
+                footer: { padding: 'p-4' }
+            }">
                 <template #header>
-                    <UICardHeader>
-                        <div class="">
-                            <h1 class="text-2xl lg:text-lg">Department Information</h1>
-                        </div>
-                    </UICardHeader>
+                    <h1 class="text-2xl lg:text-lg">List of Department's</h1>
                 </template>
-                <DepartmentForm :is-update="isUpdate" :form-data="data" @data-department="submitDepartment"
-                    @reset="resetInstance" />
-            </UICard>
 
-        </div>
-        <div class="col-span-5 lg:col-span-4 ">
-            <UICard class="py-2 px-4">
-                <template #header>
-                    <UICardHeader>
-                        <div class="">
-                            <h1 class="text-2xl lg:text-lg">List of Department's</h1>
-                        </div>
-                    </UICardHeader>
-                </template>
-                <template #default>
-                    <DepartmentList :department-data="department ?? []" @update="editDepartment"
-                        @delete="removeDepartment"/>
-                </template>
-            </UICard>
+                <DepartmentList :department-data="departmentData"  @modal-open="toggleModal"
+                    @update="editDepartment" @delete="removeDepartment"></DepartmentList>
+            </UCard>
         </div>
     </div>
+
+
+
 </template>
 
 <script setup lang="ts">
@@ -47,51 +47,73 @@ useHead({
         { property: "og:description", content: 'CRUD for Department' },
     ],
 });
-const { setToast } = useToasts()
+
+
+
+const { $api, payload, static: stat } = useNuxtApp()
+const { setToast } = useToasts();
+const isUpdate = ref(false);
 const { setAlert } = useAlert()
-const data = ref<DepartmentModel>({
-    department_name: '',
-    status: false,
+const departmentRepo = repository<ApiResponse<DepartmentModel>>($api)
+const departmentData = ref<DepartmentModel[]>([])
+const isOpen = ref(false);
+const data = ref<DepartmentModel>({})
 
-})
-const isUpdate = ref(false)
-const shouldRefetch = ref(0)
-const nuxtApp = useNuxtApp()
-const departmentRepo = repository<ApiResponse<DepartmentModel>>(nuxtApp.$api)
-
-
-const { data: department } = await useAPI<DepartmentModel[]>('/department', {
-    watch: [shouldRefetch],
+const { data: department, error, status } = await useAPI<DepartmentModel[]>('/department', {
     getCachedData(key) {
-        const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+        const data = payload.data[key] || stat.data[key]
         if (!data) {
             return
         }
         return data;
-    }
+    },
+
 })
 
-/* Department */
-const submitDepartment = async (data: DepartmentModel) => {
+if (department && department.value) {
+
+    departmentData.value = department.value;
+} else {
+    setToast('error', error.value?.message || 'An error occurred');
+}
+
+const submitDepartment = async (response: DepartmentModel) => {
     try {
-        let response;
         if (!isUpdate.value) {
-            response = await departmentRepo.addDepartment(data);
+            const res = await departmentRepo.addDepartment(response);
+            departmentData.value.unshift(res.data as DepartmentModel)
+            setToast('success', res.message)
         } else {
-            response = await departmentRepo.updateDepartment(data);
+            const res = await departmentRepo.updateDepartment(response);
+            const index = departmentData.value.findIndex((item) => item.department_id === res.data?.department_id);
+            departmentData.value[index] = { ...departmentData.value[index], ...res.data }
+            setToast('success', res.message)
         }
-        setToast('success', response.message)
-        shouldRefetch.value++;
-        resetInstance();
+        isOpen.value = false;
+        isUpdate.value = false;
+
     } catch (error: any) {
-        console.error(error)
         setToast('error', error.data.error || 'An error occurred');
     }
 }
 
+/* Examinee */
+
+const toggleModal = () => {
+    data.value = {}
+    isOpen.value = true;
+    isUpdate.value = false
+}
+
+
 
 const editDepartment = (response: DepartmentModel) => {
-    data.value = response
+    data.value = {
+        department_id: response.department_id,
+        department_name: response.department_name,
+        status: response.status
+    };
+    isOpen.value = true;
     isUpdate.value = true
 }
 
@@ -101,26 +123,16 @@ const removeDepartment = (id: number) => {
             if (result.isConfirmed) {
                 try {
                     const response = await departmentRepo.removeDepartment(id);
+                    const index = departmentData.value.findIndex((item) => item.department_id === id);
+                    departmentData.value.splice(index, 1);
                     setToast('success', response.message);
-                    shouldRefetch.value++;
                 } catch (error: any) {
-                    console.error(error)
                     setToast('error', error.data.error || 'An error occurred');
                 }
             }
         }
     )
 }
-
-
-const resetInstance = () => {
-    isUpdate.value = false
-    data.value = {
-        department_name: '',
-        status: true,
-    }
-}
-
 
 
 

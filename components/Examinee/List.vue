@@ -1,25 +1,44 @@
 <template>
-    <UITable :data="examineeData" :header="header">
-        <template #row="{ item, index }">
-            <td class="table__block">{{ index + 1 }}</td>
-            <td class="table__block">{{ item.fullname }}</td>
-            <td class="table__block">{{ item.username }}</td>
-            <td class="table__block">
-                <UIButton type="button" class="bg-success mr-1" size="small" @click="handleUpdate(item)">
-                    <i-bx-edit></i-bx-edit>
-                </UIButton>
-                <UIButton type="button" class="bg-danger" size="small" @click="handleDelete(item.examinee_id)">
-                    <i-icon-park-solid-people-delete></i-icon-park-solid-people-delete>
-                </UIButton>
-            </td>
+    <UITables :data="transformData" :status="status" :columns="columns">
+        <template #header-button>
+            <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="handleModal">
+                Add Examinee
+            </UButton>
         </template>
-    </UITable>
+        <template #action="{ data }">
+            <UButton color="emerald" size="sm" @click="handleUpdate(data)"><i-bx-edit /></UButton>
+            <UButton color="carnation" size="sm" @click="handleDelete(data.examinee_id)">
+                <i-icon-park-solid-people-delete />
+            </UButton>
+        </template>
+    </UITables>
 </template>
 
 <script setup lang="ts">
+const columns = [{
+    key: 'id',
+    label: '#',
+    sortable: true
+}, {
+    key: 'fullname',
+    label: 'Fullname',
+    sortable: true
+}, {
+    key: 'username',
+    label: 'Username',
+    sortable: true
+}, {
+    key: 'actions',
+    label: 'Actions',
+    sortable: false
+
+}]
+
+
 const emits = defineEmits<{
     (e: 'update', payload: ExamineeModel): void;
     (e: 'delete', id: number): void;
+    (e: 'modalOpen'): void;
 }>();
 
 
@@ -28,12 +47,22 @@ const props = defineProps({
         type: Array as PropType<ExamineeModel[]>,
         required: true,
         default: () => [],
-    }
+    },
+    status: String
 })
 
 const { examineeData } = toRefs(props)
 
-const header = ref<string[]>(['#', 'Fullname', 'Username', 'Action'])
+const transformData = computed(() => {
+    return examineeData.value.map((item) => {
+        const fullname = item.first_name + ' ' + item.last_name + (item.middle_name ? ' ' + item.middle_name[0] + '.' : '');
+        return {
+            ...item,
+            fullname
+        }
+    })
+})
+
 
 
 const handleUpdate = (val: ExamineeModel) => {
@@ -42,4 +71,8 @@ const handleUpdate = (val: ExamineeModel) => {
 const handleDelete = (id: number) => {
     emits('delete', id)
 }
+const handleModal = () => {
+    emits('modalOpen')
+}
+
 </script>

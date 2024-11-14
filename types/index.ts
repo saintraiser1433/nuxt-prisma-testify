@@ -151,7 +151,7 @@ export interface ExamAttemptModel extends Timestamped {
 // Department Model
 export interface DepartmentModel extends Timestamped {
     department_id?: number;
-    department_name: string;
+    department_name?: string;
     status?: boolean;
     Deans?: DeansModel; // Optional relationship
 }

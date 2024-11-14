@@ -1,65 +1,62 @@
 <template>
-    <form @submit.prevent="submitDepartment">
-        <div class="mb-3">
-            <label class="text-sm" for="department">Department:</label>
-            <UIInput type="text" class="mt-2" id="department" v-model="formDepartment.department_name" required />
-        </div>
-        <div class="mb-3 flex gap-2 items-center">
-            <label class="text-sm" for="status">Status:</label>
-            <UISwitch id="status" v-model="formDepartment.status"></UISwitch>
-        </div>
-        <div class="border-t dark:border-colorBorder pt-2">
-            <UIButton type="button" v-if="isUpdate" class="bg-danger mb-2" size="block" @click="reset">Reset</UIButton>
-            <UIButton type="submit" class="bg-primary" size="block">{{
-                isUpdate ? 'Update' : 'Submit'
-            }}</UIButton>
-
-        </div>
-    </form>
+    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+        <UFormGroup label="Department Name" name="department_name" required>
+            <UInput v-model="state.department_name" />
+        </UFormGroup>
+        <UFormGroup label="Last Name" name="last_name" required>
+            <UToggle v-model="state.status" />
+        </UFormGroup>
+        <UButton type="submit" block>
+            Submit
+        </UButton>
+    </UForm>
 </template>
 
 <script setup lang="ts">
+import Joi from 'joi'
+import type { FormSubmitEvent } from '#ui/types'
 
 const emits = defineEmits<{
     (e: 'dataDepartment', payload: DepartmentModel): void;
     (e: 'reset'): void;
-}>();
+}>()
 
 const props = defineProps({
-    isUpdate: {
-        type: Boolean,
-        default: false
-    },
     formData: {
         type: Object as PropType<DepartmentModel>,
-        required: true
-
-    }
+        required: true,
+    },
 })
 
-const { isUpdate, formData } = toRefs(props)
+const { formData } = toRefs(props)
 
-// Reactive form object
-const formDepartment = ref<DepartmentModel>({
-    department_name: '',
-    status: true
+const schema = Joi.object({
+    department_name: Joi.string().required().messages({
+        "any.required": `Department Name is Required`,
+    }),
+    status: Joi.boolean().required(),
+    department_id: Joi.number().optional()
 })
 
-const submitDepartment = () => {
-    emits('dataDepartment', { ...formDepartment.value })
+const state = ref<DepartmentModel>({
+    department_id: undefined,
+    department_name: undefined,
+    status: undefined
+
+})
+
+const onSubmit = async (event: FormSubmitEvent<DepartmentModel>) => {
+    emits('dataDepartment', event.data)
 }
 
-const reset = () => {
-    emits('reset')
-}
 
 watch(
     formData,
     (newData) => {
         if (newData) {
-            formDepartment.value = { ...newData }
+            state.value = { ...newData }
         }
     },
-    { deep: true }
-)
+    { deep: true, immediate: true }
+);
 </script>

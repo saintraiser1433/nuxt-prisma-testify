@@ -1,39 +1,54 @@
 <template>
-    <UITable :data="departmentData" :header="header">
-        <template #row="{ item, index }">
-            <td class="table__block">{{ index + 1 }}</td>
-            <td class="table__block">{{ item.department_name }}</td>
-            <td class="table__block">
-                <UIBadge :variant="item.status ? 'success' : 'danger'">
-                    {{ item.status ? 'Active' : 'Inactive' }}
-                </UIBadge>
-            </td>
-            <td class="table__block">
-                <UIButton type="button" variant="success" size="small" class="mr-1" @click="handleUpdate(item)">
-                    <i-bx-edit></i-bx-edit>
-                </UIButton>
-                <UIButton type="button" variant="danger" size="small" @click="handleDelete(item.department_id)">
-                    <i-icon-park-solid-people-delete></i-icon-park-solid-people-delete>
-                </UIButton>
-            </td>
+    <UITables :data="departmentData" :columns="columns">
+        <template #header-button>
+            <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="handleModal">
+                Add Department
+            </UButton>
         </template>
-    </UITable>
+        <template #action="{ data }">
+            <UButton color="emerald" size="sm" @click="handleUpdate(data)"><i-bx-edit /></UButton>
+            <UButton color="carnation" size="sm" @click="handleDelete(data.department_id)">
+                <i-icon-park-solid-people-delete />
+            </UButton>
+        </template>
+    </UITables>
 </template>
 
 <script setup lang="ts">
+const columns = [{
+    label: '#',
+    sortable: true
+}, {
+    key: 'department_name',
+    label: 'Department Name',
+    sortable: true
+}, {
+    key: 'status',
+    label: 'Status',
+    sortable: true
+}, {
+    key: 'actions',
+    label: 'Actions',
+    sortable: false
+
+}]
+
+
+const emits = defineEmits<{
+    (e: 'update', payload: DepartmentModel): void;
+    (e: 'delete', id: number): void;
+    (e: 'modalOpen'): void;
+}>();
+
 
 const props = defineProps({
     departmentData: {
-        type: Object as PropType<DepartmentModel[]>,
-        required: true
-    }
+        type: Array as PropType<DepartmentModel[]>,
+        required: true,
+        default: () => [],
+    },
 })
 
-const emits = defineEmits<{
-    (e: 'update', payload: DepartmentModel): void
-    (e: 'delete', id: number): void
-}>();
-const header = ref<string[]>(['#', 'Department', 'Status', 'Action'])
 const { departmentData } = toRefs(props)
 
 
@@ -43,4 +58,8 @@ const handleUpdate = (val: DepartmentModel) => {
 const handleDelete = (id: number) => {
     emits('delete', id)
 }
+const handleModal = () => {
+    emits('modalOpen')
+}
+
 </script>
