@@ -19,7 +19,7 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
         })
     },
 
-    async deleteCourse(id: number): Promise<T> {
+    async removeCourse(id: number): Promise<T> {
         return fetch<T>(`/course/${id}`, {
             method: 'DELETE',
         })

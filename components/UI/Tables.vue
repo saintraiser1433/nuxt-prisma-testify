@@ -3,7 +3,12 @@
         <div class="flex items-center justify-between gap-3 px-4 py-3">
 
             <UInput v-model="search" icon="i-heroicons-magnifying-glass-20-solid" placeholder="Search..." />
-            <slot name="header-button"></slot>
+            <div class="flex items-center gap-2">
+                <slot name="action-header"></slot>
+            </div>
+            <!-- <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="handleModal">
+                Add Examinee
+            </UButton> -->
 
         </div>
         <!-- Header and Action buttons -->
@@ -24,6 +29,13 @@
             td: {
                 padding: 'px-4 py-2'
             },
+            tr: {
+                base: 'odd:bg-white even:bg-slate-50 dark:odd:bg-gray-900 dark:even:bg-gray-800'
+            },
+            th: {
+                base: 'bg-gray-100 dark:bg-gun-powder-700',
+                size: 'text-sm'
+            },
 
         }">
             <template #empty-state>
@@ -31,18 +43,13 @@
                     <span class="italic text-sm">NO DATA FOUND</span>
                 </div>
             </template>
-            <template #id-data="{ row, index }">
-                <span>{{ index + 1 }}</span>
-            </template>
-            <template #actions-data="{ row, index }">
-                <div class="flex gap-1 items-center">
-                    <slot name="action" :data="row" :index="index"></slot>
-
-                </div>
+            <template v-for="(_, name) in $slots" #[name]="slotData">
+                <slot :name="name" v-bind="slotData" />
             </template>
         </UTable>
 
-        <div class="flex flex-wrap justify-between items-center border-t border-2 px-3 py-4">
+        <div
+            class="flex flex-wrap justify-between items-center border-t dark:border-t-0 px-3 py-4 outline-none dark:bg-gun-powder-700">
             <div>
                 <span class="text-sm leading-5">
                     Showing
@@ -83,34 +90,17 @@ const props = defineProps({
     },
 
 })
-const search = ref('')
-const page = ref(1)
-const pageCount = ref(5)
-const pageFrom = computed(() => (page.value - 1) * pageCount.value + 1)
-const pageTo = computed(() => Math.min(page.value * pageCount.value, filteredTableData.value.length))
 
-const filteredTableData = computed(() => {
-    return props.data.filter((item: any) => {
-        return Object.values(item).some((val: any) => val.toString().toLowerCase().includes(search.value))
-    })
-});
-
-const paginatedData = computed(() => {
-    const start = (page.value - 1) * pageCount.value
-    const end = start + pageCount.value
-    return filteredTableData.value.slice(start, end)
-})
-
-const totalPages = computed(() => {
-    return Math.ceil(filteredTableData.value.length / pageCount.value)
-})
-
-
-//page
-
-//filter
-const selectedColumns = ref(props.columns)
-const columnsTable = computed(() => props.columns.filter(column => selectedColumns.value.includes(column)))
-const excludeSelectColumn = computed(() => props.columns.filter((v: any) => v.key !== 'select'))
-
+const { data } = toRefs(props)
+const { search,
+    pageCount,
+    paginatedData,
+    pageFrom,
+    pageTo,
+    filteredTableData,
+    page,
+    selectedColumns,
+    columnsTable,
+    excludeSelectColumn,
+    totalPages } = usePagination(data, props.columns);
 </script>

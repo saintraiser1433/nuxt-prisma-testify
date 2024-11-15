@@ -21,6 +21,8 @@ export interface Token {
 
 }
 
+
+
 export interface TokenDetail {
     accessToken: string;
     refreshToken: string;
@@ -29,6 +31,12 @@ export interface TokenDetail {
 export interface refreshTokenModel {
     accessToken: string
 }
+
+export interface DepartmentSelection {
+    name: string | undefined,
+    value: number | undefined
+  
+  }
 
 export interface User {
     id?: string,
@@ -90,8 +98,8 @@ export interface ExamineeModel extends Timestamped {
 // Course Model
 export interface CourseModel extends Timestamped {
     course_id?: number;
-    description: string;
-    score: number;
+    description?: string;
+    score?: number;
     AssignDeans?: AssignDeansModel[]; // Optional relationship
 }
 
@@ -101,7 +109,6 @@ export interface ExamModel extends Timestamped {
     exam_title?: string;
     description?: string;
     time_limit?: number;
-    question_limit?: number;
     status?: boolean;
     Question?: QuestionModel[]; // Optional relationship
     Answers?: AnswersModel[]; // Optional relationship

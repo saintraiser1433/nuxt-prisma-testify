@@ -1,36 +1,35 @@
 <template>
-  <form @submit.prevent="submitDeans">
-    <div class="mb-3">
-      <label class="text-sm" for="firstname">First Name</label>
-      <UIInput type="text" id="firstname" v-model="formDeans.first_name" required />
-    </div>
-    <div class="mb-3">
-      <label class="text-sm" for="middlename">Middle Name</label>
-      <UIInput type="text" id="middlename" v-model="formDeans.middle_name" required />
-    </div>
-    <div class="mb-3">
-      <label class="text-sm" for="lastname">Last Name</label>
-      <UIInput type="text" id="lastname" v-model="formDeans.last_name" required />
-    </div>
-    <div class="mb-3">
-      <label class="text-sm" for="department">Department</label>
-      <UISelector id="department" :data="departmentList" v-model.number="formDeans.department_id" />
-    </div>
-    <div class="mb-3 flex gap-2 items-center">
-      <label class="text-sm" for="status">Status:</label>
-      <UISwitch id="status" v-model="formDeans.status"></UISwitch>
-    </div>
-    <div class="border-t dark:border-colorBorder pt-2">
-      <UIButton type="button" v-if="isUpdate" class="bg-danger mb-2" size="block" @click="reset">Reset</UIButton>
-      <UIButton type="submit" class="bg-primary" size="block">{{
-        isUpdate ? 'Update' : 'Submit'
-      }}</UIButton>
 
-    </div>
-  </form>
+  <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+    <UFormGroup label="First Name" name="first_name" required>
+      <UInput v-model="state.first_name" />
+    </UFormGroup>
+    <UFormGroup label="Last Name" name="last_name" required>
+      <UInput v-model="state.last_name" />
+    </UFormGroup>
+    <UFormGroup label="Middle Name" name="middle_name" required>
+      <UInput v-model="state.middle_name" />
+    </UFormGroup>
+    <UFormGroup label="Department" name="department_id" required>
+      <USelect v-model="state.department_id" :options="departmentData" option-attribute="name" />
+    </UFormGroup>
+    <UFormGroup v-if="isUpdate" label="Status" name="status">
+      <UToggle v-model="state.status" />
+    </UFormGroup>
+    <UButton type="submit" block>
+      Submit
+    </UButton>
+  </UForm>
+
+
 </template>
 
 <script setup lang="ts">
+import Joi from 'joi'
+import type { FormSubmitEvent } from '#ui/types'
+
+
+
 const emits = defineEmits<{
   (e: 'dataDeans', payload: DeansModel): void;
   (e: 'reset'): void;
@@ -46,7 +45,7 @@ const props = defineProps({
     required: true,
   },
   departmentData: {
-    type: Array as PropType<DepartmentModel[]>,
+    type: Array as PropType<DepartmentSelection[]>,
     required: true,
   }
 })
@@ -54,49 +53,64 @@ const props = defineProps({
 const { isUpdate, formData, departmentData } = toRefs(props)
 const { $id } = useNuxtApp();
 
-const formDeans = ref<DeansModel>({
-  first_name: '',
-  middle_name: '',
-  last_name: ''
+const schema = Joi.object({
+  deans_id: Joi.number().optional(),
+  first_name: Joi.string().required().messages({
+    "any.required": `First Name is Required`,
+  }),
+  last_name: Joi.string().required().messages({
+    "any.required": `Last Name is Required`,
+  }),
+  middle_name: Joi.string().required().messages({
+    "any.required": `Middle Name is Required`,
+  }),
+  department_id: Joi.number().empty().required().messages({
+    "number.empty": `Department cannot be empty`,
+    "any.required": `Department cannot be null or empty`,
+  }),
+  status: Joi.boolean().optional(),
+  username: Joi.string().optional(),
+  password: Joi.string().optional(),
+
 })
 
-const departmentList = computed(() => {
-  return departmentData.value.map((i) => {
-      return {
-        id: i.department_id,
-        value: i.department_name
-      }
-    })
+const state = ref<DeansModel>({
+  deans_id: undefined,
+  first_name: undefined,
+  last_name: undefined,
+  middle_name: undefined,
+  department_id: undefined,
+  username: undefined,
+  password: undefined,
+  status: undefined,
 })
 
-const submitDeans = () => {
-  let data:DeansModel
+
+const onSubmit = async (event: FormSubmitEvent<DeansModel>) => {
+  let data: DeansModel;
   if (!isUpdate.value) {
     data = {
-      ...formDeans.value,
+      ...event.data,
       username: $id,
       password: $id
     }
   } else {
     data = {
-      ...formDeans.value
+      ...event.data
     }
   }
-
   emits('dataDeans', data)
 }
 
-const reset = () => {
-  emits('reset')
-}
+
 
 watch(
   formData,
   (newData) => {
     if (newData) {
-      formDeans.value = { ...newData }
+      state.value = { ...newData }
     }
   },
-  { deep: true }
+  { deep: true, immediate: true }
 )
 </script>

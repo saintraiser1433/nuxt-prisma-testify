@@ -1,72 +1,82 @@
 <template>
-    <form @submit.prevent="submitExam">
-        <div class="mb-2">
-            <label class="text-sm" for="exam">Exam Title:</label>
-            <UIInput type="text" id="exam" v-model="formExam.exam_title" required />
-        </div>
-        <div class="mb-2">
-            <label class="text-sm" for="description">Exam Description:</label>
-            <UIInput type="text" id="description" v-model="formExam.description" required />
-        </div>
-        <div class="mb-2">
-            <label class="text-sm" for="score">Time Limit:</label>
-            <UIInput type="number" id="score" v-model.number="formExam.time_limit" required />
-        </div>
-        <div class="mb-2">
-            <label class="text-sm" for="question">Question Limit:</label>
-            <UIInput type="number" id="question" v-model.number="formExam.question_limit" required />
-        </div>
-        <div class="border-t dark:border-colorBorder pt-2">
-            <UIButton type="button" v-if="isUpdate" class="bg-danger mb-2" size="block" @click="reset">Reset</UIButton>
-            <UIButton type="submit" class="bg-primary" size="block">{{
-                isUpdate ? 'Update' : 'Submit'
-            }}</UIButton>
 
-        </div>
-    </form>
+    <UForm :schema="schema" :state="formExam" class="space-y-4" @submit="onSubmit">
+        <UFormGroup label="Exam Title" name="exam_title" required>
+            <UInput v-model="formExam.exam_title" />
+        </UFormGroup>
+        <UFormGroup label="Exam Description" name="description" required>
+            <UInput v-model="formExam.description" />
+        </UFormGroup>
+        <UFormGroup label="Time Limit" name="time_limit" required>
+            <UInput v-model="formExam.time_limit" />
+        </UFormGroup>
+        <UFormGroup v-if="isUpdate" label="Status" name="status">
+            <UToggle v-model="formExam.status" />
+        </UFormGroup>
+
+        <UButton type="submit" block>
+            Submit
+        </UButton>
+    </UForm>
 </template>
 
 <script setup lang="ts">
+import Joi from 'joi'
+import type { FormSubmitEvent } from '#ui/types'
 
 const emits = defineEmits<{
     (e: 'dataExam', payload: ExamModel): void;
     (e: 'reset'): void;
 }>();
 const props = defineProps({
-    isUpdate: {
-        type: Boolean,
-        default: false
-    },
     formData: {
         type: Object as PropType<ExamModel>,
+        required: true
+    },
+    isUpdate: {
+        type: Boolean,
         required: true
     }
 })
 
-const { isUpdate, formData } = toRefs(props)
+const { formData, isUpdate } = toRefs(props)
 
 const formExam = ref<ExamModel>({
-    exam_title: '',
-    description: '',
-    time_limit: 0,
-    question_limit: 0
+    exam_id: undefined,
+    exam_title: undefined,
+    description: undefined,
+    time_limit: undefined,
+    status: undefined,
+});
+
+const schema = Joi.object({
+    exam_id: Joi.number().optional(),
+    exam_title: Joi.string().required().messages({
+        "any.required": `Department Name is Required`,
+    }),
+    description: Joi.string().required().messages({
+        "any.required": `Score  is Required`,
+    }),
+    time_limit: Joi.number().required().messages({
+        "any.required": `Score  is Required`,
+    }),
+    status: Joi.boolean().optional()
+
+
 })
+
+
+const onSubmit = async (event: FormSubmitEvent<ExamModel>) => {
+    emits('dataExam', event.data)
+}
 
 watch(
     formData,
     (newData) => {
-        if (newData && JSON.stringify(formExam.value) !== JSON.stringify(formData)) {
-            formExam.value = { ...newData }
+        if (newData) {
+            formExam.value = { ...newData };
         }
     },
-    { deep: true }
-)
-
-const reset = () => {
-    emits('reset')
-}
-
-const submitExam = () => {
-    emits('dataExam', { ...formExam.value })
-}
+    { deep: true, immediate: true }
+);
 </script>

@@ -1,43 +1,68 @@
 <template>
     <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
+    <UModal v-model="isOpen">
+        <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+            <template #header>
+                <h1 class="text-2xl lg:text-lg">Exam Information</h1>
+            </template>
+            <ExamForm :form-data="data" :is-update="isUpdate" @data-exam="submitExam"></ExamForm>
+        </UCard>
+    </UModal>
 
     <div class="grid grid-cols-5 gap-5">
-        <div class="col-span-5 lg:col-span-1 ">
-            <UICard class="py-2 px-4">
+        <div class="col-span-5">
+            <UCard class="w-full" :ui="{
+                base: '',
+                ring: '',
+                divide: 'divide-y divide-gray-200 dark:divide-gray-700',
+                header: { padding: 'px-4 py-5' },
+                body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
+                footer: { padding: 'p-4' }
+            }">
                 <template #header>
-                    <UICardHeader>
-                        <h1 class="text-2xl lg:text-lg">Exam Information</h1>
-                    </UICardHeader>
+                    <h1 class="text-2xl lg:text-lg">List of Exam's</h1>
                 </template>
-                <ExamForm :is-update="isUpdate" :form-data="data" @data-exam="submitExam" @reset="resetInstance" />
-            </UICard>
 
-        </div>
-        <div class="col-span-5 lg:col-span-4 ">
-            <UICard class="py-2 px-4">
-                <template #header>
-                    <UICardHeader>
-                        <h1 class="text-2xl lg:text-lg">List of Exam's</h1>
-                    </UICardHeader>
-                </template>
-                <template #default>
-                    <ExamList :exam-data="exam ?? []" @update="editExam" @delete="removeExam" />
+                <UITables :data="examData" :columns="columns">
+                    <template #action-header>
+                        <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="toggleModal">
+                            Add Exam's
+                        </UButton>
+                    </template>
+                    <template #increment-data="{ row, index }">
+                        <span>{{ index + 1 }}</span>
 
-                </template>
-            </UICard>
+                    </template>
+                    <template #actions-data="{ row, index }">
+                        <div class="flex gap-1">
+                            <UButton color="primary" class="dark:text-white" variant="solid" size="sm"
+                                @click="routeToQuestion(row.exam_id)">
+                                <i-bx-show />
+                            </UButton>
+                            <UButton color="emerald" class="dark:text-white" variant="solid" size="sm"
+                                @click="editExam(row)">
+                                <i-bx-edit />
+                            </UButton>
+                            <UButton color="carnation" class="dark:text-white" variant="solid" size="sm"
+                                @click="removeExam(row.exam_id)">
+                                <i-icon-park-solid-people-delete />
+                            </UButton>
+                        </div>
+                    </template>
+                </UITables>
+            </UCard>
         </div>
     </div>
+
+
+
 </template>
 
 <script setup lang="ts">
-
-
 definePageMeta({
     requiredRole: 'admin',
     // middleware: ['checkRole'],
-    breadcrumbs: 'Exam',
 })
-
 useHead({
     title: 'Testify Exam Module',
     meta: [
@@ -47,47 +72,103 @@ useHead({
     ],
 });
 
-const { setToast } = useToasts()
+const columns = [{
+    key: "increment",
+    label: '#',
+    sortable: true
+}, {
+    key: 'exam_title',
+    label: 'Exam Name',
+    sortable: true
+}, {
+    key: 'description',
+    label: 'Description',
+    sortable: true
+}, {
+    key: 'time_limit',
+    label: 'Time',
+    sortable: true
+}, {
+    key: 'actions',
+    label: 'Actions',
+    sortable: false
+
+}]
+
+
+
+const { $api, payload, static: stat } = useNuxtApp()
+const { setToast } = useToasts();
+const isUpdate = ref(false);
 const { setAlert } = useAlert()
+const examRepo = repository<ApiResponse<ExamModel>>($api)
+const examData = ref<ExamModel[]>([])
+const isOpen = ref(false);
 const data = ref<ExamModel>({})
-const isUpdate = ref(false)
-const shouldRefetch = ref(0);
-const nuxtApp = useNuxtApp()
-const examRepo = repository<ApiResponse<ExamModel>>(nuxtApp.$api)
-
-
-const { data: exam } = await useAPI<ExamModel[]>('/exam', {
-    watch: [shouldRefetch],
+const { data: exam, error, status } = await useAPI<ExamModel[]>('/exam', {
     getCachedData(key) {
-        const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+        const data = payload.data[key] || stat.data[key]
         if (!data) {
             return
         }
         return data;
-    }
+    },
+
 })
+
+if (exam && exam.value) {
+    examData.value = exam.value;
+} else {
+    setToast('error', error.value?.message || 'An error occurred');
+}
+
+
+
 /* Exam */
 
-const submitExam = async (data: ExamModel) => {
+const submitExam = async (response: ExamModel) => {
     try {
-        let response;
         if (!isUpdate.value) {
-            response = await examRepo.addExam(data);
+            const res = await examRepo.addExam(response);
+            examData.value.unshift(res.data as ExamModel)
+            setToast('success', res.message)
         } else {
-            response = await examRepo.updateExam(data);
+            const res = await examRepo.updateExam(response);
+            const index = examData.value.findIndex((item) => item.exam_id === res.data?.exam_id);
+            examData.value[index] = { ...examData.value[index], ...res.data }
+            setToast('success', res.message)
         }
-        setToast('success', response.message)
-        shouldRefetch.value++;
-        resetInstance();
+        isOpen.value = false;
+        isUpdate.value = false;
+
     } catch (error: any) {
-        console.error(error);
         setToast('error', error.data.error || 'An error occurred');
     }
 }
 
+const toggleModal = () => {
+    data.value = {}
+    isOpen.value = true;
+    isUpdate.value = false
+}
+
+
+const routeToQuestion = async (id: number) => {
+    await navigateTo(`/exam/${id}`)
+}
+
+
+
 
 const editExam = (response: ExamModel) => {
-    data.value = response
+    data.value = {
+        exam_id: response.exam_id,
+        description: response.description,
+        exam_title: response.exam_title,
+        time_limit: response.time_limit,
+        status: response.status,
+    };
+    isOpen.value = true;
     isUpdate.value = true
 }
 
@@ -97,23 +178,17 @@ const removeExam = (id: number) => {
             if (result.isConfirmed) {
                 try {
                     const response = await examRepo.removeExam(id);
+                    const index = examData.value.findIndex((item) => item.exam_id === id);
+                    examData.value.splice(index, 1);
                     setToast('success', response.message);
-                    shouldRefetch.value++;
                 } catch (error: any) {
-                    console.error(error);
+                    console.error(error)
                     setToast('error', error.data.error || 'An error occurred');
                 }
             }
         }
     )
 }
-
-
-const resetInstance = () => {
-    isUpdate.value = false
-    data.value = {}
-}
-
 
 
 

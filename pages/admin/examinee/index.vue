@@ -12,7 +12,8 @@
   <div class="grid grid-cols-5 gap-5">
     <div class="col-span-5">
       <UCard class="w-full" :ui="{
-        base: '',
+
+
         ring: '',
         divide: 'divide-y divide-gray-200 dark:divide-gray-700',
         header: { padding: 'px-4 py-5' },
@@ -22,9 +23,28 @@
         <template #header>
           <h1 class="text-2xl lg:text-lg">List of Examinee's</h1>
         </template>
+        <UITables :data="transformData" :columns="columns">
+          <template #action-header>
+            <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="toggleModal">
+              Add Examinee's
+            </UButton>
+          </template>
+          <template #id-data="{ row, index }">
+            <span>{{ index + 1 }}</span>
+          </template>
+          <template #actions-data="{ row, index }">
+            <div class="flex gap-1">
+              <UButton color="emerald" class="dark:text-white" variant="solid" size="sm" @click="editExaminee(row)">
+                <i-bx-edit />
+              </UButton>
+              <UButton color="carnation" class="dark:text-white" variant="solid" size="sm"
+                @click="removeExaminee(row.examinee_id)">
+                <i-icon-park-solid-people-delete />
+              </UButton>
+            </div>
+          </template>
+        </UITables>
 
-        <ExamineeList :examinee-data="examineeData" :status="status" @modal-open="toggleModal" @update="editExaminee"
-          @delete="removeExaminee"></ExamineeList>
       </UCard>
     </div>
   </div>
@@ -34,6 +54,7 @@
 </template>
 
 <script setup lang="ts">
+
 definePageMeta({
   requiredRole: 'admin',
   // middleware: ['checkRole'],
@@ -46,7 +67,24 @@ useHead({
     { property: "og:description", content: 'CRUD for Examinee' },
   ],
 });
+const columns = [{
+  key: 'id',
+  label: '#',
+  sortable: true
+}, {
+  key: 'fullname',
+  label: 'Fullname',
+  sortable: true
+}, {
+  key: 'username',
+  label: 'Username',
+  sortable: true
+}, {
+  key: 'actions',
+  label: 'Actions',
+  sortable: false
 
+}]
 
 
 const { $api, payload, static: stat } = useNuxtApp()
@@ -74,6 +112,16 @@ if (examinee && examinee.value) {
 } else {
   setToast('error', error.value?.message || 'An error occurred');
 }
+
+const transformData = computed(() => {
+  return examineeData.value.map((item) => {
+    const fullname = item.first_name + ' ' + item.last_name + (item.middle_name ? ' ' + item.middle_name[0] + '.' : '');
+    return {
+      ...item,
+      fullname
+    }
+  })
+})
 
 const submitExaminee = async (response: ExamineeModel) => {
   try {
