@@ -9,7 +9,7 @@
                         <h1 class="text-2xl lg:text-lg">Exam Information</h1>
                     </UICardHeader>
                 </template>
-                <ExamForm :is-update="isUpdate" :form-data="data" @data-exam="submitExam" @reset="resetInstance"/>
+                <ExamForm :is-update="isUpdate" :form-data="data" @data-exam="submitExam" @reset="resetInstance" />
             </UICard>
 
         </div>
@@ -21,7 +21,7 @@
                     </UICardHeader>
                 </template>
                 <template #default>
-                    <ExamList :exam-data="exam ?? []" @update="editExam" @delete="removeExam"/>
+                    <ExamList :exam-data="exam ?? []" @update="editExam" @delete="removeExam" />
 
                 </template>
             </UICard>
@@ -30,6 +30,8 @@
 </template>
 
 <script setup lang="ts">
+
+
 definePageMeta({
     requiredRole: 'admin',
     // middleware: ['checkRole'],

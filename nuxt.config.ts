@@ -71,7 +71,7 @@ export default defineNuxtConfig({
   css: ["sweetalert2/dist/sweetalert2.min.css"],
   devtools: { enabled: true },
   imports: {
-    dirs: ["types/*.ts", "store/*.ts", "utils/*.ts"],
+    dirs: ["types/*.ts", "store/*.ts", "utils/*.ts","composables/*.ts"],
   },
   modules: [
     "@pinia/nuxt",

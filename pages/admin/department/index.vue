@@ -24,8 +24,8 @@
                     <h1 class="text-2xl lg:text-lg">List of Department's</h1>
                 </template>
 
-                <DepartmentList :department-data="departmentData"  @modal-open="toggleModal"
-                    @update="editDepartment" @delete="removeDepartment"></DepartmentList>
+                <DepartmentList :department-data="departmentData" @modal-open="toggleModal" @update="editDepartment"
+                    @delete="removeDepartment"></DepartmentList>
             </UCard>
         </div>
     </div>
@@ -71,7 +71,6 @@ const { data: department, error, status } = await useAPI<DepartmentModel[]>('/de
 })
 
 if (department && department.value) {
-
     departmentData.value = department.value;
 } else {
     setToast('error', error.value?.message || 'An error occurred');

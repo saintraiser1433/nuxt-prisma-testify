@@ -3,7 +3,7 @@
         <UFormGroup label="Department Name" name="department_name" required>
             <UInput v-model="state.department_name" />
         </UFormGroup>
-        <UFormGroup label="Last Name" name="last_name" required>
+        <UFormGroup label="Status" name="status" >
             <UToggle v-model="state.status" />
         </UFormGroup>
         <UButton type="submit" block>
@@ -34,7 +34,7 @@ const schema = Joi.object({
     department_name: Joi.string().required().messages({
         "any.required": `Department Name is Required`,
     }),
-    status: Joi.boolean().required(),
+    status: Joi.boolean().optional(),
     department_id: Joi.number().optional()
 })
 

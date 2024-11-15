@@ -42,32 +42,34 @@ export default defineNuxtPlugin((event) => {
       }
 
       try {
-        const store = storeUser();
-        const decodedToken = jwtDecode<DecodeJWT>(token.value);
-        const currentTime = Date.now();
-        const isExpired =
-          decodedToken.exp !== undefined &&
-          decodedToken.exp * 1000 < currentTime;
-        if (isExpired) {
-          signOut(store.getUser?.id);
-          localStorage.removeItem("token");
-          localStorage.removeItem("refreshToken");
-          store.setUser({});
-          return navigateTo({ name: "auth" });
-        }
-        store.setUser(decodedToken);
-        if (decodedToken.role === "admin" && to.meta.requiredRole !== "admin") {
-          return navigateTo({ name: "admin-home" });
-        } else if (
-          decodedToken.role === "examinee" &&
-          to.meta.requiredRole !== "examinee"
-        ) {
-          return navigateTo({ name: "user" });
-        } else if (
-          decodedToken.role === "deans" &&
-          to.meta.requiredRole !== "deans"
-        ) {
-          return navigateTo({ name: "deans-home" });
+        if (to.name !== "auth") {
+          const store = storeUser();
+          const decodedToken = jwtDecode<DecodeJWT>(token.value);
+          const currentTime = Date.now();
+          const isExpired =
+            decodedToken.exp !== undefined &&
+            decodedToken.exp * 1000 < currentTime;
+          if (isExpired) {
+            signOut(store.getUser?.id);
+            localStorage.removeItem("token");
+            localStorage.removeItem("refreshToken");
+            store.setUser({});
+            return navigateTo({ name: "auth" });
+          }
+          store.setUser(decodedToken);
+          if (decodedToken.role === "admin" && to.meta.requiredRole !== "admin") {
+            return navigateTo({ name: "admin-home" });
+          } else if (
+            decodedToken.role === "examinee" &&
+            to.meta.requiredRole !== "examinee"
+          ) {
+            return navigateTo({ name: "user" });
+          } else if (
+            decodedToken.role === "deans" &&
+            to.meta.requiredRole !== "deans"
+          ) {
+            return navigateTo({ name: "deans-home" });
+          }
         }
       } catch (error) {
         localStorage.removeItem("token");
