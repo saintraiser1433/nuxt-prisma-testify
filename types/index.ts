@@ -180,8 +180,8 @@ export interface DeansModel extends Timestamped {
 
 // AssignDeans Model
 export interface AssignDeansModel extends Timestamped {
-    deans_id: number;
-    course_id: number;
+    deans_id?: number;
+    course_id?: number;
     deans?: DeansModel; // Optional relationship
     course?: CourseModel; // Optional relationship
 }

@@ -1,53 +1,74 @@
 <template>
-    <form @submit.prevent="submitCourse">
-        <div class="py-5">
-            <label class="text-sm" for="course">Course:</label>
-            <UISelector id="course" class="text-base" v-model="courseId" :data="courseData"></UISelector>
-        </div>
-        <div class="border-t dark:border-colorBorder pt-2">
-            <UIButton type="submit" variant="primary" size="sm">Submit</UIButton>
-        </div>
+    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+        <UFormGroup label="Deans Name" name="first_name">
+            <UInput :model-value="deansName" disabled />
+        </UFormGroup>
+        <UFormGroup label="Course Name" name="course_id" required>
+            <USelect v-model.number="state.course_id" :options="courseList" option-attribute="name" />
+        </UFormGroup>
 
-    </form>
+        <UButton type="submit" block>
+            Submit
+        </UButton>
+    </UForm>
 </template>
 
 <script setup lang="ts">
-
+import Joi from 'joi'
+import type { FormSubmitEvent } from '#ui/types'
 const props = defineProps({
     deansId: {
         type: Number,
         required: true
     },
-    courseList: {
+    deansName: {
+        type: String,
+        required: true
+    },
+    courseData: {
         type: Array as PropType<CourseModel[]>,
         required: true
 
     }
 })
-const { deansId, courseList } = toRefs(props)
+const { deansId, courseData, deansName } = toRefs(props)
 
 const emits = defineEmits<{
     (e: 'dataAssign', payload: AssignDeansModel): void,
     (e: 'reset'): void,
 }>()
-const courseId = ref<number | string>('');
 
 
-const courseData = computed(() => {
-    return courseList.value.map((item) => ({
-        id: item.course_id,
-        value: item.description,
+
+const courseList = computed(() => {
+    return courseData.value.map((item) => ({
+        name: item.description,
+        value: item.course_id,
     }))
 })
 
+const schema = Joi.object({
+    course_id: Joi.number().required().messages({
+        "any.required": `Course is Required`,
+    }),
 
-const submitCourse = () => {
+
+})
+
+const state = ref<AssignDeansModel>({
+    course_id: undefined
+})
+
+
+
+
+const onSubmit = async (event: FormSubmitEvent<AssignDeansModel>) => {
     const data = {
         deans_id: deansId.value,
-        course_id: Number(courseId.value)
+        course_id: state.value.course_id
     }
     emits('dataAssign', data)
-    courseId.value = 0
+    state.value.course_id = 0;
 }
 
 
