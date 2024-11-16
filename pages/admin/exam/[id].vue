@@ -1,7 +1,24 @@
 <template>
     <div class="grid grid-cols-12 gap-2">
         <div class="col-span-12 lg:col-span-4">
-            <UICard class="py-2 px-4">
+            <UCard class="w-full" :ui="{
+                base: '',
+                ring: '',
+                divide: 'divide-y divide-gray-200 dark:divide-gray-700',
+                header: { padding: 'px-4 py-5' },
+                body: { padding: 'px-1', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
+                footer: { padding: 'p-4' }
+            }">
+                <template #header>
+                    <h1 class="text-2xl lg:text-lg">Question Limit</h1>
+                </template>
+                <template #footer>
+                    
+                </template>
+                <QuestionForm @data-quest-choice="submitQuestion" :form-data="data" :is-update="isUpdate"
+                    @reset="resetInstance" />
+            </UCard>
+            <!-- <UICard class="py-2 px-4">
                 <template #header>
                     <UICardHeader>
                         <h1 class="text-2xl lg:text-lg">Question Information</h1>
@@ -10,7 +27,7 @@
                 <QuestionForm @data-quest-choice="submitQuestion" :form-data="data" :is-update="isUpdate"
                     @reset="resetInstance" />
 
-            </UICard>
+            </UICard> -->
         </div>
         <div class="col-span-12 lg:col-span-8">
             <UICard class="py-2 px-4">

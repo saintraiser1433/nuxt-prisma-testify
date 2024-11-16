@@ -44,31 +44,18 @@
                         body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
                         footer: { padding: 'p-4' }
                     }">
-                    {{ assign?.assignCourses}}
                         <UITables :data="assign?.assignCourses ?? []" :columns="assignColumns">
-                            <!-- <template #increment-data="{ row, index }">
+                            <template #increment-data="{ row, index }">
                                 <span>{{ index + 1 }}</span>
                             </template>
-                            <template #status-data="{ row, index }">
-                                <UBadge v-if="row.status" class="dark:text-white" color="emerald" size="sm"
-                                    variant="solid">
-                                    Active</UBadge>
-                                <UBadge v-else color="carnation" class="dark:text-white" size="sm" variant="solid">
-                                    Inactive
-                                </UBadge>
-                            </template> -->
-                            <!-- <template #actions-data="{ row, index }">
+                            <template #actions-data="{ row, index }">
                                 <div class="flex gap-1">
-                                    <UButton color="primary" class="dark:text-white" variant="solid" size="sm"
-                                        @click="toggleAssignDeans(row.deans_id)">
-                                        <i-bx-show />
-                                    </UButton>
-                                    <UButton color="emerald" class="dark:text-white" variant="solid" size="sm"
-                                        @click="editDeans(row)">
-                                        <i-bx-edit />
+                                    <UButton color="carnation" class="dark:text-white" variant="solid" size="sm"
+                                        @click="removeAssign(row.deans_id, row.course_id)">
+                                        <i-bx-x />
                                     </UButton>
                                 </div>
-                            </template> -->
+                            </template>
 
                         </UITables>
                     </UCard>
@@ -176,7 +163,7 @@ const assignColumns = [{
     label: '#',
     sortable: true
 }, {
-    key: 'course',
+    key: 'course_name',
     label: 'Course Assigned',
     sortable: true
 }, {
@@ -191,6 +178,7 @@ const { $api, payload, static: stat } = useNuxtApp()
 const { setToast } = useToasts();
 const isUpdate = ref(false);
 const isOpen = ref(false);
+const { setAlert } = useAlert()
 const data = ref<DeansModel>({})
 
 
@@ -226,16 +214,25 @@ const shouldAssign = ref(0);
 const deansId = ref(0);
 const deansName = ref('');
 const assignDeansRepo = repository<ApiResponse<AssignDeansInfoData>>($api)
-const { data: assign } = await useAsyncData<AssignDeansInfoData>('assign', async () => {
+const { data: assign } = await useAsyncData('assign', async () => {
     const [assignCourses, filteredCourses] = await Promise.all([
         assignDeansRepo.getAssignDeans(deansId.value),
         assignDeansRepo.getCourseFiltered()
     ])
-    return { assignCourses, filteredCourses }
+    return {
+        assignCourses: assignCourses.map((item) => ({
+            deans_id: item.deans_id,
+            course_id: item.course_id,
+            course_name: item.course?.description ?? 'Untitled Course'
+        })),
+        filteredCourses
+    }
 }, {
     immediate: false,
     watch: [shouldAssign]
 })
+
+
 const toggleAssignDeans = async (deanId: number, name: string) => {
     deansId.value = deanId;
     deansName.value = name
@@ -252,6 +249,22 @@ const submitAssign = async (data: AssignDeansModel) => {
     } catch (err: any) {
         setToast('error', error.value?.message || 'An error occurred')
     }
+}
+
+const removeAssign = async (deansId: number, courseId: number) => {
+    setAlert('warning', 'Are you sure you want to delete?', '', 'Confirm delete').then(
+        async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await assignDeansRepo.removeAssignCourse(deansId, courseId);
+                    shouldAssign.value++
+                    setToast('success', response.message);
+                } catch (error: any) {
+                    setToast('error', error.data.error || 'An error occurred');
+                }
+            }
+        }
+    )
 }
 
 

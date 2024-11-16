@@ -154,7 +154,7 @@ const toggleModal = () => {
 
 
 const routeToQuestion = async (id: number) => {
-    await navigateTo(`/exam/${id}`)
+    await navigateTo(`/admin/exam/${id}`)
 }
 
 

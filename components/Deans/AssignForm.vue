@@ -1,7 +1,7 @@
 <template>
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Deans Name" name="first_name">
-            <UInput :model-value="deansName" disabled />
+            <UInput :model-value="deansName" :ui="{ base: 'capitalize' }" disabled />
         </UFormGroup>
         <UFormGroup label="Course Name" name="course_id" required>
             <USelect v-model.number="state.course_id" :options="courseList" option-attribute="name" />

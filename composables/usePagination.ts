@@ -1,7 +1,7 @@
 export const usePagination = (items: any,columns:any) => {
   const search = ref('')
   const page = ref(1)
-  const pageCount = ref(5)
+  const pageCount = ref(10)
   const pageFrom = computed(() => (page.value - 1) * pageCount.value + 1)
   const pageTo = computed(() => Math.min(page.value * pageCount.value, filteredTableData.value.length))
 

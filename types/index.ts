@@ -35,8 +35,8 @@ export interface refreshTokenModel {
 export interface DepartmentSelection {
     name: string | undefined,
     value: number | undefined
-  
-  }
+
+}
 
 export interface User {
     id?: string,
