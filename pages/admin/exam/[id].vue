@@ -12,9 +12,6 @@
                 <template #header>
                     <h1 class="text-2xl lg:text-lg">Question Limit</h1>
                 </template>
-                <template #footer>
-
-                </template>
                 <QuestionForm @data-quest-choice="submitQuestion" :form-data="data" :is-update="isUpdate"
                     @reset="resetInstance" />
             </UCard>
@@ -33,35 +30,7 @@
                 <template #header>
                     <h1 class="text-2xl lg:text-lg">Question List</h1>
                 </template>
-                <UITables :data="question ?? []" :columns="columns"> 
-                    <template #increment-data="{ row, index }">
-                        {{ index + 1 }}
-                    </template>
-                    <template #question-data="{ row, index }">
-                        <td class="max-w-lg whitespace-normal text-wrap">
-                            <p class="font-bold text-warning">{{ row.question }}</p>
-                            <div class="grid grid-cols-12 gap-2 mt-2">
-                                <div class="lg:col-span-4 col-span-12"
-                                    v-for="(choices, index) in row.Choices" :key="choices.choices_id">
-                                    <p :class="{ 'text-success': choices.status }">{{ convertToLetter(index) + ').' +
-                                        choices.description }}</p>
-                                </div>
-                            </div>
-                        </td>
-                    </template>
-                    <template #actions-data="{ row, index }">
-                        <div class="flex gap-1">
-                            <UButton color="emerald" class="dark:text-white" variant="solid" size="sm"
-                                @click="edit(row)">
-                                <i-bx-edit />
-                            </UButton>
-                            <UButton color="carnation" class="dark:text-white" variant="solid" size="sm"
-                                @click="remove(row.question_id)">
-                                <i-icon-park-solid-people-delete />
-                            </UButton>
-                        </div>
-                    </template>
-                </UITables>
+                <QuestionList :question-data="question ?? []" @update="editQuestion" @delete="removeQuestion" />
             </UCard>
 
         </div>
@@ -76,21 +45,6 @@ definePageMeta({
 
 })
 
-const columns = [{
-    key: "increment",
-    label: '#',
-    sortable: true
-}, {
-    key: 'question',
-    label: 'Questions',
-    sortable: true
-}, {
-    key: 'actions',
-    label: 'Actions',
-    sortable: false
-
-}]
-const { convertToLetter } = useConvertLetter();
 const { setToast } = useToasts()
 const { setAlert } = useAlert()
 const route = useRoute().params;
@@ -131,13 +85,13 @@ const submitQuestion = async (data: QuestionModel): Promise<void> => {
 }
 
 
-const edit = (response: QuestionModel) => {
+const editQuestion = (response: QuestionModel) => {
     
     data.value = JSON.parse(JSON.stringify(response))
     isUpdate.value = true
 }
 
-const remove = (id: number) => {
+const removeQuestion = (id: number) => {
     setAlert('warning', 'Are you sure you want to delete?', '', 'Confirm delete').then(
         async (result) => {
             if (result.isConfirmed) {

@@ -3,7 +3,7 @@
         <UFormGroup label="Department Name" name="department_name" required>
             <UInput v-model="state.department_name" />
         </UFormGroup>
-        <UFormGroup label="Status" name="status" >
+        <UFormGroup label="Status" name="status">
             <UToggle v-model="state.status" />
         </UFormGroup>
         <UButton type="submit" block>
@@ -13,7 +13,6 @@
 </template>
 
 <script setup lang="ts">
-import Joi from 'joi'
 import type { FormSubmitEvent } from '#ui/types'
 
 const emits = defineEmits<{
@@ -29,13 +28,13 @@ const props = defineProps({
 })
 
 const { formData } = toRefs(props)
-
-const schema = Joi.object({
-    department_name: Joi.string().required().messages({
+const { $joi } = useNuxtApp()
+const schema = $joi.object({
+    department_name: $joi.string().required().messages({
         "any.required": `Department Name is Required`,
     }),
-    status: Joi.boolean().optional(),
-    department_id: Joi.number().optional()
+    status: $joi.boolean().optional(),
+    department_id: $joi.number().optional()
 })
 
 const state = ref<DepartmentModel>({

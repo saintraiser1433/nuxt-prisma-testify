@@ -1,43 +1,34 @@
-<template>
-  <UITable :data="deansData" :header="header">
-    <template #row="{ item, index }">
-      <td class="table__block">{{ index + 1 }}</td>
-      <td class="table__block">{{ item.fullname }}</td>
-      <td class="table__block">{{ item.department.department_name }}</td>
-      <td class="table__block">{{ item.username }}</td>
-      <td class="table__block">
-        <UIBadge :variant="item.status ? 'success' : 'danger'">
-          {{ item.status ? 'Active' : 'Inactive' }}
-        </UIBadge>
-      </td>
-      <td class="table__block">
-        <UIButton type="button" variant="primary" size="small" class="mr-1" @click="assignDeans(item.deans_id)">
-          <i-gridicons-add-outline></i-gridicons-add-outline>
-        </UIButton>
-        <UIButton type="button" variant="success" size="small" class="mr-1" @click="handleUpdate(item)">
-          <i-bx-edit></i-bx-edit>
-        </UIButton>
-        <!-- <base-button
-          type="button"
-          variant="secondary"
-          size="small"
-          class="mr-1"
-          @click="handleUpdate(item.deans_id)"
-        >
-          <i-bx-reset></i-bx-reset>
-        </base-button> -->
-      </td>
-    </template>
-  </UITable>
-</template>
-
 <script setup lang="ts">
-const header = ref<string[]>(['#', 'Fullname', 'Department', 'Username', 'Status', 'Action'])
-// const emits = defineEmits(['update', 'delete', 'assign'])
+const columns = [{
+    key: "increment",
+    label: '#',
+    sortable: true
+}, {
+    key: 'fullname',
+    label: 'Deans Name',
+    sortable: true
+}, {
+    key: 'department_name',
+    label: 'Department',
+    sortable: true
+}, {
+    key: 'username',
+    label: 'Username',
+    sortable: true
+}, {
+    key: 'status',
+    label: 'Status',
+    sortable: true
+}, {
+    key: 'actions',
+    label: 'Actions',
+    sortable: false
+}]
 const emits = defineEmits<{
   (e: 'update', payload: DeansModel): void,
   (e: 'delete', id: number): void,
-  (e: 'assign', id: number): void,
+  (e: 'assign', id: number, fullname: string): void,
+  (e: 'toggleModal'): void,
 }>()
 const props = defineProps({
   deansData: {
@@ -51,17 +42,46 @@ const props = defineProps({
 const { deansData } = toRefs(props)
 
 
-// const fullname = (firstName, lastName, middleName) => {
-//   return computed(() => {
-//     return `${lastName} ${firstName}  ${middleName ? ' ' + middleName[0] + '.' : ''}`;
-//   });
-// };
-
-const assignDeans = (id: number) => {
-  emits('assign', id)
+const assignDeans = (id: number, fullname: string) => {
+  emits('assign', id, fullname)
+}
+const toggleModal = () => {
+  emits('toggleModal')
 }
 
 const handleUpdate = (item: DeansModel) => {
   emits('update', item)
 }
+
 </script>
+
+<template>
+  <UITables :data="deansData" :columns="columns">
+    <template #action-header>
+      <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="toggleModal">
+        Add Deans's
+      </UButton>
+    </template>
+    <template #increment-data="{ row, index }">
+      <span>{{ index + 1 }}</span>
+    </template>
+    <template #status-data="{ row, index }">
+      <UBadge v-if="row.status" class="dark:text-white" color="emerald" size="sm" variant="solid">
+        Active</UBadge>
+      <UBadge v-else color="carnation" class="dark:text-white" size="sm" variant="solid">Inactive
+      </UBadge>
+    </template>
+    <template #actions-data="{ row, index }">
+      <div class="flex gap-1">
+        <UButton color="primary" class="dark:text-white" variant="solid" size="sm"
+          @click="assignDeans(row.deans_id, row.fullname)">
+          <i-bx-show />
+        </UButton>
+        <UButton color="emerald" class="dark:text-white" variant="solid" size="sm" @click="handleUpdate(row)">
+          <i-bx-edit />
+        </UButton>
+      </div>
+    </template>
+
+  </UITables>
+</template>

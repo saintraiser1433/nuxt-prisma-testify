@@ -24,32 +24,7 @@
                     <h1 class="text-2xl lg:text-lg">List of Department's</h1>
                 </template>
 
-                <UITables :data="departmentData" :columns="columns">
-                    <template #action-header>
-                        <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="toggleModal">
-                            Add Department
-                        </UButton>
-                    </template>
-                    <template #increment-data="{ row, index }">
-                        <span>{{ index + 1 }}</span>
-                    </template>
-                    <template #status-data="{ row, index }">
-                        <UBadge v-if="row.status" class="dark:text-white" color="emerald" size="sm" variant="solid">
-                            Active</UBadge>
-                        <UBadge v-else color="carnation" class="dark:text-white" size="sm" variant="solid">Inactive
-                        </UBadge>
-                    </template>
-                    <template #actions-data="{ row, index }">
-                        <div class="flex gap-1">
-                            <UButton color="emerald" class="dark:text-white" variant="solid" size="sm"
-                                @click="editDepartment(row)"><i-bx-edit /></UButton>
-                            <UButton color="carnation" class="dark:text-white" variant="solid" size="sm"
-                                @click="removeDepartment(row.department_id)">
-                                <i-icon-park-solid-people-delete />
-                            </UButton>
-                        </div>
-                    </template>
-                </UITables>
+               <DepartmentList :department-data="departmentData" @update="editDepartment" @delete="removeDepartment" @toggle-modal="toggleModal"/>
             </UCard>
         </div>
     </div>
@@ -59,24 +34,7 @@
 </template>
 
 <script setup lang="ts">
-const columns = [{
-    key: "increment",
-    label: '#',
-    sortable: true
-}, {
-    key: 'department_name',
-    label: 'Department Name',
-    sortable: true
-}, {
-    key: 'status',
-    label: 'Status',
-    sortable: true
-}, {
-    key: 'actions',
-    label: 'Actions',
-    sortable: false
 
-}]
 definePageMeta({
     requiredRole: 'admin',
     // middleware: ['checkRole'],

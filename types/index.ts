@@ -5,82 +5,7 @@ interface Timestamped {
     updatedAt?: Date;
 }
 
-export interface DeansInfoData {
-    deans: DeansModel[];
-    department: DepartmentModel[];
-}
 
-export interface AssignDeansInfoData {
-    assignCourses: AssignDeansModel[];
-    filteredCourses: CourseModel[];
-}
-
-export interface Token {
-    token: TokenDetail,
-    user: User
-
-}
-
-
-
-export interface TokenDetail {
-    accessToken: string;
-    refreshToken: string;
-}
-
-export interface refreshTokenModel {
-    accessToken: string
-}
-
-export interface DepartmentSelection {
-    name: string | undefined,
-    value: number | undefined
-
-}
-
-export interface User {
-    id?: string,
-    email?: string,
-    password?: string,
-    accessToken?: string,
-    refreshToken?: string,
-    role?: Role
-}
-
-
-
-export type Role = 'admin' | 'examinee' | 'deans';
-
-export enum Method {
-    GET = "GET",
-    POST = "POST",
-    PUT = "PUT",
-    DELETE = "DELETE",
-    PATCH = "PATCH"
-}
-
-
-
-
-export interface DecodeJWT {
-    id?: string,
-    email?: string,
-    role?: string,
-    iat?: number,
-    exp?: number
-}
-
-
-export interface TokenStatus {
-    user?: any;
-    message?: string
-    status: string
-}
-
-export interface ApiResponse<T> {
-    message: string,
-    data?: T,
-}
 
 // Examinee Model
 export interface ExamineeModel extends Timestamped {
@@ -185,6 +110,95 @@ export interface AssignDeansModel extends Timestamped {
     deans?: DeansModel; // Optional relationship
     course?: CourseModel; // Optional relationship
 }
+
+
+export interface DeansInfoData {
+    deans: DeansModel[];
+    department: DepartmentModel[];
+}
+
+export interface AssignDeansInfoData {
+    assignCourses: AssignDeansModel[];
+    filteredCourses: CourseModel[];
+}
+
+export interface Token {
+    token: TokenDetail,
+    user: User
+
+}
+
+export interface FollowupModel {
+    gender?: string,
+    birth_date?: string,
+    contact_number?: string,
+    school?: string,
+    address?: string
+    email?: string
+}
+
+
+
+export interface TokenDetail {
+    accessToken: string;
+    refreshToken: string;
+}
+
+export interface refreshTokenModel {
+    accessToken: string
+}
+
+export interface DepartmentSelection {
+    name: string | undefined,
+    value: number | undefined
+
+}
+
+export interface User {
+    id?: string,
+    email?: string,
+    password?: string,
+    accessToken?: string,
+    refreshToken?: string,
+    role?: Role
+}
+
+
+
+export type Role = 'admin' | 'examinee' | 'deans';
+
+export enum Method {
+    GET = "GET",
+    POST = "POST",
+    PUT = "PUT",
+    DELETE = "DELETE",
+    PATCH = "PATCH"
+}
+
+
+
+
+export interface DecodeJWT {
+    id?: string,
+    email?: string,
+    role?: string,
+    iat?: number,
+    exp?: number
+}
+
+
+export interface TokenStatus {
+    user?: any;
+    message?: string
+    status: string
+}
+
+export interface ApiResponse<T> {
+    message: string,
+    data?: T,
+}
+
+
 
 
 import { format, parse, parseISO, getDay } from 'date-fns';

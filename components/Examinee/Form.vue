@@ -16,7 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import Joi from 'joi'
 import type { FormSubmitEvent } from '#ui/types'
 
 const emits = defineEmits<{
@@ -36,21 +35,21 @@ const props = defineProps({
 })
 
 const { formData, isUpdate } = toRefs(props)
-const { $id } = useNuxtApp();
+const { $id,$joi } = useNuxtApp();
 
-const schema = Joi.object({
-    first_name: Joi.string().required().messages({
+const schema = $joi.object({
+    first_name: $joi.string().required().messages({
         "any.required": `First Name is Required`,
     }),
-    last_name: Joi.string().required().messages({
+    last_name: $joi.string().required().messages({
         "any.required": `Last Name is Required`,
     }),
-    middle_name: Joi.string().required().messages({
+    middle_name: $joi.string().required().messages({
         "any.required": `Middle Name is Required`,
     }),
-    username: Joi.string().optional(),
-    password: Joi.string().optional(),
-    examinee_id: Joi.number().optional()
+    username: $joi.string().optional(),
+    password: $joi.string().optional(),
+    examinee_id: $joi.number().optional()
 })
 
 const state = ref<ExamineeModel>({

@@ -43,7 +43,6 @@
 </template>
 
 <script setup lang="ts">
-import Joi from 'joi'
 import type { FormSubmitEvent } from '#ui/types'
 
 
@@ -65,25 +64,25 @@ const props = defineProps({
 
 const route = useRoute();
 const { isUpdate, formData } = toRefs(props)
+const { $joi } = useNuxtApp()
 
 
 
-
-const schema = Joi.object({
-    question_id: Joi.number().optional(),
-    exam_id: Joi.number().optional(),
-    question: Joi.string().required().messages({
+const schema = $joi.object({
+    question_id: $joi.number().optional(),
+    exam_id: $joi.number().optional(),
+    question: $joi.string().required().messages({
         "any.required": `Question is Required`,
     }),
-    Choices: Joi.array().min(2).items(
-        Joi.object({
-            description: Joi.string().required().trim().min(1).messages({
+    Choices: $joi.array().min(2).items(
+        $joi.object({
+            description: $joi.string().required().trim().min(1).messages({
                 'string.empty': 'Choice description cannot be empty',
                 'any.required': 'Choice description is required',
                 'string.min': 'Choice description cannot be empty'
             }),
-            choices_id: Joi.number().optional(),
-            status: Joi.boolean().optional()
+            choices_id: $joi.number().optional(),
+            status: $joi.boolean().optional()
         })
     ).messages({
         'array.min': 'At least 2 choices are required'

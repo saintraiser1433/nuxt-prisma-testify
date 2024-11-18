@@ -13,14 +13,13 @@
 </template>
 
 <script setup lang="ts">
-import Joi from 'joi'
 import type { FormSubmitEvent } from '#ui/types'
 const emits = defineEmits<{
   (e: 'dataCourse', payload: CourseModel): void;
   (e: 'reset'): void;
 }>();
 
-
+const { $joi } = useNuxtApp()
 
 const props = defineProps({
   formData: {
@@ -37,14 +36,14 @@ const formCourse = ref<CourseModel>({
   score: undefined
 });
 
-const schema = Joi.object({
-  description: Joi.string().required().messages({
+const schema = $joi.object({
+  description: $joi.string().required().messages({
     "any.required": `Department Name is Required`,
   }),
-  score: Joi.number().required().messages({
+  score: $joi.number().required().messages({
     "any.required": `Score  is Required`,
   }),
-  course_id: Joi.number().optional()
+  course_id: $joi.number().optional()
 })
 
 

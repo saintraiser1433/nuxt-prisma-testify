@@ -29,9 +29,9 @@
                         <template #header>
                             <h1 class="text-2xl lg:text-lg">Courses Assign</h1>
                         </template>
-                        <AssignForm :deans-name="deansName" :course-data="assign?.filteredCourses ?? []"
-                            :deans-id="deansId" @data-assign="submitAssign">
-                        </AssignForm>
+                        <DeansAssignForm :deans-name="deansName" :course-data="assign?.filteredCourses ?? []"
+                            :deans-id="deansId" @data-assign="submitAssign" />
+
                     </UCard>
 
                 </div>
@@ -44,20 +44,8 @@
                         body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
                         footer: { padding: 'p-4' }
                     }">
-                        <UITables :data="assign?.assignCourses ?? []" :columns="assignColumns">
-                            <template #increment-data="{ row, index }">
-                                <span>{{ index + 1 }}</span>
-                            </template>
-                            <template #actions-data="{ row, index }">
-                                <div class="flex gap-1">
-                                    <UButton color="carnation" class="dark:text-white" variant="solid" size="sm"
-                                        @click="removeAssign(row.deans_id, row.course_id)">
-                                        <i-bx-x />
-                                    </UButton>
-                                </div>
-                            </template>
+                        <DeansAssignList :assign-data="assign?.assignCourses ?? []" @delete="removeAssign" />
 
-                        </UITables>
                     </UCard>
                 </div>
             </div>
@@ -78,36 +66,8 @@
                 <template #header>
                     <h1 class="text-2xl lg:text-lg">List of Deans's</h1>
                 </template>
-
-                <UITables :data="transformDeans" :columns="columns">
-                    <template #action-header>
-                        <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="toggleModal">
-                            Add Deans's
-                        </UButton>
-                    </template>
-                    <template #increment-data="{ row, index }">
-                        <span>{{ index + 1 }}</span>
-                    </template>
-                    <template #status-data="{ row, index }">
-                        <UBadge v-if="row.status" class="dark:text-white" color="emerald" size="sm" variant="solid">
-                            Active</UBadge>
-                        <UBadge v-else color="carnation" class="dark:text-white" size="sm" variant="solid">Inactive
-                        </UBadge>
-                    </template>
-                    <template #actions-data="{ row, index }">
-                        <div class="flex gap-1">
-                            <UButton color="primary" class="dark:text-white" variant="solid" size="sm"
-                                @click="toggleAssignDeans(row.deans_id, row.fullname)">
-                                <i-bx-show />
-                            </UButton>
-                            <UButton color="emerald" class="dark:text-white" variant="solid" size="sm"
-                                @click="editDeans(row)">
-                                <i-bx-edit />
-                            </UButton>
-                        </div>
-                    </template>
-
-                </UITables>
+                <DeansList :deans-data="transformDeans" @toggle-modal="toggleModal" @assign="toggleAssignDeans"
+                    @update="editDeans" />
             </UCard>
         </div>
     </div>
@@ -117,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import AssignForm from '~/components/deans/AssignForm.vue';
+
 
 definePageMeta({
     requiredRole: 'admin',
@@ -131,46 +91,6 @@ useHead({
         { property: "og:description", content: 'CRUD for Deans' },
     ],
 });
-
-const columns = [{
-    key: "increment",
-    label: '#',
-    sortable: true
-}, {
-    key: 'fullname',
-    label: 'Deans Name',
-    sortable: true
-}, {
-    key: 'department_name',
-    label: 'Department',
-    sortable: true
-}, {
-    key: 'username',
-    label: 'Username',
-    sortable: true
-}, {
-    key: 'status',
-    label: 'Status',
-    sortable: true
-}, {
-    key: 'actions',
-    label: 'Actions',
-    sortable: false
-}]
-
-const assignColumns = [{
-    key: "increment",
-    label: '#',
-    sortable: true
-}, {
-    key: 'course_name',
-    label: 'Course Assigned',
-    sortable: true
-}, {
-    key: 'actions',
-    label: 'Actions',
-    sortable: false
-}]
 
 
 

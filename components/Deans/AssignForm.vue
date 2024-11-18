@@ -14,7 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import Joi from 'joi'
 import type { FormSubmitEvent } from '#ui/types'
 const props = defineProps({
     deansId: {
@@ -32,7 +31,7 @@ const props = defineProps({
     }
 })
 const { deansId, courseData, deansName } = toRefs(props)
-
+const { $joi } = useNuxtApp()
 const emits = defineEmits<{
     (e: 'dataAssign', payload: AssignDeansModel): void,
     (e: 'reset'): void,
@@ -47,8 +46,8 @@ const courseList = computed(() => {
     }))
 })
 
-const schema = Joi.object({
-    course_id: Joi.number().required().messages({
+const schema = $joi.object({
+    course_id: $joi.number().required().messages({
         "any.required": `Course is Required`,
     }),
 

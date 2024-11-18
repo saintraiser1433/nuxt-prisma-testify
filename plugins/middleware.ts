@@ -53,7 +53,6 @@ export default defineNuxtPlugin((event) => {
             signOut(store.getUser?.id);
             localStorage.removeItem("token");
             localStorage.removeItem("refreshToken");
-            store.setUser({});
             return navigateTo({ name: "auth" });
           }
           store.setUser(decodedToken);

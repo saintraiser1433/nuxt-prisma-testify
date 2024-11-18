@@ -30,6 +30,7 @@
                 base: 'odd:bg-white even:bg-slate-50 dark:odd:bg-gray-900 dark:even:bg-gray-800'
             },
             th: {
+                padding: 'py-2',
                 base: 'bg-gray-100 dark:bg-gun-powder-700  ',
                 size: 'text-sm'
             },
@@ -46,7 +47,7 @@
         </UTable>
 
         <div
-            class="flex flex-wrap justify-between items-center border-t dark:border-t-0 px-3 py-4 outline-none dark:bg-gun-powder-700">
+            class="flex flex-wrap justify-between items-center border-t dark:border-t-0 px-3 pt-2 outline-none dark:bg-gun-powder-700">
             <div>
                 <span class="text-sm leading-5">
                     Showing

@@ -22,34 +22,9 @@
                 <template #header>
                     <h1 class="text-2xl lg:text-lg">List of Exam's</h1>
                 </template>
+                <ExamList :exam-data="examData" @toggle-modal="toggleModal" @assign="routeToQuestion" @update="editExam"
+                    @delete="removeExam" />
 
-                <UITables :data="examData" :columns="columns">
-                    <template #action-header>
-                        <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="toggleModal">
-                            Add Exam's
-                        </UButton>
-                    </template>
-                    <template #increment-data="{ row, index }">
-                        <span>{{ index + 1 }}</span>
-
-                    </template>
-                    <template #actions-data="{ row, index }">
-                        <div class="flex gap-1">
-                            <UButton color="primary" class="dark:text-white" variant="solid" size="sm"
-                                @click="routeToQuestion(row.exam_id)">
-                                <i-bx-show />
-                            </UButton>
-                            <UButton color="emerald" class="dark:text-white" variant="solid" size="sm"
-                                @click="editExam(row)">
-                                <i-bx-edit />
-                            </UButton>
-                            <UButton color="carnation" class="dark:text-white" variant="solid" size="sm"
-                                @click="removeExam(row.exam_id)">
-                                <i-icon-park-solid-people-delete />
-                            </UButton>
-                        </div>
-                    </template>
-                </UITables>
             </UCard>
         </div>
     </div>
@@ -72,28 +47,7 @@ useHead({
     ],
 });
 
-const columns = [{
-    key: "increment",
-    label: '#',
-    sortable: true
-}, {
-    key: 'exam_title',
-    label: 'Exam Name',
-    sortable: true
-}, {
-    key: 'description',
-    label: 'Description',
-    sortable: true
-}, {
-    key: 'time_limit',
-    label: 'Time',
-    sortable: true
-}, {
-    key: 'actions',
-    label: 'Actions',
-    sortable: false
 
-}]
 
 
 

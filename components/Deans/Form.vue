@@ -25,11 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import Joi from 'joi'
 import type { FormSubmitEvent } from '#ui/types'
-
-
-
 const emits = defineEmits<{
   (e: 'dataDeans', payload: DeansModel): void;
   (e: 'reset'): void;
@@ -51,26 +47,26 @@ const props = defineProps({
 })
 
 const { isUpdate, formData, departmentData } = toRefs(props)
-const { $id } = useNuxtApp();
+const { $id,$joi } = useNuxtApp();
 
-const schema = Joi.object({
-  deans_id: Joi.number().optional(),
-  first_name: Joi.string().required().messages({
+const schema = $joi.object({
+  deans_id: $joi.number().optional(),
+  first_name: $joi.string().required().messages({
     "any.required": `First Name is Required`,
   }),
-  last_name: Joi.string().required().messages({
+  last_name: $joi.string().required().messages({
     "any.required": `Last Name is Required`,
   }),
-  middle_name: Joi.string().required().messages({
+  middle_name: $joi.string().required().messages({
     "any.required": `Middle Name is Required`,
   }),
-  department_id: Joi.number().empty().required().messages({
+  department_id: $joi.number().empty().required().messages({
     "number.empty": `Department cannot be empty`,
     "any.required": `Department cannot be null or empty`,
   }),
-  status: Joi.boolean().optional(),
-  username: Joi.string().optional(),
-  password: Joi.string().optional(),
+  status: $joi.boolean().optional(),
+  username: $joi.string().optional(),
+  password: $joi.string().optional(),
 
 })
 

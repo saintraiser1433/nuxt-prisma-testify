@@ -22,29 +22,7 @@
         <template #header>
           <h1 class="text-2xl lg:text-lg">List of Course's</h1>
         </template>
-
-        <UITables :data="courseData" :columns="columns">
-          <template #action-header>
-            <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="toggleModal">
-              Add course's
-            </UButton>
-          </template>
-          <template #increment-data="{ row, index }">
-            <span>{{ index + 1 }}</span>
-
-          </template>
-          <template #actions-data="{ row, index }">
-            <div class="flex gap-1">
-              <UButton color="emerald" class="dark:text-white" variant="solid" size="sm" @click="editCourse(row)">
-                <i-bx-edit />
-              </UButton>
-              <UButton color="carnation" class="dark:text-white" variant="solid" size="sm"
-                @click="removeCourse(row.course_id)">
-                <i-icon-park-solid-people-delete />
-              </UButton>
-            </div>
-          </template>
-        </UITables>
+        <CourseList :course-data="courseData" @update="editCourse" @delete="removeCourse" @toggleModal="toggleModal" />
       </UCard>
     </div>
   </div>
@@ -67,24 +45,7 @@ useHead({
   ],
 });
 
-const columns = [{
-  key: "increment",
-  label: '#',
-  sortable: true
-}, {
-  key: 'description',
-  label: 'Course',
-  sortable: true
-}, {
-  key: 'score',
-  label: 'Score Attained',
-  sortable: true
-}, {
-  key: 'actions',
-  label: 'Actions',
-  sortable: false
 
-}]
 
 
 
@@ -97,6 +58,7 @@ const courseData = ref<CourseModel[]>([])
 const isOpen = ref(false);
 const data = ref<CourseModel>({})
 
+/* course */
 const { data: course, error, status } = await useAPI<CourseModel[]>('/course', {
   getCachedData(key) {
     const data = payload.data[key] || stat.data[key]
@@ -113,6 +75,8 @@ if (course && course.value) {
 } else {
   setToast('error', error.value?.message || 'An error occurred');
 }
+
+
 
 const submitCourse = async (response: CourseModel) => {
   try {
@@ -133,15 +97,6 @@ const submitCourse = async (response: CourseModel) => {
     setToast('error', error.data.error || 'An error occurred');
   }
 }
-
-/* course */
-
-const toggleModal = () => {
-  data.value = {}
-  isOpen.value = true;
-  isUpdate.value = false
-}
-
 
 
 const editCourse = (response: CourseModel) => {
@@ -169,6 +124,12 @@ const removeCourse = (id: number) => {
       }
     }
   )
+}
+
+const toggleModal = () => {
+  data.value = {}
+  isOpen.value = true;
+  isUpdate.value = false
 }
 
 

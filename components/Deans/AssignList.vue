@@ -1,25 +1,41 @@
 <template>
-    <UITable :data="assignData" :header="header">
-        <template #row="{ item, index }">
-            <td class="table__block">{{ index + 1 }}</td>
-            <td class="table__block">{{ item.course.description }}</td>
-            <td class="table__block">
-                <UIButton type="button" size="small" variant="danger"
-                    @click="handleDelete(item.deans.deans_id, item.course.course_id)">
-                    <i-icon-park-solid-people-delete></i-icon-park-solid-people-delete>
-                </UIButton>
-            </td>
+
+    <UITables :data="assignData" :columns="assignColumns">
+        <template #increment-data="{ row, index }">
+            <span>{{ index + 1 }}</span>
         </template>
-    </UITable>
+        <template #actions-data="{ row, index }">
+            <div class="flex gap-1">
+                <UButton color="carnation" class="dark:text-white" variant="solid" size="sm"
+                    @click="handleDelete(row.deans_id, row.course_id)">
+                    <i-bx-x />
+                </UButton>
+            </div>
+        </template>
+
+    </UITables>
 </template>
 
 <script setup lang="ts">
-
+const assignColumns = [{
+    key: "increment",
+    label: '#',
+    sortable: true
+}, {
+    key: 'course_name',
+    label: 'Course Assigned',
+    sortable: true
+}, {
+    key: 'actions',
+    label: 'Actions',
+    sortable: false
+}]
 
 const emits = defineEmits<{
     (e: 'delete', deans_id: number, course_id: number): void
 }>();
-const header = ref<string[]>(['#', 'Course Assigned', 'Action'])
+
+
 const props = defineProps({
     assignData: {
         type: Array as PropType<AssignDeansModel[]>,
