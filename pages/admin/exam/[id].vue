@@ -1,6 +1,27 @@
 <template>
     <div class="grid grid-cols-12 gap-2">
-        <div class="col-span-12 lg:col-span-4">
+        <div class="col-span-12 lg:col-span-3">
+            <UCard class="w-full" :ui="{
+                base: '',
+                ring: '',
+                divide: 'divide-y divide-gray-200 dark:divide-gray-700',
+                header: { padding: 'px-4 py-5' },
+                body: { padding: 'px-1 py-1', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
+                footer: { padding: 'p-4' }
+            }">
+                <template #header>
+                    <h1 class="text-2xl lg:text-lg">Question Limit</h1>
+                </template>
+                <template #footer>
+
+                </template>
+                <QuestionForm @data-quest-choice="submitQuestion" :form-data="data" :is-update="isUpdate"
+                    @reset="resetInstance" />
+            </UCard>
+
+        </div>
+        <div class="col-span-12 lg:col-span-9">
+
             <UCard class="w-full" :ui="{
                 base: '',
                 ring: '',
@@ -10,34 +31,39 @@
                 footer: { padding: 'p-4' }
             }">
                 <template #header>
-                    <h1 class="text-2xl lg:text-lg">Question Limit</h1>
+                    <h1 class="text-2xl lg:text-lg">Question List</h1>
                 </template>
-                <template #footer>
-                    
-                </template>
-                <QuestionForm @data-quest-choice="submitQuestion" :form-data="data" :is-update="isUpdate"
-                    @reset="resetInstance" />
+                <UITables :data="question ?? []" :columns="columns"> 
+                    <template #increment-data="{ row, index }">
+                        {{ index + 1 }}
+                    </template>
+                    <template #question-data="{ row, index }">
+                        <td class="max-w-lg whitespace-normal text-wrap">
+                            <p class="font-bold text-warning">{{ row.question }}</p>
+                            <div class="grid grid-cols-12 gap-2 mt-2">
+                                <div class="lg:col-span-4 col-span-12"
+                                    v-for="(choices, index) in row.Choices" :key="choices.choices_id">
+                                    <p :class="{ 'text-success': choices.status }">{{ convertToLetter(index) + ').' +
+                                        choices.description }}</p>
+                                </div>
+                            </div>
+                        </td>
+                    </template>
+                    <template #actions-data="{ row, index }">
+                        <div class="flex gap-1">
+                            <UButton color="emerald" class="dark:text-white" variant="solid" size="sm"
+                                @click="edit(row)">
+                                <i-bx-edit />
+                            </UButton>
+                            <UButton color="carnation" class="dark:text-white" variant="solid" size="sm"
+                                @click="remove(row.question_id)">
+                                <i-icon-park-solid-people-delete />
+                            </UButton>
+                        </div>
+                    </template>
+                </UITables>
             </UCard>
-            <!-- <UICard class="py-2 px-4">
-                <template #header>
-                    <UICardHeader>
-                        <h1 class="text-2xl lg:text-lg">Question Information</h1>
-                    </UICardHeader>
-                </template>
-                <QuestionForm @data-quest-choice="submitQuestion" :form-data="data" :is-update="isUpdate"
-                    @reset="resetInstance" />
 
-            </UICard> -->
-        </div>
-        <div class="col-span-12 lg:col-span-8">
-            <UICard class="py-2 px-4">
-                <template #header>
-                    <UICardHeader>
-                        <h1 class="text-2xl lg:text-lg">Question List</h1>
-                    </UICardHeader>
-                </template>
-                <QuestionList :question-data="question ?? []" @update="edit" @delete="remove" />
-            </UICard>
         </div>
 
     </div>
@@ -50,6 +76,21 @@ definePageMeta({
 
 })
 
+const columns = [{
+    key: "increment",
+    label: '#',
+    sortable: true
+}, {
+    key: 'question',
+    label: 'Questions',
+    sortable: true
+}, {
+    key: 'actions',
+    label: 'Actions',
+    sortable: false
+
+}]
+const { convertToLetter } = useConvertLetter();
 const { setToast } = useToasts()
 const { setAlert } = useAlert()
 const route = useRoute().params;
@@ -91,7 +132,8 @@ const submitQuestion = async (data: QuestionModel): Promise<void> => {
 
 
 const edit = (response: QuestionModel) => {
-    data.value = response
+    
+    data.value = JSON.parse(JSON.stringify(response))
     isUpdate.value = true
 }
 

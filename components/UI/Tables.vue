@@ -1,15 +1,9 @@
 <template>
     <div>
         <div class="flex items-center justify-between gap-3 px-4 py-3">
-
-            <UInput v-model="search" icon="i-heroicons-magnifying-glass-20-solid" placeholder="Search..." />
             <div class="flex items-center gap-2">
                 <slot name="action-header"></slot>
             </div>
-            <!-- <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="handleModal">
-                Add Examinee
-            </UButton> -->
-
         </div>
         <!-- Header and Action buttons -->
         <div class="flex justify-between items-center w-full px-4 py-3">
@@ -18,22 +12,25 @@
                 <USelect v-model.number="pageCount" :options="[3, 5, 10, 20, 30, 40]" class="me-2 w-20" size="xs" />
             </div>
             <div class="flex gap-1.5 items-center">
+                <UInput v-model="search" icon="i-heroicons-magnifying-glass-20-solid" placeholder="Search..." />
                 <USelectMenu v-model="selectedColumns" :options="excludeSelectColumn" multiple>
                     <UButton icon="i-heroicons-view-columns" color="gray" size="xs">
                         Columns
                     </UButton>
                 </USelectMenu>
+                
             </div>
         </div>
-        <UTable class="w-full" :rows="paginatedData" :columns="columnsTable" :ui="{
+        <UTable class="w-full " :rows="paginatedData" :columns="columnsTable" :ui="{
             td: {
-                padding: 'px-4 py-2'
+
+                padding: 'px-4 py-2 align-top '
             },
             tr: {
                 base: 'odd:bg-white even:bg-slate-50 dark:odd:bg-gray-900 dark:even:bg-gray-800'
             },
             th: {
-                base: 'bg-gray-100 dark:bg-gun-powder-700',
+                base: 'bg-gray-100 dark:bg-gun-powder-700  ',
                 size: 'text-sm'
             },
 
@@ -88,6 +85,7 @@ const props = defineProps({
         required: true,
         default: () => [],
     },
+    isBorder: Boolean
 
 })
 
