@@ -7,7 +7,7 @@
             <span :class="store.getToggleState ? 'lg:block' : 'lg:hidden'" class="font-titleFont font-bold text-lg ml-2">
                 Testify</span>
         </div>
-        <ul class="flex flex-col grow ">
+        <ul class="flex flex-col grow  ">
             <AppMenuList :menu-items="item"></AppMenuList>
         </ul>
     </aside>

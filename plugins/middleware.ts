@@ -30,7 +30,7 @@ export default defineNuxtPlugin((event) => {
   addRouteMiddleware(
     "auth",
     async (to, from) => {
-      const { token, signOut } = useAuthentication();
+      const { token, validateToken, signOut } = useAuthentication();
 
       if (!token.value) {
         if (to.name !== "auth") {
@@ -45,17 +45,12 @@ export default defineNuxtPlugin((event) => {
         if (to.name !== "auth") {
           const store = storeUser();
           const decodedToken = jwtDecode<DecodeJWT>(token.value);
-          const currentTime = Date.now();
-          const isExpired =
-            decodedToken.exp !== undefined &&
-            decodedToken.exp * 1000 < currentTime;
-          if (isExpired) {
-            signOut(store.getUser?.id);
-            localStorage.removeItem("token");
-            localStorage.removeItem("refreshToken");
+          const checkToken = await validateToken();
+          if (!checkToken) {
+            await signOut(store.getUser.id)
             return navigateTo({ name: "auth" });
           }
-          store.setUser(decodedToken);
+
           if (decodedToken.role === "admin" && to.meta.requiredRole !== "admin") {
             return navigateTo({ name: "admin-home" });
           } else if (
@@ -73,6 +68,7 @@ export default defineNuxtPlugin((event) => {
       } catch (error) {
         localStorage.removeItem("token");
         localStorage.removeItem("refreshToken");
+
         return navigateTo({ name: "auth" });
       }
     },

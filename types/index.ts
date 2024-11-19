@@ -8,17 +8,7 @@ interface Timestamped {
 
 
 // Examinee Model
-export interface ExamineeModel extends Timestamped {
-    examinee_id?: number;
-    first_name?: string;
-    last_name?: string;
-    middle_name?: string;
-    username?: string;
-    password?: string;
-    fullname?: string;
-    Answers?: AnswersModel[]; // Optional relationship
-    ExamAttempt?: ExamAttemptModel[]; // Optional relationship
-}
+
 
 // Course Model
 export interface CourseModel extends Timestamped {
@@ -66,7 +56,7 @@ export interface AnswersModel extends Timestamped {
     exam_id: number;
     question_id: number;
     choices_id: number;
-    examineeList?: ExamineeModel; // Optional relationship
+    examineeList?: User; // Optional relationship
     examList?: ExamModel; // Optional relationship
     questionList?: QuestionModel; // Optional relationship
     choicesList?: ChoicesModel; // Optional relationship
@@ -76,7 +66,7 @@ export interface AnswersModel extends Timestamped {
 export interface ExamAttemptModel extends Timestamped {
     examinee_id: number;
     exam_id: number;
-    examineeList?: ExamineeModel; // Optional relationship
+    examineeList?: User; // Optional relationship
     examList?: ExamModel; // Optional relationship
 }
 
@@ -157,6 +147,10 @@ export interface DepartmentSelection {
 export interface User {
     id?: string,
     email?: string,
+    username?:string,
+    first_name?:string,
+    last_name?:string,
+    middle_name?:string,
     password?: string,
     accessToken?: string,
     refreshToken?: string,

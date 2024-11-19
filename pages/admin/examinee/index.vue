@@ -57,12 +57,12 @@ const { $api, payload, static: stat } = useNuxtApp()
 const { setToast } = useToasts();
 const isUpdate = ref(false);
 const { setAlert } = useAlert()
-const examineeRepo = repository<ApiResponse<ExamineeModel>>($api)
-const examineeData = ref<ExamineeModel[]>([])
+const examineeRepo = repository<ApiResponse<User>>($api)
+const examineeData = ref<User[]>([])
 const isOpen = ref(false);
-const data = ref<ExamineeModel>({})
+const data = ref<User>({})
 
-const { data: examinee, error, status } = await useAPI<ExamineeModel[]>('/examinee', {
+const { data: examinee, error, status } = await useAPI<User[]>('/examinee', {
   getCachedData(key) {
     const data = payload.data[key] || stat.data[key]
     if (!data) {
@@ -89,15 +89,16 @@ const transformData = computed(() => {
   })
 })
 
-const submitExaminee = async (response: ExamineeModel) => {
+const submitExaminee = async (response: User) => {
+  console.log(response);
   try {
     if (!isUpdate.value) {
       const res = await examineeRepo.addExaminee(response);
-      examineeData.value.unshift(res.data as ExamineeModel)
+      examineeData.value.unshift(res.data as User)
       setToast('success', res.message)
     } else {
       const res = await examineeRepo.updateExaminee(response);
-      const index = examineeData.value.findIndex((item) => item.examinee_id === res.data?.examinee_id);
+      const index = examineeData.value.findIndex((item) => item.id === res.data?.id);
       examineeData.value[index] = { ...examineeData.value[index], ...res.data }
       setToast('success', res.message)
     }
@@ -119,25 +120,25 @@ const toggleModal = () => {
 
 
 
-const editExaminee = (response: ExamineeModel) => {
+const editExaminee = (response: User) => {
+  console.log(response)
   data.value = {
-    examinee_id: response.examinee_id,
+    id: response.id,
     first_name: response.first_name,
     last_name: response.last_name,
     middle_name: response.middle_name,
-    username: response.username,
   };
   isOpen.value = true;
   isUpdate.value = true
 }
 
-const removeExaminee = (id: number) => {
+const removeExaminee = (id: string) => {
   setAlert('warning', 'Are you sure you want to delete?', '', 'Confirm delete').then(
     async (result) => {
       if (result.isConfirmed) {
         try {
           const response = await examineeRepo.removeExaminee(id);
-          const index = examineeData.value.findIndex((item) => item.examinee_id === id);
+          const index = examineeData.value.findIndex((item) => item.id === id);
           examineeData.value.splice(index, 1);
           setToast('success', response.message);
         } catch (error: any) {

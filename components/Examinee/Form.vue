@@ -19,13 +19,13 @@
 import type { FormSubmitEvent } from '#ui/types'
 
 const emits = defineEmits<{
-    (e: 'dataExaminee', payload: ExamineeModel): void;
+    (e: 'dataExaminee', payload: User): void;
     (e: 'reset'): void;
 }>()
 
 const props = defineProps({
     formData: {
-        type: Object as PropType<ExamineeModel>,
+        type: Object as PropType<User>,
         required: true,
     },
     isUpdate: {
@@ -49,19 +49,19 @@ const schema = $joi.object({
     }),
     username: $joi.string().optional(),
     password: $joi.string().optional(),
-    examinee_id: $joi.number().optional()
+    id: $joi.string().optional()
 })
 
-const state = ref<ExamineeModel>({
-    examinee_id: undefined,
+const state = ref<User>({
+    id: undefined,
     first_name: undefined,
     last_name: undefined,
     middle_name: undefined,
 
 })
 
-const onSubmit = async (event: FormSubmitEvent<ExamineeModel>) => {
-    let data: ExamineeModel;
+const onSubmit = async (event: FormSubmitEvent<User>) => {
+    let data: User;
     if (!isUpdate.value) {
         data = {
             ...event.data,

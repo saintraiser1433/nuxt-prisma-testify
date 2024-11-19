@@ -6,7 +6,7 @@
                 ring: '',
                 divide: 'divide-y divide-gray-200 dark:divide-gray-700',
                 header: { padding: 'px-4 py-5' },
-                body: { padding: 'px-1 py-1', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
+                body: { padding: 'px-3 py-1', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
                 footer: { padding: 'p-4' }
             }">
                 <template #header>
@@ -18,13 +18,12 @@
 
         </div>
         <div class="col-span-12 lg:col-span-9">
-
             <UCard class="w-full" :ui="{
                 base: '',
                 ring: '',
                 divide: 'divide-y divide-gray-200 dark:divide-gray-700',
                 header: { padding: 'px-4 py-5' },
-                body: { padding: 'px-1', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
+                body: { padding: 'px-0', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
                 footer: { padding: 'p-4' }
             }">
                 <template #header>

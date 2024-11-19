@@ -9,6 +9,7 @@
       class="col-span-3 px-5 pt-2 my-12 pb-8 transition-all ease-in-out">
       <div class="flex items-center flex-wrap justify-end pb-4">
       </div>
+      {{ idle }}
       <slot />
     </main>
 
@@ -31,10 +32,7 @@ const { idle } = useIdle(50 * 10 * 1000);
 watch(idle, async (newValue: boolean) => {
   if (newValue) {
     await signOut(user.getUser?.id);
-    localStorage.removeItem("token");
-    localStorage.removeItem("refreshToken");
-    user.setUser({});
-    await navigateTo({ name: "auth" });
+    return navigateTo({ name: "auth" });
   }
 });
 

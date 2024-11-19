@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="py-5 lg:py-2">
         <div class="grid grid-cols-12 gap-2">
             <div class="col-span-12 lg:col-span-3">
                 <UCard class="w-full" :ui="{
@@ -114,6 +114,9 @@ definePageMeta({
 })
 const shouldRefetch = ref(0);
 const nuxtApp = useNuxtApp()
+const store = storeUser();
+const { getUser } = storeToRefs(store);
+
 const { data: exam } = await useAPI<ExamModel[]>('/exam', {
     watch: [shouldRefetch],
     getCachedData(key) {

@@ -1,33 +1,34 @@
 <template>
     <div>
-        <div class="flex items-center justify-between gap-3 px-4 py-3">
+        <div class="flex items-center justify-between gap-3 px-4 py-3" v-if="hasActionHeader">
             <div class="flex items-center gap-2">
                 <slot name="action-header"></slot>
             </div>
         </div>
         <!-- Header and Action buttons -->
-        <div class="flex justify-between items-center w-full px-4 py-3">
-            <div class="flex items-center gap-1.5">
+        <div class="flex justify-between items-center w-full px-4 py-3 flex-col lg:flex-row gap-3"
+            v-if="hasPageCount && hasColumnFilter">
+            <div class="flex items-center gap-1.5" v-if="hasPageCount">
                 <span class="text-sm leading-5">Rows per page:</span>
                 <USelect v-model.number="pageCount" :options="[3, 5, 10, 20, 30, 40]" class="me-2 w-20" size="xs" />
             </div>
-            <div class="flex gap-1.5 items-center">
+            <div class="flex gap-1.5 items-center" v-if="hasColumnFilter">
                 <UInput v-model="search" icon="i-heroicons-magnifying-glass-20-solid" placeholder="Search..." />
                 <USelectMenu v-model="selectedColumns" :options="excludeSelectColumn" multiple>
                     <UButton icon="i-heroicons-view-columns" color="gray" size="xs">
                         Columns
                     </UButton>
                 </USelectMenu>
-                
+
             </div>
         </div>
-        <UTable class="w-full " :rows="paginatedData" :columns="columnsTable" :ui="{
+        <UTable class="w-full " :rows="hasPagination ? paginatedData : data" :columns="columnsTable" :ui="{
             td: {
-
-                padding: 'px-4 py-2 align-top '
+                padding: 'px-4 py-2',
+                base: hasBorder ? 'align-top border' : 'align-top'
             },
             tr: {
-                base: 'odd:bg-white even:bg-slate-50 dark:odd:bg-gray-900 dark:even:bg-gray-800'
+                base: 'odd:bg-white even:bg-slate-50 dark:odd:bg-gray-900 dark:even:bg-gray-800 '
             },
             th: {
                 padding: 'py-2',
@@ -46,8 +47,8 @@
             </template>
         </UTable>
 
-        <div
-            class="flex flex-wrap justify-between items-center border-t dark:border-t-0 px-3 pt-2 outline-none dark:bg-gun-powder-700">
+        <div v-if="hasPagination"
+            class="flex flex-wrap justify-between items-center border-t dark:border-t-0 px-3 py-2 outline-none dark:bg-gun-powder-700">
             <div>
                 <span class="text-sm leading-5">
                     Showing
@@ -60,7 +61,7 @@
                 </span>
             </div>
             <UPagination v-model="page" :max="5" :page-count="1" :total="totalPages" :ui="{
-                wrapper: 'flex items-center gap-1',
+                wrapper: 'flex items-center gap-1 py-2',
                 rounded: '!rounded-full min-w-[32px] justify-center',
                 default: {
                     activeButton: {
@@ -86,7 +87,27 @@ const props = defineProps({
         required: true,
         default: () => [],
     },
-    isBorder: Boolean
+    hasBorder: {
+        type: Boolean,
+        default: false
+    },
+    hasPagination: {
+        type: Boolean,
+        default: true
+    },
+    hasPageCount: {
+        type: Boolean,
+        default: true
+    },
+    hasColumnFilter: {
+        type: Boolean,
+        default: true
+    },
+    hasActionHeader: {
+        type: Boolean,
+        default: true
+    }
+
 
 })
 

@@ -1,55 +1,52 @@
 <template>
     <div>
         <UCard :ui="{
-            base: 'h-[81vh] overflow-hidden  ',
+            base: 'static overflow-hidden',
             ring: '',
-            body: { padding: 'sm:p-0 p-0' },
+            body: { padding: 'sm:p-0 p-0', base: 'h-[65vh] lg:h-[71vh] w-full overflow-y-auto' },
             header: { padding: '' },
             footer: { padding: '' },
 
         }">
             <template #header>
                 <div
-                    class="bg-[url('@/assets/images/bgheaders.png')] w-full h-16 bg-cover flex justify-between items-center px-3">
-                    <h2 class="text-2xl font-semibold text-white">EXAM TITLE:</h2>
-                    <h2 class="text-2xl font-semibold text-white">ITEMS ANSWERED: 0/76</h2>
+                    class="bg-[url('@/assets/images/bgheaders.png')] w-full h-16 bg-cover flex gap-2 justify-between items-center px-3 text-sm lg:text-2xl font-semibold text-white">
+                    <h2>EXAM TITLE: LEARNING IN FILIPINO USING BLAH</h2>
+                    <h2>ITEMS: 0/76</h2>
                 </div>
             </template>
             <template #default>
 
-                <div class="overflow-y-auto">
-                    <UITables :data="question ?? []" :columns="columns">
-                        <template #increment-data="{ row, index }">
-                            {{ index + 1 }}
-                        </template>
-                        <template #question-data="{ row, index }">
-                            <td class="max-w-lg whitespace-normal text-wrap">
-                                <p class="font-bold">{{ row.question }}</p>
-                                <div class="grid grid-cols-12 gap-2 mt-2">
-                                    <div class="col-span-12 ">
-                                        <URadioGroup v-model="value" color="primary" size="xl" :options="row.choices">
-                                            <template #label="{ option }">
-                                                <p class="text-sm">
-                                                    {{ option.label }}
-                                                </p>
-                                            </template>
-                                        </URadioGroup>
-                                    </div>
+                <UITables :data="question ?? []" :columns="columns" :has-border="true" :has-column-filter="false"
+                    :hasActionHeader="false" :has-pagination="false" :has-page-count="false">
+                    <template #increment-data="{ row, index }">
+                        <p class="text-center font-bold">{{ index + 1 }}</p>
+                    </template>
+                    <template #question-data="{ row, index }">
+                        <td class="lg:max-w-6xl whitespace-normal text-wrap">
+                            <p class="font-bold">{{ row.question }}</p>
+                            <URadioGroup v-model="value" color="primary" size="xl" :options="row.choices" :ui="{
+                                fieldset: 'lg:grid lg:grid-cols-2 lg:gap-5 lg: pt-2 cursor-pointer  ',
+                            }">
+                                <template #label="{ option, index }">
+                                    <p class="text-sm break-words whitespace-normal">
+                                        {{ option.label }}
+                                    </p>
+                                </template>
+                            </URadioGroup>
+                        </td>
+                    </template>
 
-                                
-                                </div>
-                            </td>
-                        </template>
+                </UITables>
 
-                    </UITables>
-                </div>
 
 
             </template>
-
-            <!-- <template #footer>
-                
-            </template> -->
+            <template #footer>
+                <UButton type="submit" block>
+                    Submit
+                </UButton>
+            </template>
         </UCard>
 
 

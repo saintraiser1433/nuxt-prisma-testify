@@ -16,7 +16,7 @@
 
         <!-- Table Section -->
         <div
-            class="overflow-x-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300">
+            class=" overflow-x-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300">
             <table class="whitespace-nowrap w-100 min-w-full mx-auto">
                 <thead
                     class="bg-gray-100 dark:bg-darken dark:border-y dark:border-colorBorder rounded-lg text-left text-sm lg:text-xs">

@@ -16,14 +16,14 @@
             <template #header>
                 <h1 class="text-2xl lg:text-lg">Assign Deans</h1>
             </template>
-            <div class="grid grid-cols-12 gap-2">
-                <div class="col-span-3">
+            <div class="grid grid-cols-12 gap-3">
+                <div class="col-span-12 lg:col-span-3">
                     <UCard class="w-full" :ui="{
                         base: '',
                         ring: '',
                         divide: 'divide-y divide-gray-200 dark:divide-gray-700',
-                        header: { padding: 'px-0 py-2' },
-                        body: { padding: 'px-1', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
+                        header: { padding: 'px-3 py-2' },
+                        body: { padding: 'px-3', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
                         footer: { padding: 'p-4' }
                     }">
                         <template #header>
@@ -35,7 +35,7 @@
                     </UCard>
 
                 </div>
-                <div class="col-span-9">
+                <div class="col-span-12 lg:col-span-9">
                     <UCard class="w-full" :ui="{
                         base: '',
                         ring: '',

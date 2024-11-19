@@ -44,7 +44,7 @@
 <script setup>
 definePageMeta({
     layout: 'empty',
-    
+    requiredRole: 'guest',
     // middleware: ['checkRole'],
 })
 

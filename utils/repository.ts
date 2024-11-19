@@ -2,7 +2,7 @@ import type { NitroFetchRequest, $Fetch } from 'nitropack'
 
 export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
     //course
-    
+
 
 
     async addCourse(body: CourseModel): Promise<T> {
@@ -61,7 +61,7 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
         })
     },
 
-    
+
 
     async removeAssignCourse(deansId: number, courseId: number): Promise<T> {
         return fetch<T>(`/deans/assign/${deansId}/${courseId}`, {
@@ -95,7 +95,7 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
     //end
 
     //exam
-    async getExamId(id:number): Promise<ExamModel> {
+    async getExamId(id: number): Promise<ExamModel> {
         return fetch<ExamModel>(`/exam/${id}`)
     },
 
@@ -146,21 +146,22 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
     //end
 
     //examinee
-    async addExaminee(body: ExamineeModel): Promise<T> {
+    async addExaminee(body: User): Promise<T> {
+
         return fetch<T>('/examinee', {
             method: 'POST',
-            body: body
+            body: { ...body, role: 'examinee' }
         })
     },
 
-    async updateExaminee(body: ExamineeModel): Promise<T> {
-        return fetch<T>(`/examinee/${body.examinee_id}`, {
+    async updateExaminee(body: User): Promise<T> {
+        return fetch<T>(`/examinee/${body.id}`, {
             method: 'PUT',
             body: body
         })
     },
 
-    async removeExaminee(id: number): Promise<T> {
+    async removeExaminee(id: string): Promise<T> {
         return fetch<T>(`/examinee/${id}`, {
             method: 'DELETE',
         })

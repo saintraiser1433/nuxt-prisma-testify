@@ -39,7 +39,7 @@ const handleDelete = (id: number) => {
 
 </script>
 <template>
-    <UITables :data="questionData" :columns="columns">
+    <UITables :data="questionData" :columns="columns" :has-action-header="false">
         <template #increment-data="{ row, index }">
             {{ index + 1 }}
         </template>

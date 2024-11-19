@@ -20,13 +20,13 @@ const columns = [{
 
 
 const emits = defineEmits<{
-    (e: 'update', payload: ExamineeModel): void,
-    (e: 'delete', id: number): void,
+    (e: 'update', payload: User): void,
+    (e: 'delete', id: string): void,
     (e: 'toggleModal'): void,
 }>()
 const props = defineProps({
     examineeData: {
-        type: Array as PropType<ExamineeModel[]>,
+        type: Array as PropType<User[]>,
         required: true,
         default: () => [],
     },
@@ -40,11 +40,11 @@ const toggleModal = () => {
     emits('toggleModal');
 }
 
-const handleDelete = (id: number) => {
+const handleDelete = (id: string) => {
     emits('delete', id)
 }
 
-const handleUpdate = (item: ExamModel) => {
+const handleUpdate = (item: User) => {
     emits('update', item)
 }
 
@@ -66,7 +66,7 @@ const handleUpdate = (item: ExamModel) => {
                     <i-bx-edit />
                 </UButton>
                 <UButton color="carnation" class="dark:text-white" variant="solid" size="sm"
-                    @click="handleDelete(row.examinee_id)">
+                    @click="handleDelete(row.id)">
                     <i-icon-park-solid-people-delete />
                 </UButton>
             </div>

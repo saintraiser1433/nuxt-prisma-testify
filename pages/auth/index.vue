@@ -43,6 +43,7 @@
 <script setup lang="ts">
 definePageMeta({
   layout: "empty",
+  requiredRole: 'guest',
   // middleware: ['checkRole'],
 });
 
@@ -55,7 +56,7 @@ const store = storeUser();
 const handleSignIn = async () => {
   try {
     await signIn({
-      email: username.value,
+      username: username.value,
       password: password.value,
     });
 
