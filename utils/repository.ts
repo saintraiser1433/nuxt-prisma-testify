@@ -167,6 +167,16 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
         })
     },
 
+    async uploadImage(file: any) {
+        return fetch<T>(`/file`, {
+            method: 'POST',
+            body: file
+        })
+    },
+
+
+
+
     //end
 
 

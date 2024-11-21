@@ -9,7 +9,6 @@
       class="col-span-3 px-5 pt-2 my-12 pb-8 transition-all ease-in-out">
       <div class="flex items-center flex-wrap justify-end pb-4">
       </div>
-      {{ idle }}
       <slot />
     </main>
 
@@ -25,16 +24,15 @@
 
 <script setup lang="ts">
 const store = useStore();
-const user = storeUser();
-const { refreshToken, signOut } = useAuthentication();
-const { idle } = useIdle(50 * 10 * 1000);
-
-watch(idle, async (newValue: boolean) => {
-  if (newValue) {
-    await signOut(user.getUser?.id);
-    return navigateTo({ name: "auth" });
-  }
-});
+const { refreshToken, signOut, info } = useAuthentication();
+// const { idle } = useIdle(10 * 10 * 1000);
+// const parse = JSON.parse(info.value);
+// watch(idle, async (newValue: boolean) => {
+//   if (newValue) {
+//     await signOut(parse.id);
+//     return navigateTo('auth')
+//   }
+// });
 
 useIntervalFn(() => {
   refreshToken();

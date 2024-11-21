@@ -11,7 +11,7 @@
         </UCard>
     </UModal>
 
-    <UModal :ui="{ width: 'w-full lg:max-w-[1200px]' }" v-model="isOpenAssign">
+    <UModal :ui="{ width: 'w-full lg:max-w-[1400px]' }" v-model="isOpenAssign">
         <UCard :ui="{ divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
             <template #header>
                 <h1 class="text-2xl lg:text-lg">Assign Deans</h1>
@@ -119,7 +119,8 @@ const { data: department, error: errordept, status: statusdept } = await useAPI<
 if (department && department.value) {
     departmentData.value = department.value;
 } else {
-    setToast('error', errordept.value?.message || 'An error occurred');
+    console.error(errordept.value)
+    setToast('error', errordept.value?.data.message || 'An error occurred');
 }
 const transformDepartment = computed(() => {
     return departmentData.value.map((item) => ({
@@ -134,7 +135,7 @@ const shouldAssign = ref(0);
 const deansId = ref(0);
 const deansName = ref('');
 const assignDeansRepo = repository<ApiResponse<AssignDeansInfoData>>($api)
-const { data: assign } = await useAsyncData('assign', async () => {
+const { data: assign, error: assignError } = await useAsyncData('assign', async () => {
     const [assignCourses, filteredCourses] = await Promise.all([
         assignDeansRepo.getAssignDeans(deansId.value),
         assignDeansRepo.getCourseFiltered()
@@ -153,6 +154,7 @@ const { data: assign } = await useAsyncData('assign', async () => {
 })
 
 
+
 const toggleAssignDeans = async (deanId: number, name: string) => {
     deansId.value = deanId;
     deansName.value = name
@@ -167,7 +169,7 @@ const submitAssign = async (data: AssignDeansModel) => {
         shouldAssign.value++
         setToast('success', response.message)
     } catch (err: any) {
-        setToast('error', error.value?.message || 'An error occurred')
+        setToast('error', error.value?.data.message || 'An error occurred')
     }
 }
 
@@ -180,7 +182,7 @@ const removeAssign = async (deansId: number, courseId: number) => {
                     shouldAssign.value++
                     setToast('success', response.message);
                 } catch (error: any) {
-                    setToast('error', error.data.error || 'An error occurred');
+                    setToast('error', error.data.message || 'An error occurred');
                 }
             }
         }

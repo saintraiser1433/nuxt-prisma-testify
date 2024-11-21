@@ -66,7 +66,12 @@ const handleAssign = (id: number) => {
         </template>
         <template #increment-data="{ row, index }">
             <span>{{ index + 1 }}</span>
-
+        </template>
+        <template #exam_title-data="{ row, index }">
+            <span class="uppercase">{{ row.exam_title }}</span>
+        </template>
+        <template #description-data="{ row, index }">
+            <span class="capitalize">{{ row.description }}</span>
         </template>
         <template #actions-data="{ row, index }">
             <div class="flex gap-1">

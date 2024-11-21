@@ -4,30 +4,35 @@
             <UInput value model-value="Test" />
         </UFormGroup>
         <UFormGroup label="Enter Question" name="question" required>
-            <UTextarea :rows="6" size="lg" v-model="formQuestion.question" />
+            <UITiptapEditor></UITiptapEditor>
+            <!-- <UTextarea :rows="6" size="lg" v-model="formQuestion.question" /> -->
         </UFormGroup>
         <div class="flex mb-2 border-b dark:border-colorBorder pb-2">
             <UButton :ui="{ base: 'ml-auto' }" @click="addChoice"> <i-mingcute-plus-fill />Add Choices</UButton>
         </div>
-        <div class="overflow-y-auto max-h-[400px] custom-scrollbar px-2 py-2  ">
-            <TransitionGroup name="choices-list" tag="div" class="space-y-4" mode="out-in">
+        <div class="overflow-y-auto max-h-[400px] custom-scrollbar px-1  ">
+            <!-- <TransitionGroup name="choices-list" tag="div" class="space-y-4" mode="out-in"> -->
+            <transition-expand group mode="out-in">
                 <div v-for="(choice, index) in formQuestion.Choices" :key="'choice-' + index"
-                    class="flex flex-col gap-2 p-3 rounded-lg border dark:border-gray-700 hover:shadow-sm transition-shadow">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <span class="font-medium">Choice {{ convertToLetter(index) }}</span>
+                    class="flex flex-col gap-2 mb-5 p-2 rounded-lg border dark:border-gray-700 hover:shadow-sm">
+                    <div class="flex items-center justify-between border-b py-2">
+                        <div class="flex items-center gap-x-2">
+                            <span class="font-medium">Choice {{ convertToLetter(index) }} :</span>
                             <UCheckbox v-model="choice.status"
                                 :aria-label="'Mark choice ' + convertToLetter(index) + ' as correct'" />
                         </div>
 
-                        <UButton color="red" variant="ghost" size="xs" icon="i-tabler-trash"
+                        <UButton color="red" variant="solid" size="xs" icon="i-tabler-trash"
                             @click="removeChoices(index)" :aria-label="'Remove choice ' + convertToLetter(index)" />
                     </div>
-
-                    <UTextarea v-model="choice.description" :rows="4" size="lg"
-                        :placeholder="'Enter choice ' + convertToLetter(index) + ' description'" />
+                    <UITiptapEditor></UITiptapEditor>
+                    <!-- <UTextarea v-model="choice.description" :rows="4" size="lg"
+                        :placeholder="'Enter choice ' + convertToLetter(index) + ' description'" /> -->
                 </div>
-            </TransitionGroup>
+                <br/>
+            </transition-expand>
+
+            <!-- </TransitionGroup> -->
             <div class="space-y-2 mt-4">
                 <UButton v-if="isUpdate" color="red" variant="outline" @click="reset" block>
                     Reset Form

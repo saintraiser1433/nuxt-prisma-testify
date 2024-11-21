@@ -73,7 +73,8 @@ const { data: department, error, status } = await useAPI<DepartmentModel[]>('/de
 if (department && department.value) {
     departmentData.value = department.value;
 } else {
-    setToast('error', error.value?.message || 'An error occurred');
+    console.error(error.value)
+    setToast('error', error.value?.data.message || 'An error occurred');
 }
 
 const submitDepartment = async (response: DepartmentModel) => {
@@ -92,7 +93,7 @@ const submitDepartment = async (response: DepartmentModel) => {
         isUpdate.value = false;
 
     } catch (error: any) {
-        setToast('error', error.data.error || 'An error occurred');
+        setToast('error', error.data.message || 'An error occurred');
     }
 }
 
@@ -126,7 +127,7 @@ const removeDepartment = (id: number) => {
                     departmentData.value.splice(index, 1);
                     setToast('success', response.message);
                 } catch (error: any) {
-                    setToast('error', error.data.error || 'An error occurred');
+                    setToast('error', error.data.message || 'An error occurred');
                 }
             }
         }

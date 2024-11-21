@@ -73,7 +73,8 @@ const { data: exam, error, status } = await useAPI<ExamModel[]>('/exam', {
 if (exam && exam.value) {
     examData.value = exam.value;
 } else {
-    setToast('error', error.value?.message || 'An error occurred');
+    console.error(error.value)
+    setToast('error', error.value?.data.message || 'An error occurred');
 }
 
 
@@ -96,7 +97,7 @@ const submitExam = async (response: ExamModel) => {
         isUpdate.value = false;
 
     } catch (error: any) {
-        setToast('error', error.data.error || 'An error occurred');
+        setToast('error', error.data.message || 'An error occurred');
     }
 }
 
@@ -137,7 +138,7 @@ const removeExam = (id: number) => {
                     setToast('success', response.message);
                 } catch (error: any) {
                     console.error(error)
-                    setToast('error', error.data.error || 'An error occurred');
+                    setToast('error', error.data.message || 'An error occurred');
                 }
             }
         }

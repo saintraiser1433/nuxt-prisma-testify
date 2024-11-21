@@ -1,7 +1,7 @@
 <template>
   <UForm :schema="schema" :state="formCourse" class="space-y-4" @submit="onSubmit">
     <UFormGroup label="Course Name" name="description" required>
-      <UInput v-model="formCourse.description" />
+      <UInput v-model="formCourse.description" :ui="{ base: 'capitalize' }" />
     </UFormGroup>
     <UFormGroup label="Score" name="score" required>
       <UInput type="number" v-model.number="formCourse.score" />

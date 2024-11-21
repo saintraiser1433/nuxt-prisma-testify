@@ -4,7 +4,8 @@
             <UInput :model-value="deansName" :ui="{ base: 'capitalize' }" disabled />
         </UFormGroup>
         <UFormGroup label="Course Name" name="course_id" required>
-            <USelect v-model.number="state.course_id" :options="courseList" option-attribute="name" />
+            <USelect v-model.number="state.course_id" :options="courseList" :ui="{ base: 'capitalize' }"
+                option-attribute="name" />
         </UFormGroup>
 
         <UButton type="submit" block>

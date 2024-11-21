@@ -4,6 +4,9 @@
         <template #increment-data="{ row, index }">
             <span>{{ index + 1 }}</span>
         </template>
+        <template #course_name-data="{ row, index }">
+            <span class="capitalize">{{ row.course_name }}</span>
+        </template>
         <template #actions-data="{ row, index }">
             <div class="flex gap-1">
                 <UButton color="carnation" class="dark:text-white" variant="solid" size="sm"

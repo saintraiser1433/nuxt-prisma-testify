@@ -76,7 +76,8 @@ const { data: examinee, error, status } = await useAPI<User[]>('/examinee', {
 if (examinee && examinee.value) {
   examineeData.value = examinee.value;
 } else {
-  setToast('error', error.value?.message || 'An error occurred');
+  console.error(error.value)
+  setToast('error', error.value?.data.message || 'An error occurred');
 }
 
 const transformData = computed(() => {
@@ -106,7 +107,7 @@ const submitExaminee = async (response: User) => {
     isUpdate.value = false;
 
   } catch (error: any) {
-    setToast('error', error.data.error || 'An error occurred');
+    setToast('error', error.data.message || 'An error occurred');
   }
 }
 
@@ -142,7 +143,7 @@ const removeExaminee = (id: string) => {
           examineeData.value.splice(index, 1);
           setToast('success', response.message);
         } catch (error: any) {
-          setToast('error', error.data.error || 'An error occurred');
+          setToast('error', error.data.message || 'An error occurred');
         }
       }
     }

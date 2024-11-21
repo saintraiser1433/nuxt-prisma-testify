@@ -71,7 +71,7 @@ export default defineNuxtConfig({
   css: ["sweetalert2/dist/sweetalert2.min.css"],
   devtools: { enabled: true },
   imports: {
-    dirs: ["types/*.ts", "store/*.ts", "utils/*.ts","composables/*.ts"],
+    dirs: ["types/*.ts", "store/*.ts", "utils/*.ts", "composables/*.ts"],
   },
   modules: [
     "@pinia/nuxt",
@@ -79,8 +79,16 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@sidebase/nuxt-auth",
     "@nuxt/ui",
+    '@morev/vue-transitions/nuxt',
+    "nuxt-tiptap-editor",
   ],
-  plugins: ["~/plugins/generateRandom"],
+  tiptap: {
+    prefix: 'Tiptap',
+    lowlight: {
+      theme: 'github-dark',
+    },
+  },
+
 
   runtimeConfig: {
     gitSecretKey: process.env.GITHUB_SECRET_KEY,

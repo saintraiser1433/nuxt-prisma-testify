@@ -58,6 +58,9 @@ const handleUpdate = (item: DepartmentModel) => {
         <template #increment-data="{ row, index }">
             <span>{{ index + 1 }}</span>
         </template>
+        <template #department_name-data="{ row, index }">
+            <span class="capitalize">{{ row.department_name }}</span>
+        </template>
         <template #status-data="{ row, index }">
             <UBadge v-if="row.status" class="dark:text-white" color="emerald" size="sm" variant="solid">
                 Active</UBadge>
@@ -67,7 +70,8 @@ const handleUpdate = (item: DepartmentModel) => {
         <template #actions-data="{ row, index }">
             <div class="flex gap-1">
                 <UButton color="emerald" class="dark:text-white" variant="solid" size="sm" @click="handleUpdate(row)">
-                    <i-bx-edit /></UButton>
+                    <i-bx-edit />
+                </UButton>
                 <UButton color="carnation" class="dark:text-white" variant="solid" size="sm"
                     @click="handleDelete(row.department_id)">
                     <i-icon-park-solid-people-delete />

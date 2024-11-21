@@ -60,6 +60,9 @@ const handleUpdate = (item: User) => {
         <template #id-data="{ row, index }">
             <span>{{ index + 1 }}</span>
         </template>
+        <template #fullname-data="{ row, index }">
+            <span class="capitalize">{{ row.fullname }}</span>
+        </template>
         <template #actions-data="{ row, index }">
             <div class="flex gap-1">
                 <UButton color="emerald" class="dark:text-white" variant="solid" size="sm" @click="handleUpdate(row)">

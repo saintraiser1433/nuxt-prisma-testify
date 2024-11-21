@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="flex justify-center items-center max-w-sm lg:max-w-3xl mx-auto min-h-screen">
     <div class="w-full rounded-lg shadow-lg bg-white dark:bg-cardColor">
@@ -50,8 +48,8 @@ definePageMeta({
 const { setToast } = useToasts();
 const username = ref("");
 const password = ref("");
-const { signIn } = useAuthentication();
-const store = storeUser();
+const { signIn, info } = useAuthentication();
+
 
 const handleSignIn = async () => {
   try {
@@ -59,9 +57,9 @@ const handleSignIn = async () => {
       username: username.value,
       password: password.value,
     });
-
-    if (store.getUser) {
-      const userRole = store.getUser.role;
+    const parse = JSON.parse(info.value);
+    if (parse.role) {
+      const userRole = parse.role
       if (userRole === "admin") {
         return navigateTo({ name: "admin-home" });
       } else if (userRole === "examinee") {
@@ -70,6 +68,7 @@ const handleSignIn = async () => {
         return navigateTo({ name: "deans-home" });
       }
     }
+
     return navigateTo({ name: "auth" });
   } catch (err: any) {
     setToast("error", err.data?.error || "An error occurred");

@@ -2,13 +2,13 @@
 
     <UForm :schema="schema" :state="formExam" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Exam Title" name="exam_title" required>
-            <UInput v-model="formExam.exam_title" />
+            <UInput v-model="formExam.exam_title" :ui="{ base: 'uppercase' }" />
         </UFormGroup>
         <UFormGroup label="Exam Description" name="description" required>
-            <UInput v-model="formExam.description" />
+            <UInput v-model="formExam.description" :ui="{ base: 'capitalize' }" />
         </UFormGroup>
         <UFormGroup label="Time Limit" name="time_limit" required>
-            <UInput v-model="formExam.time_limit" />
+            <UInput type="number" v-model="formExam.time_limit" />
         </UFormGroup>
         <UFormGroup v-if="isUpdate" label="Status" name="status">
             <UToggle v-model="formExam.status" />

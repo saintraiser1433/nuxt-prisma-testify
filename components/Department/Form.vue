@@ -1,7 +1,7 @@
 <template>
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Department Name" name="department_name" required>
-            <UInput v-model="state.department_name" />
+            <UInput v-model="state.department_name" :ui="{ base: 'capitalize' }" />
         </UFormGroup>
         <UFormGroup label="Status" name="status">
             <UToggle v-model="state.status" />

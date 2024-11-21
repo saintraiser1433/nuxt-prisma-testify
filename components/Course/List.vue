@@ -56,9 +56,11 @@ const handleUpdate = (item: CourseModel) => {
                 Add course's
             </UButton>
         </template>
-        <template #increment-data="{ row, index  }">
+        <template #increment-data="{ row, index }">
             <span>{{ index + 1 }}</span>
-
+        </template>
+        <template #description-data="{ row, index }">
+            <span class="capitalize">{{ row.description }}</span>
         </template>
         <template #actions-data="{ row, index }">
             <div class="flex gap-1">

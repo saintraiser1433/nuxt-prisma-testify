@@ -1,13 +1,13 @@
 <template>
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="First Name" name="first_name" required>
-            <UInput v-model="state.first_name" />
+            <UInput v-model="state.first_name" :ui="{ base: 'capitalize' }" />
         </UFormGroup>
         <UFormGroup label="Last Name" name="last_name" required>
-            <UInput v-model="state.last_name" />
+            <UInput v-model="state.last_name"  :ui="{ base: 'capitalize' }" />
         </UFormGroup>
         <UFormGroup label="Middle Name" name="middle_name" required>
-            <UInput v-model="state.middle_name" />
+            <UInput v-model="state.middle_name"  :ui="{ base: 'capitalize' }" />
         </UFormGroup>
         <UButton type="submit" block>
             Submit
@@ -35,7 +35,7 @@ const props = defineProps({
 })
 
 const { formData, isUpdate } = toRefs(props)
-const { $id,$joi } = useNuxtApp();
+const { $id, $joi } = useNuxtApp();
 
 const schema = $joi.object({
     first_name: $joi.string().required().messages({

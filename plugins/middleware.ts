@@ -1,9 +1,17 @@
-import type { DecodeJWT } from "~/types";
-import { jwtDecode } from "jwt-decode";
 export default defineNuxtPlugin((event) => {
+
+  const ROLE_REDIRECTS: Record<Role, string> = {
+    admin: 'admin-home',
+    examinee: 'user',
+    deans: 'deans-home'
+  };
+
+  const GUEST_ROUTES = ['auth', 'auth-signup']
+
+
+
   addRouteMiddleware("checkExam", async (to, from) => {
     const id = Number(to.params.id);
-
     const nuxtApp = useNuxtApp();
     const examRepo = repository(nuxtApp.$api);
     try {
@@ -29,51 +37,38 @@ export default defineNuxtPlugin((event) => {
 
   addRouteMiddleware(
     "auth",
-    async (to, from) => {
-      const { token, validateToken, signOut } = useAuthentication();
+    (to, from) => {
+
+      const { token, clearAuthTokens, info } = useAuthentication();
+      const inf = JSON.parse(info.value);
 
       if (!token.value) {
-        if (to.name !== "auth") {
-          localStorage.removeItem("token");
-          localStorage.removeItem("refreshToken");
+        if (to.name !== 'auth') {
+          clearAuthTokens();
           return navigateTo({ name: "auth" });
         }
         return;
       }
-
       try {
-        if (to.name !== "auth") {
-          const store = storeUser();
-          const decodedToken = jwtDecode<DecodeJWT>(token.value);
-          const checkToken = await validateToken();
-          if (!checkToken) {
-            await signOut(store.getUser.id)
-            return navigateTo({ name: "auth" });
-          }
 
-          if (decodedToken.role === "admin" && to.meta.requiredRole !== "admin") {
-            return navigateTo({ name: "admin-home" });
-          } else if (
-            decodedToken.role === "examinee" &&
-            to.meta.requiredRole !== "examinee"
-          ) {
-            return navigateTo({ name: "user" });
-          } else if (
-            decodedToken.role === "deans" &&
-            to.meta.requiredRole !== "deans"
-          ) {
-            return navigateTo({ name: "deans-home" });
-          }
+        if (GUEST_ROUTES.some(route => route === to.name)) {
+          return;
         }
-      } catch (error) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("refreshToken");
+        const userRole = inf.role as Role;
+        const requiredRole = to.meta.requiredRole as Role;
+        if (userRole && requiredRole && userRole !== requiredRole) {
+          return navigateTo({ name: ROLE_REDIRECTS[userRole] });
+        }
 
+      } catch (error) {
+        clearAuthTokens();
         return navigateTo({ name: "auth" });
       }
     },
     {
       global: true,
     }
+
+
   );
 });

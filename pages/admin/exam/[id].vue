@@ -1,6 +1,6 @@
 <template>
     <div class="grid grid-cols-12 gap-2">
-        <div class="col-span-12 lg:col-span-3">
+        <div class="col-span-12 lg:col-span-4">
             <UCard class="w-full" :ui="{
                 base: '',
                 ring: '',
@@ -17,7 +17,7 @@
             </UCard>
 
         </div>
-        <div class="col-span-12 lg:col-span-9">
+        <div class="col-span-12 lg:col-span-8">
             <UCard class="w-full" :ui="{
                 base: '',
                 ring: '',
@@ -30,6 +30,7 @@
                     <h1 class="text-2xl lg:text-lg">Question List</h1>
                 </template>
                 <QuestionList :question-data="question ?? []" @update="editQuestion" @delete="removeQuestion" />
+                <!-- <UITiptapEditor></UITiptapEditor> -->
             </UCard>
 
         </div>
@@ -64,6 +65,11 @@ const { data: question, status, error } = await useAPI<QuestionModel[]>(`/questi
     }
 })
 
+if (error.value) {
+    console.error(error.value)
+    setToast('error', error.value?.data.message || 'An error occurred');
+}
+
 
 
 /* Question */
@@ -79,13 +85,13 @@ const submitQuestion = async (data: QuestionModel): Promise<void> => {
         shouldRefetch.value++;
         resetInstance();
     } catch (error: any) {
-        setToast('error', error.data.error || 'An error occurred');
+        setToast('error', error.data.message || 'An error occurred');
     }
 }
 
 
 const editQuestion = (response: QuestionModel) => {
-    
+
     data.value = JSON.parse(JSON.stringify(response))
     isUpdate.value = true
 }
@@ -99,7 +105,7 @@ const removeQuestion = (id: number) => {
                     setToast('success', response.message);
                     shouldRefetch.value++;
                 } catch (error: any) {
-                    setToast('error', error.data.error || 'An error occurred');
+                    setToast('error', error.data.message || 'An error occurred');
                 }
             }
         }

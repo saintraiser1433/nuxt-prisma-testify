@@ -29,6 +29,7 @@
 
 
 
+
 </template>
 
 <script setup lang="ts">
@@ -44,6 +45,12 @@ useHead({
     { property: "og:description", content: 'CRUD for course' },
   ],
 });
+
+
+
+// onBeforeUnmount(() => {
+//   unref(editor).destroy();
+// });
 
 
 
@@ -73,7 +80,7 @@ const { data: course, error, status } = await useAPI<CourseModel[]>('/course', {
 if (course && course.value) {
   courseData.value = course.value;
 } else {
-  setToast('error', error.value?.message || 'An error occurred');
+  setToast('error', error.value?.data.message || 'An error occurred');
 }
 
 
@@ -94,7 +101,7 @@ const submitCourse = async (response: CourseModel) => {
     isUpdate.value = false;
 
   } catch (error: any) {
-    setToast('error', error.data.error || 'An error occurred');
+    setToast('error', error.data.message || 'An error occurred');
   }
 }
 
@@ -119,7 +126,7 @@ const removeCourse = (id: number) => {
           courseData.value.splice(index, 1);
           setToast('success', response.message);
         } catch (error: any) {
-          setToast('error', error.data.error || 'An error occurred');
+          setToast('error', error.data.message || 'An error occurred');
         }
       }
     }

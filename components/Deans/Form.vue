@@ -2,16 +2,17 @@
 
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
     <UFormGroup label="First Name" name="first_name" required>
-      <UInput v-model="state.first_name" />
+      <UInput v-model="state.first_name" :ui="{ base: 'capitalize' }" />
     </UFormGroup>
     <UFormGroup label="Last Name" name="last_name" required>
-      <UInput v-model="state.last_name" />
+      <UInput v-model="state.last_name" :ui="{ base: 'capitalize' }" />
     </UFormGroup>
     <UFormGroup label="Middle Name" name="middle_name" required>
-      <UInput v-model="state.middle_name" />
+      <UInput v-model="state.middle_name" :ui="{ base: 'capitalize' }" />
     </UFormGroup>
     <UFormGroup label="Department" name="department_id" required>
-      <USelect v-model="state.department_id" :options="departmentData" option-attribute="name" />
+      <USelect v-model="state.department_id" :options="departmentData" :ui="{ base: 'capitalize' }"
+        option-attribute="name" />
     </UFormGroup>
     <UFormGroup v-if="isUpdate" label="Status" name="status">
       <UToggle v-model="state.status" />
@@ -47,7 +48,7 @@ const props = defineProps({
 })
 
 const { isUpdate, formData, departmentData } = toRefs(props)
-const { $id,$joi } = useNuxtApp();
+const { $id, $joi } = useNuxtApp();
 
 const schema = $joi.object({
   deans_id: $joi.number().optional(),

@@ -18,6 +18,24 @@
     @apply bg-gray-100 text-slate-500 dark:text-fontBase dark:bg-darkBody;
     font-family: "Public Sans", system-ui, sans-serif;
   }
+
+  h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+  h3 {
+    @apply text-lg;
+  }
+  h4 {
+    @apply text-sm;
+  }
+  h5 {
+    @apply text-xs;
+  }
+
+
 }
 
 @layer components {

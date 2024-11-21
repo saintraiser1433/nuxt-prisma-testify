@@ -1,28 +1,28 @@
 <script setup lang="ts">
 const columns = [{
-    key: "increment",
-    label: '#',
-    sortable: true
+  key: "increment",
+  label: '#',
+  sortable: true
 }, {
-    key: 'fullname',
-    label: 'Deans Name',
-    sortable: true
+  key: 'fullname',
+  label: 'Deans Name',
+  sortable: true
 }, {
-    key: 'department_name',
-    label: 'Department',
-    sortable: true
+  key: 'department_name',
+  label: 'Department',
+  sortable: true
 }, {
-    key: 'username',
-    label: 'Username',
-    sortable: true
+  key: 'username',
+  label: 'Username',
+  sortable: true
 }, {
-    key: 'status',
-    label: 'Status',
-    sortable: true
+  key: 'status',
+  label: 'Status',
+  sortable: true
 }, {
-    key: 'actions',
-    label: 'Actions',
-    sortable: false
+  key: 'actions',
+  label: 'Actions',
+  sortable: false
 }]
 const emits = defineEmits<{
   (e: 'update', payload: DeansModel): void,
@@ -64,6 +64,12 @@ const handleUpdate = (item: DeansModel) => {
     </template>
     <template #increment-data="{ row, index }">
       <span>{{ index + 1 }}</span>
+    </template>
+    <template #fullname-data="{ row, index }">
+      <span class="capitalize">{{ row.fullname }}</span>
+    </template>
+    <template #department_name-data="{ row, index }">
+      <span class="capitalize">{{ row.department_name }}</span>
     </template>
     <template #status-data="{ row, index }">
       <UBadge v-if="row.status" class="dark:text-white" color="emerald" size="sm" variant="solid">
