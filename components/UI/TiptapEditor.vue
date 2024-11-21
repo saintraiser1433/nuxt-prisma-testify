@@ -26,14 +26,14 @@ const addImage = () => {
         const file = event.target.files?.[0];
 
         if (file) {
+            const urls = await uploadImage(file);
             const reader = new FileReader();
-            reader.onload = async(e) => {
-                const urls = await uploadImage(file);
+            reader.onload = (e) => {
                 const url = e.target.result;
                 editor.value.chain().focus().setImage({ src: url }).run();
             }
-       
-           
+
+            reader.readAsDataURL(file);
         }
     };
 
@@ -154,7 +154,9 @@ onBeforeUnmount(() => {
             <button @click="editor.chain().focus().deleteTable().run()">
                 <i-tabler-table-down />
             </button>
-            <button @click="addImage">Upload Image</button>
+            <button @click="addImage">
+                <i-mdi-light-image />
+            </button>
             <button @click="editor.chain().focus().mergeCells().run()">
                 <i-material-symbols-cell-merge-rounded />
             </button>

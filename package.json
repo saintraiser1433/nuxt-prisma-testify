@@ -38,6 +38,7 @@
     "nuxt-tiptap-editor": "^2.0.0",
     "pinia": "^2.2.4",
     "sass-embedded": "^1.81.0",
+    "tiptap-extension-resize-image": "^1.2.1",
     "vue": "latest",
     "vue-router": "latest",
     "vue-sweetalert2": "^5.0.11"

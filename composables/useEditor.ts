@@ -1,6 +1,7 @@
 import TableCell from '@tiptap/extension-table-cell';
 import TableHeader from '@tiptap/extension-table-header';
 import Image from '@tiptap/extension-image';
+import ImageResize from 'tiptap-extension-resize-image';
 import { useEditor } from '@tiptap/vue-3';
 import { Placeholder as TiptapPlaceholder } from '@tiptap/extension-placeholder';
 import { Table } from '@tiptap/extension-table'
@@ -68,9 +69,10 @@ export const useEditorSetup = (uploadImage: any) => {
                 emptyEditorClass: 'is-editor-empty',
                 placeholder: 'Write your post content here',
             }),
-            Image.configure({
-                inline: true, // Makes the image block-level by default
-            }),
+            // Image.configure({
+            //     inline: true, // Makes the image block-level by default
+            // }),
+            ImageResize
         ],
         editorProps: {
             attributes: {
