@@ -4,7 +4,7 @@
             <UInput value model-value="Test" />
         </UFormGroup>
         <UFormGroup label="Enter Question" name="question" required>
-            <UITiptapEditor></UITiptapEditor>
+            <UITiptapEditor v-model="formQuestion.question"></UITiptapEditor>
             <!-- <UTextarea :rows="6" size="lg" v-model="formQuestion.question" /> -->
         </UFormGroup>
         <div class="flex mb-2 border-b dark:border-colorBorder pb-2">
@@ -25,11 +25,11 @@
                         <UButton color="red" variant="solid" size="xs" icon="i-tabler-trash"
                             @click="removeChoices(index)" :aria-label="'Remove choice ' + convertToLetter(index)" />
                     </div>
-                    <UITiptapEditor></UITiptapEditor>
+                    <UITiptapEditor v-model="choice.description"></UITiptapEditor>
                     <!-- <UTextarea v-model="choice.description" :rows="4" size="lg"
                         :placeholder="'Enter choice ' + convertToLetter(index) + ' description'" /> -->
                 </div>
-                <br/>
+                <br />
             </transition-expand>
 
             <!-- </TransitionGroup> -->
@@ -136,25 +136,6 @@ watch(
 )
 
 const reset = () => {
-
     emits('reset')
 }
 </script>
-
-<style scoped>
-.choices-list-move,
-.choices-list-enter-active,
-.choices-list-leave-active {
-    transition: all 0.3s ease;
-}
-
-.choices-list-enter-from,
-.choices-list-leave-to {
-    opacity: 0;
-    transform: translateX(-30px);
-}
-
-.choices-list-leave-active {
-    position: absolute;
-}
-</style>

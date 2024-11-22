@@ -3,7 +3,7 @@
 const { $api } = useNuxtApp();
 const { setToast } = useToasts()
 const repo = repository($api)
-
+const emits = defineEmits(['update:modelValue'])
 const uploadImage = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
@@ -16,7 +16,6 @@ const uploadImage = async (file) => {
 
 };
 
-
 const addImage = () => {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -26,7 +25,7 @@ const addImage = () => {
         const file = event.target.files?.[0];
 
         if (file) {
-            const urls = await uploadImage(file);
+            await uploadImage(file);
             const reader = new FileReader();
             reader.onload = (e) => {
                 const url = e.target.result;
@@ -39,10 +38,56 @@ const addImage = () => {
 
     fileInput.click();
 }
-const editor = useEditorSetup(uploadImage)
 
+const lowlight = createLowlight(allLanguages);
+const editor = useEditor({
+    extensions: [
+        TiptapStarterKit.configure({
+            codeBlock: false,
+        }),
+        CustomTableCell,
+        CustomTableHeader,
+        Table.configure({
+            resizable: true,
 
+        }),
+        TableRow,
+        TiptapCodeBlockLowlight.configure({ lowlight }),
+        TiptapPlaceholder.configure({
+            emptyEditorClass: 'is-editor-empty',
+            placeholder: 'Write your post content here',
+        }),
+        ImageResize
+    ],
+    onUpdate: ({ editor }) => {
+        let content = editor.getHTML()
+        emits('update:modelValue', content)
+    },
+    editorProps: {
+        attributes: {
+            class: 'prose prose-sm focus:outline-none py-5 ',
+        },
+        transformPastedText(text) {
+            return text.toUpperCase()
+        },
+        handleDrop: (view, event) => {
+            const files = event.dataTransfer?.files;
+            if (!files || !files.length) return false;
 
+            const file = files[0];
+            if (!file.type.startsWith('image/')) return false;
+
+            uploadImage(file).then((url) => {
+                const { schema } = view.state;
+                const node = schema.nodes.image.create({ src: url });
+                const transaction = view.state.tr.replaceSelectionWith(node);
+                view.dispatch(transaction);
+            });
+
+            return true;
+        },
+    },
+});
 
 
 onBeforeUnmount(() => {

@@ -25,18 +25,18 @@
 <script setup lang="ts">
 const store = useStore();
 const { refreshToken, signOut, info } = useAuthentication();
-// const { idle } = useIdle(10 * 10 * 1000);
-// const parse = JSON.parse(info.value);
-// watch(idle, async (newValue: boolean) => {
-//   if (newValue) {
-//     await signOut(parse.id);
-//     return navigateTo('auth')
-//   }
-// });
+const { idle } = useIdle(50 * 10 * 1000);
+const parse = JSON.parse(info.value);
+watch(idle, async (newValue: boolean) => {
+  if (newValue) {
+    await signOut(parse.id);
+    return navigateTo('auth')
+  }
+});
 
 useIntervalFn(() => {
   refreshToken();
-}, 300000);
+}, 3000000);
 </script>
 
 <style scoped></style>
