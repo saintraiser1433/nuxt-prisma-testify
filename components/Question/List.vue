@@ -14,7 +14,7 @@ const columns = [{
 
 }]
 
-const { convertToLetter } = useConvertLetter();
+const { letterWithText } = useConvertLetter();
 const emits = defineEmits<{
     (e: 'update', payload: QuestionModel): void;
     (e: 'delete', id: number): void;
@@ -45,12 +45,13 @@ const handleDelete = (id: number) => {
         </template>
         <template #question-data="{ row, index }">
             <td class="max-w-lg whitespace-normal text-wrap">
-                <p class="font-bold text-warning">{{ row.question }}</p>
+                <p class="font-bold text-warning" v-html="row.question"></p>
                 <div class="grid grid-cols-12 gap-2 mt-2">
                     <div class="lg:col-span-4 col-span-12" v-for="(choices, index) in row.Choices"
                         :key="choices.choices_id">
-                        <p :class="{ 'text-success': choices.status }">{{ convertToLetter(index) + ').' +
-                            choices.description }}</p>
+
+                        <p :class="{ 'text-success': choices.status }"
+                            v-html="letterWithText(index, choices.description)"></p>
                     </div>
                 </div>
             </td>

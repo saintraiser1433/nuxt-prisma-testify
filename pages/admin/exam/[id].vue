@@ -91,7 +91,6 @@ const submitQuestion = async (data: QuestionModel): Promise<void> => {
 
 
 const editQuestion = (response: QuestionModel) => {
-
     data.value = JSON.parse(JSON.stringify(response))
     isUpdate.value = true
 }
