@@ -50,16 +50,15 @@
 </template>
 
 <script setup>
-const userStore = storeUser();
 const colorMode = useColorMode();
 const setColorTheme = (theme) => {
   colorMode.preference = theme;
 };
 
-const { signOut } = useAuthentication();
-
+const { signOut, info } = useAuthentication();
+const parse = JSON.parse(info.value);
 const handleSignOut = async () => {
-  await signOut(userStore.getUser.id)
+  await signOut(parse.id)
   return navigateTo({ name: 'auth' })
 };
 </script>

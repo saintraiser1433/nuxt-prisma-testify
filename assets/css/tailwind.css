@@ -41,7 +41,7 @@
 @layer components {
   /* List & Collapsible */
   .list__item-child {
-    @apply flex justify-between items-center cursor-pointer lg:text-sm text-gray-600 font-normal py-2 px-4 rounded-md mt-2 hover:bg-secondaryHover gap-2;
+    @apply flex justify-between items-center cursor-pointer text-sm text-gray-100 font-semibold py-2 px-4 rounded-md mt-2 hover:bg-secondaryHover gap-2;
   }
 
   .list__item-nav {

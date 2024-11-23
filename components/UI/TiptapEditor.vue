@@ -45,6 +45,7 @@ const addImage = () => {
 
 const lowlight = createLowlight(allLanguages);
 const editor = useEditor({
+    content: props.modelValue,
     extensions: [
         TiptapStarterKit.configure({
             codeBlock: false,
@@ -67,8 +68,7 @@ const editor = useEditor({
         }),
     ],
     onUpdate: ({ editor }) => {
-        let content = editor.getHTML()
-        emits('update:modelValue', content)
+        emits('update:modelValue', editor.getHTML())
     },
     editorProps: {
         attributes: {
@@ -97,15 +97,14 @@ const editor = useEditor({
 });
 
 
-watch(
-    () => props.modelValue,
-    (newData) => {
-        if (newData && editor.value) {
-            editor.value.commands.setContent(newData);
-        }
-    },
-    { deep: true, immediate: true }
-);
+
+
+watch(() => props.modelValue, (newVal) => {
+    if (editor.value && newVal !== editor.value.getHTML()) {
+        editor.value.commands.setContent(newVal);
+
+    }
+})
 
 
 onBeforeUnmount(() => {
@@ -233,6 +232,7 @@ onBeforeUnmount(() => {
                 <i-fad-redo />
             </button>
         </div>
+
         <TiptapEditorContent class="w-full border px-2" :editor="editor" />
     </div>
 </template>

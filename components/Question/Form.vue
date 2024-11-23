@@ -12,7 +12,7 @@
         <div class="overflow-y-auto max-h-[400px] custom-scrollbar px-1  ">
 
             <transition-expand group mode="out-in">
-                <div v-for="(choice, index) in formQuestion.Choices" :key="'choice-' + index"
+                <div v-for="(choice, index) in formQuestion.Choices" :key="choice.choices_id"
                     class="flex flex-col gap-2 mb-5 p-2 rounded-lg border dark:border-gray-700 hover:shadow-sm">
                     <div class="flex items-center justify-between border-b py-2">
                         <div class="flex items-center gap-x-2">
@@ -23,10 +23,11 @@
 
                         <UButton color="red" variant="solid" size="xs" icon="i-tabler-trash"
                             @click="removeChoices(index)" :aria-label="'Remove choice ' + convertToLetter(index)" />
-                    </div>\
-                    <UITiptapEditor v-model="choice.description"></UITiptapEditor>
+                    </div>
+
+                    <UITiptapEditor v-model="choice.description" />
                 </div>
-                <br />
+
             </transition-expand>
 
             <!-- </TransitionGroup> -->

@@ -52,8 +52,6 @@
 </template>
 
 <script setup>
-
-const store = useStore();
 const colorMode = useColorMode();
 const setColorTheme = (theme) => {
   colorMode.preference = theme;

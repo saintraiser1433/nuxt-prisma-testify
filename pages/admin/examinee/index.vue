@@ -12,16 +12,14 @@
   <div class="grid grid-cols-5 gap-5">
     <div class="col-span-5">
       <UCard class="w-full" :ui="{
-
-
-        ring: '',
+        base: 'overflow-hidden ',
         divide: 'divide-y divide-gray-200 dark:divide-gray-700',
-        header: { padding: 'px-4 py-5' },
-        body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
+        header: { padding: 'px-4 py-5', base: 'bg-darken' },
+        body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700 dark:bg-darken' },
         footer: { padding: 'p-4' }
       }">
         <template #header>
-          <h1 class="text-2xl lg:text-lg">List of Examinee's</h1>
+          <h1 class="text-2xl lg:text-lg font-bold">List of Examinee's</h1>
         </template>
 
         <ExamineeList :examinee-data="transformData" @toggle-modal="toggleModal" @update="editExaminee"
@@ -40,7 +38,6 @@
 
 definePageMeta({
   requiredRole: 'admin',
-  // middleware: ['checkRole'],
 })
 useHead({
   title: 'Testify Examinee Module',

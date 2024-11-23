@@ -24,22 +24,18 @@
                     </template>
                     <template #question-data="{ row, index }">
                         <td class="lg:max-w-6xl whitespace-normal text-wrap">
-                            <p class="font-bold">{{ row.question }}</p>
+                            <p class="font-bold" v-html="row.question"></p>
                             <URadioGroup v-model="value" color="primary" size="xl" :options="row.choices" :ui="{
                                 fieldset: 'lg:grid lg:grid-cols-2 lg:gap-5 lg: pt-2 cursor-pointer  ',
                             }">
                                 <template #label="{ option, index }">
-                                    <p class="text-sm break-words whitespace-normal">
-                                        {{ option.label }}
-                                    </p>
+                                    <p class="text-sm break-words whitespace-normal" v-html="option.label"></p>
                                 </template>
                             </URadioGroup>
                         </td>
                     </template>
 
                 </UITables>
-
-
 
             </template>
             <template #footer>
@@ -74,7 +70,7 @@ const columns = [{
 const nuxtApp = useNuxtApp()
 
 
-const { data: question, status, error } = await useAPI(`/question/1`, {
+const { data: question, status, error } = await useAPI(`/question/4`, {
     getCachedData(key) {
         const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
         if (!data) {
