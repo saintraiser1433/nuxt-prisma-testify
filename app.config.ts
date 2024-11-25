@@ -3,9 +3,14 @@ export default defineAppConfig({
         primary: "currentColor",
         button: {
             default: {
-                color:'primary'
-                
+                color: 'primary'
+
             }
-        }
+        },
+        select: {
+            default: {
+                rounded: 'rounded-lg',
+            }
+        },
     }
 })

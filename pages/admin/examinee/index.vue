@@ -14,7 +14,7 @@
       <UCard class="w-full" :ui="{
         base: 'overflow-hidden ',
         divide: 'divide-y divide-gray-200 dark:divide-gray-700',
-        header: { padding: 'px-4 py-5', base: 'bg-darken' },
+        header: { padding: 'px-4 py-5', base: 'dark:bg-darken' },
         body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700 dark:bg-darken' },
         footer: { padding: 'p-4' }
       }">

@@ -10,7 +10,9 @@
             v-if="hasPageCount && hasColumnFilter">
             <div class="flex items-center gap-1.5" v-if="hasPageCount">
                 <span class="text-sm leading-5">Rows per page:</span>
-                <USelect v-model.number="pageCount" :options="[3, 5, 10, 20, 30, 40]" class="me-2 w-20" size="xs" />
+                <USelect v-model.number="pageCount" :options="[3, 5, 10, 20, 30, 40]" class="me-2 w-20" size="xs" :ui="{
+                    base:'dark:bg-red-500'
+                }" />
             </div>
             <div class="flex gap-1.5 items-center" v-if="hasColumnFilter">
                 <UInput v-model="search" icon="i-heroicons-magnifying-glass-20-solid" placeholder="Search..." />
@@ -22,21 +24,22 @@
 
             </div>
         </div>
-        <UTable class="w-full " :rows="hasPagination ? paginatedData : data" :columns="columnsTable" :ui="{
-            td: {
-                padding: 'px-4 py-2',
-                base: hasBorder ? 'align-top border' : 'align-top'
-            },
-            tr: {
-                base: 'odd:bg-white even:bg-slate-50 dark:odd:bg-gray-900 dark:even:bg-gray-800 '
-            },
-            th: {
-                padding: 'py-2',
-                base: 'bg-gray-100 dark:bg-gun-powder-700  ',
-                size: 'text-sm'
-            },
+        <UTable class="w-full"
+            :sort-button="{ icon: 'i-heroicons-sparkles-20-solid', variant: 'outline', size: 'xs', square: false }"
+            :rows="hasPagination ? paginatedData : data" :columns="columnsTable" :ui="{
+                td: {
+                    padding: 'px-4 py-2',
+                    base: hasBorder ? 'border text-sm' : 'text-sm'
+                },
+                tr: {
+                    base: 'odd:bg-white even:bg-slate-50 dark:odd:bg-gray-900 dark:even:bg-gray-800  '
+                },
+                th: {
+                    base: 'bg-gray-100 dark:bg-gun-powder-800 dark:text-slate-400 text-xs',
 
-        }">
+                },
+
+            }">
             <template #empty-state>
                 <div class="flex flex-col items-center justify-center py-6 gap-3">
                     <span class="italic text-sm">NO DATA FOUND</span>
@@ -48,7 +51,7 @@
         </UTable>
 
         <div v-if="hasPagination"
-            class="flex flex-wrap justify-between items-center border-t dark:border-t-0 px-3 py-2 outline-none dark:bg-gun-powder-700">
+            class="flex flex-wrap justify-between items-center border-t dark:border-t-0 px-3 py-1 outline-none dark:bg-gun-powder-800">
             <div>
                 <span class="text-sm leading-5">
                     Showing

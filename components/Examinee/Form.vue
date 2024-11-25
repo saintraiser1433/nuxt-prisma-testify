@@ -9,7 +9,7 @@
         <UFormGroup label="Middle Name" name="middle_name" required>
             <UInput v-model="state.middle_name"  :ui="{ base: 'capitalize' }" />
         </UFormGroup>
-        <UButton type="submit" block>
+        <UButton type="submit" color="red" block>
             Submit
         </UButton>
     </UForm>

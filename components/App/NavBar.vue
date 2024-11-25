@@ -1,7 +1,7 @@
 <template>
   <div :class="store.getToggleState
-      ? ' lg:w-[calc(100%-15rem)] lg:left-60'
-      : 'lg:w-[calc(100%-5rem)] lg:left-20'
+    ? ' lg:w-[calc(100%-15rem)] lg:left-60'
+    : 'lg:w-[calc(100%-5rem)] lg:left-20'
     "
     class="fixed top-0 bg-white dark:border-colorBorder dark:bg-darken py-2 border-b border-opacity-10 w-full col-span-2 transition-all ease-in-out">
     <div class="mx-auto flex justify-between px-5">
@@ -52,6 +52,7 @@
 </template>
 
 <script setup>
+const store = useStore();
 const colorMode = useColorMode();
 const setColorTheme = (theme) => {
   colorMode.preference = theme;
