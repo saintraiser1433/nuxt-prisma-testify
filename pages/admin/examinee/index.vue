@@ -1,32 +1,27 @@
 <template>
   <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
   <UModal v-model="isOpen">
-    <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+    <UICard :body="{
+      padding: 'px-4'
+    }">
       <template #header>
         <h1 class="text-2xl lg:text-lg">Examinee Information</h1>
       </template>
       <ExamineeForm :form-data="data" :is-update="isUpdate" @data-examinee="submitExaminee"></ExamineeForm>
-    </UCard>
+    </UICard>
+
   </UModal>
 
   <div class="grid grid-cols-5 gap-5">
     <div class="col-span-5">
-      <UCard class="w-full" :ui="{
-        base: 'overflow-hidden ',
-        divide: 'divide-y divide-gray-200 dark:divide-gray-700',
-        header: { padding: 'px-4 py-5', base: 'dark:bg-darken' },
-        body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700 dark:bg-darken' },
-        footer: { padding: 'p-4' }
-      }">
+      <UICard>
         <template #header>
           <h1 class="text-2xl lg:text-lg font-bold">List of Examinee's</h1>
         </template>
-
         <ExamineeList :examinee-data="transformData" @toggle-modal="toggleModal" @update="editExaminee"
           @delete="removeExaminee" />
+      </UICard>
 
-
-      </UCard>
     </div>
   </div>
 

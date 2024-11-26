@@ -147,10 +147,10 @@ export interface DepartmentSelection {
 export interface User {
     id?: string,
     email?: string,
-    username?:string,
-    first_name?:string,
-    last_name?:string,
-    middle_name?:string,
+    username?: string,
+    first_name?: string,
+    last_name?: string,
+    middle_name?: string,
     password?: string,
     accessToken?: string,
     refreshToken?: string,
@@ -172,13 +172,6 @@ export enum Method {
 
 
 
-export interface DecodeJWT {
-    id?: string,
-    email?: string,
-    role?: string,
-    iat?: number,
-    exp?: number
-}
 
 
 export interface TokenStatus {
@@ -192,6 +185,30 @@ export interface ApiResponse<T> {
     data?: T,
 }
 
+
+export interface CardProps {
+    padding?: string,
+    base?: string
+
+}
+export interface CardDefaultProps {
+    base?: string,
+    divide?: string
+}
+
+
+// base?: string,
+//     header?: {
+//         padding?: string,
+//         base?: string,
+//     },
+//     body?: {
+//         padding?: string,
+//         base?: string
+//     },
+//     footer?: {
+//         padding?: string
+//     }
 
 
 
