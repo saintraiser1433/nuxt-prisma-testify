@@ -5,7 +5,7 @@
       padding: 'px-4'
     }">
       <template #header>
-        <h1 class="text-2xl lg:text-lg">Examinee Information</h1>
+        <h1 class="text-2xl lg:text-lg font-semibold">Examinee Information</h1>
       </template>
       <ExamineeForm :form-data="data" :is-update="isUpdate" @data-examinee="submitExaminee"></ExamineeForm>
     </UICard>
@@ -16,7 +16,7 @@
     <div class="col-span-5">
       <UICard>
         <template #header>
-          <h1 class="text-2xl lg:text-lg font-bold">List of Examinee's</h1>
+          <h1 class="text-2xl lg:text-lg  font-semibold">List of Examinee's</h1>
         </template>
         <ExamineeList :examinee-data="transformData" @toggle-modal="toggleModal" @update="editExaminee"
           @delete="removeExaminee" />
@@ -24,7 +24,6 @@
 
     </div>
   </div>
-
 
 
 </template>

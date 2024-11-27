@@ -1,31 +1,26 @@
 <template>
     <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
     <UModal v-model="isOpen">
-        <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+        <UICard :body="{
+            padding: 'px-4'
+        }">
             <template #header>
                 <h1 class="text-2xl lg:text-lg">Department Information</h1>
             </template>
             <DepartmentForm :form-data="data" :is-update="isUpdate" @data-department="submitDepartment">
             </DepartmentForm>
-        </UCard>
+        </UICard>
     </UModal>
 
     <div class="grid grid-cols-5 gap-5">
         <div class="col-span-5">
-            <UCard class="w-full" :ui="{
-                base: '',
-                ring: '',
-                divide: 'divide-y divide-gray-200 dark:divide-gray-700',
-                header: { padding: 'px-4 py-5' },
-                body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
-                footer: { padding: 'p-4' }
-            }">
+            <UICard>
                 <template #header>
                     <h1 class="text-2xl lg:text-lg">List of Department's</h1>
                 </template>
-
-               <DepartmentList :department-data="departmentData" @update="editDepartment" @delete="removeDepartment" @toggle-modal="toggleModal"/>
-            </UCard>
+                <DepartmentList :department-data="departmentData" @update="editDepartment" @delete="removeDepartment"
+                    @toggle-modal="toggleModal" />
+            </UICard>
         </div>
     </div>
 

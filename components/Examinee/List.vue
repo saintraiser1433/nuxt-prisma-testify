@@ -53,7 +53,13 @@ const handleUpdate = (item: User) => {
 <template>
     <UITables :data="examineeData" :columns="columns">
         <template #action-header>
-            <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="toggleModal">
+            <UButton icon="i-heroicons-plus" color="gray" size="md" @click="toggleModal" :ui="{
+                color:{
+                    gray: {
+                        solid:'bg-primary-500 text-white hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600'
+                    }
+                }
+            }">
                 Add Examinee's
             </UButton>
         </template>
@@ -65,7 +71,7 @@ const handleUpdate = (item: User) => {
         </template>
         <template #actions-data="{ row, index }">
             <div class="flex gap-1">
-                <UButton color="emerald" class="dark:text-white" variant="solid" size="xs" @click="handleUpdate(row)">
+                <UButton color="emerald" class="dark:text-white" variant="solid" size="xs"  @click="handleUpdate(row)">
                     <i-bx-edit />
                 </UButton>
                 <UButton color="carnation" class="dark:text-white" variant="solid" size="xs"

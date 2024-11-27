@@ -52,8 +52,14 @@ const handleUpdate = (item: CourseModel) => {
 <template>
     <UITables :data="courseData" :columns="columns">
         <template #action-header>
-            <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="toggleModal">
-                Add course's
+            <UButton icon="i-heroicons-plus" color="gray" size="md" @click="toggleModal" :ui="{
+                color: {
+                    gray: {
+                        solid: 'bg-primary-500 text-white hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600'
+                    }
+                }
+            }">
+                Add Course
             </UButton>
         </template>
         <template #increment-data="{ row, index }">

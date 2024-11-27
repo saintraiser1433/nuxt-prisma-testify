@@ -2,24 +2,28 @@
 
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
     <UFormGroup label="First Name" name="first_name" required>
-      <UInput v-model="state.first_name" :ui="{ base: 'capitalize' }" />
+      <UInput v-model="state.first_name" color="gray" :ui="{ base: 'capitalize' }" />
     </UFormGroup>
     <UFormGroup label="Last Name" name="last_name" required>
-      <UInput v-model="state.last_name" :ui="{ base: 'capitalize' }" />
+      <UInput v-model="state.last_name" color="gray" :ui="{ base: 'capitalize' }" />
     </UFormGroup>
     <UFormGroup label="Middle Name" name="middle_name" required>
-      <UInput v-model="state.middle_name" :ui="{ base: 'capitalize' }" />
+      <UInput v-model="state.middle_name" color="gray" :ui="{ base: 'capitalize' }" />
     </UFormGroup>
     <UFormGroup label="Department" name="department_id" required>
-      <USelect v-model="state.department_id" :options="departmentData" :ui="{ base: 'capitalize' }"
+      <USelect v-model="state.department_id" color="gray" :options="departmentData" :ui="{ base: 'capitalize' }"
         option-attribute="name" />
     </UFormGroup>
     <UFormGroup v-if="isUpdate" label="Status" name="status">
       <UToggle v-model="state.status" />
     </UFormGroup>
-    <UButton type="submit" block>
-      Submit
-    </UButton>
+    <UButton block color="gray" size="md" :ui="{
+      color: {
+        gray: {
+          solid: 'bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 text-white hover:dark:bg-primary-600'
+        }
+      }
+    }">Submit</UButton>
   </UForm>
 
 

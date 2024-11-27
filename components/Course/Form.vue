@@ -1,14 +1,21 @@
 <template>
   <UForm :schema="schema" :state="formCourse" class="space-y-4" @submit="onSubmit">
     <UFormGroup label="Course Name" name="description" required>
-      <UInput v-model="formCourse.description" :ui="{ base: 'capitalize' }" />
+      <UInput v-model="formCourse.description" color="gray" :ui="{ base: 'capitalize' }" />
     </UFormGroup>
     <UFormGroup label="Score" name="score" required>
-      <UInput type="number" v-model.number="formCourse.score" />
+      <UInput type="number" color="gray" v-model.number="formCourse.score" />
     </UFormGroup>
-    <UButton type="submit" block>
-      Submit
+    <UButton type="submit" block color="gray" size="md" :ui="{
+      color: {
+        gray: {
+          solid: 'bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 text-white hover:dark:bg-primary-600'
+        }
+      }
+    }">
+         Submit
     </UButton>
+
   </UForm>
 </template>
 

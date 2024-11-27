@@ -1,13 +1,13 @@
 <template>
   <div>
     <UCard class="w-full" :ui="{
-      base: defaults?.divide || 'overflow-hidden ',
-      divide: defaults?.divide || 'divide-y divide-gray-200 dark:divide-gray-700',
+      base: defaults?.base || 'overflow-hidden dark:divide-gray-700',
+      shadow: 'shadow-lg',
       header: { padding: header?.padding || 'px-4 py-5', base: header?.padding || 'dark:bg-darken' },
-      body: { padding: body?.padding || '', base: body?.base || 'divide-y divide-gray-200 dark:divide-gray-700 dark:bg-darken' },
+      body: { padding: body?.padding || '', base: body?.base || 'dark:bg-darken' },
       footer: { padding: header?.padding || '', base: footer?.base || '' }
     }">
-      <template #header>
+      <template v-if="hasHeader" #header>
         <slot name="header"> </slot>
       </template>
       <slot></slot>
@@ -24,6 +24,10 @@ import type { CardProps, CardDefaultProps } from '~/types';
 
 
 defineProps({
+  hasHeader: {
+    type: Boolean,
+    default: true,
+  },
   header: {
     type: Object as PropType<CardProps>,
     default: () => ({})

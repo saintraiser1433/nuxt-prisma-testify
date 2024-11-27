@@ -1,74 +1,59 @@
 <template>
     <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
     <UModal v-model="isOpen">
-        <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+        <UICard :body="{
+            padding: 'px-4'
+        }">
             <template #header>
-                <h1 class="text-2xl lg:text-lg">Deans Information</h1>
+                <h1 class="text-2xl lg:text-lg font-semibold">Deans Information</h1>
             </template>
             <DeansForm :form-data="data" :department-data="transformDepartment" :is-update="isUpdate"
                 @data-Deans="submitDeans">
             </DeansForm>
-        </UCard>
+        </UICard>
     </UModal>
 
     <UModal :ui="{ width: 'w-full lg:max-w-[1400px]' }" v-model="isOpenAssign">
-        <UCard :ui="{ divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+        <UICard :body="{ padding: 'p-4', base: 'dark:bg-dark-body-950' }">
+
             <template #header>
-                <h1 class="text-2xl lg:text-lg">Assign Deans</h1>
+                <h1 class="text-2xl lg:text-lg font-semibold">Assign Deans</h1>
             </template>
             <div class="grid grid-cols-12 gap-3">
                 <div class="col-span-12 lg:col-span-3">
-                    <UCard class="w-full" :ui="{
-                        base: '',
-                        ring: '',
-                        divide: 'divide-y divide-gray-200 dark:divide-gray-700',
-                        header: { padding: 'px-3 py-2' },
-                        body: { padding: 'px-3', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
-                        footer: { padding: 'p-4' }
-                    }">
+                    <UICard :body="{ padding: 'px-4' }">
                         <template #header>
-                            <h1 class="text-2xl lg:text-lg">Courses Assign</h1>
+                            <h1 class="text-2xl lg:text-lg font-semibold">Courses Assign</h1>
                         </template>
                         <DeansAssignForm :deans-name="deansName" :course-data="assign?.filteredCourses ?? []"
                             :deans-id="deansId" @data-assign="submitAssign" />
-
-                    </UCard>
+                    </UICard>
 
                 </div>
                 <div class="col-span-12 lg:col-span-9">
-                    <UCard class="w-full" :ui="{
-                        base: '',
-                        ring: '',
-                        divide: 'divide-y divide-gray-200 dark:divide-gray-700',
-                        header: { padding: 'px-4 py-5' },
-                        body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
-                        footer: { padding: 'p-4' }
-                    }">
+                    <UICard>
+                        <template #header>
+                            <h1 class="text-2xl lg:text-lg font-semibold">List of Courses Assign</h1>
+                        </template>
                         <DeansAssignList :assign-data="assign?.assignCourses ?? []" @delete="removeAssign" />
+                    </UICard>
 
-                    </UCard>
                 </div>
             </div>
-
-        </UCard>
+        </UICard>
+        <!-- </UCard> -->
     </UModal>
 
     <div class="grid grid-cols-5 gap-5">
         <div class="col-span-5">
-            <UCard class="w-full" :ui="{
-                base: '',
-                ring: '',
-                divide: 'divide-y divide-gray-200 dark:divide-gray-700',
-                header: { padding: 'px-4 py-5' },
-                body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
-                footer: { padding: 'p-4' }
-            }">
+            <UICard>
                 <template #header>
-                    <h1 class="text-2xl lg:text-lg">List of Deans's</h1>
+                    <h1 class="text-2xl lg:text-lg font-semibold">List of Deans's</h1>
                 </template>
                 <DeansList :deans-data="transformDeans" @toggle-modal="toggleModal" @assign="toggleAssignDeans"
                     @update="editDeans" />
-            </UCard>
+            </UICard>
+
         </div>
     </div>
 

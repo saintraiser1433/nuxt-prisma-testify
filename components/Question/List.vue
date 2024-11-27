@@ -39,9 +39,11 @@ const handleDelete = (id: number) => {
 
 </script>
 <template>
-    <UITables :data="questionData" :columns="columns" :has-action-header="false">
+    <UITables :data="questionData" :hasBorder="true" :columns="columns" :has-action-header="false" :td="{
+        base: 'border dark:border-gray-700 align-top py-5'
+    }">
         <template #increment-data="{ row, index }">
-            {{ index + 1 }}
+            <span class="font-bold">{{ index + 1 }}</span>
         </template>
         <template #question-data="{ row, index }">
             <td class="max-w-lg whitespace-normal text-wrap">

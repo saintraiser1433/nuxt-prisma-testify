@@ -51,7 +51,13 @@ const handleUpdate = (item: DepartmentModel) => {
 <template>
     <UITables :data="departmentData" :columns="columns">
         <template #action-header>
-            <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="toggleModal">
+            <UButton icon="i-heroicons-plus" color="gray" size="md" @click="toggleModal" :ui="{
+                color:{
+                    gray: {
+                        solid:'bg-primary-500 text-white hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600'
+                    }
+                }
+            }">
                 Add Department
             </UButton>
         </template>

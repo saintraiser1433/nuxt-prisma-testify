@@ -1,31 +1,26 @@
 <template>
     <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
     <UModal v-model="isOpen">
-        <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+        <UICard :body="{
+            padding: 'px-4'
+        }">
             <template #header>
-                <h1 class="text-2xl lg:text-lg">Exam Information</h1>
+                <h1 class="text-2xl lg:text-lg font-semibold">Exam Information</h1>
             </template>
             <ExamForm :form-data="data" :is-update="isUpdate" @data-exam="submitExam"></ExamForm>
-        </UCard>
+        </UICard>
     </UModal>
 
     <div class="grid grid-cols-5 gap-5">
         <div class="col-span-5">
-            <UCard class="w-full" :ui="{
-                base: '',
-                ring: '',
-                divide: 'divide-y divide-gray-200 dark:divide-gray-700',
-                header: { padding: 'px-4 py-5' },
-                body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
-                footer: { padding: 'p-4' }
-            }">
+            <UICard>
                 <template #header>
-                    <h1 class="text-2xl lg:text-lg">List of Exam's</h1>
+                    <h1 class="text-2xl lg:text-lg font-semibold">List of Exam's</h1>
                 </template>
                 <ExamList :exam-data="examData" @toggle-modal="toggleModal" @assign="routeToQuestion" @update="editExam"
                     @delete="removeExam" />
 
-            </UCard>
+            </UICard>
         </div>
     </div>
 

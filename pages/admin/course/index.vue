@@ -1,29 +1,24 @@
 <template>
   <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
   <UModal v-model="isOpen">
-    <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
+    <UICard :body="{
+      padding: 'p-10'
+    }">
       <template #header>
-        <h1 class="text-2xl lg:text-lg">Course Information</h1>
+        <h1 class="text-2xl lg:text-lg font-semibold">Course Information</h1>
       </template>
       <CourseForm :form-data="data" :is-update="isUpdate" @data-course="submitCourse"></CourseForm>
-    </UCard>
+    </UICard>
   </UModal>
 
   <div class="grid grid-cols-5 gap-5">
     <div class="col-span-5">
-      <UCard class="w-full" :ui="{
-        base: '',
-        ring: '',
-        divide: 'divide-y divide-gray-200 dark:divide-gray-700',
-        header: { padding: 'px-4 py-5' },
-        body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
-        footer: { padding: 'p-4' }
-      }">
+      <UICard>
         <template #header>
-          <h1 class="text-2xl lg:text-lg">List of Course's</h1>
+          <h1 class="text-2xl lg:text-lg font-semibold">List of Course's</h1>
         </template>
         <CourseList :course-data="courseData" @update="editCourse" @delete="removeCourse" @toggleModal="toggleModal" />
-      </UCard>
+      </UICard>
     </div>
   </div>
 
@@ -45,13 +40,6 @@ useHead({
     { property: "og:description", content: 'CRUD for course' },
   ],
 });
-
-
-
-// onBeforeUnmount(() => {
-//   unref(editor).destroy();
-// });
-
 
 
 

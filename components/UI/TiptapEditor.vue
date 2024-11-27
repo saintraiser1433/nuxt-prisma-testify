@@ -72,7 +72,7 @@ const editor = useEditor({
     },
     editorProps: {
         attributes: {
-            class: 'prose prose-sm focus:outline-none py-5 ',
+            class: 'prose prose-sm focus:outline-none py-5 dark:text-white ',
         },
         transformPastedText(text) {
             return text.toUpperCase()
@@ -115,7 +115,7 @@ onBeforeUnmount(() => {
 <template>
     <div class="container mx-auto max-w-4xl my-2">
         <div v-if="editor"
-            class="flex items-center flex-wrap gap-2 border overflow-hidden font-thin bg-gray-100  text-gray-600 p-3 text-md dark:bg-gray-900 dark:text-white dark:border dark:border-gray-400  rounded-t-md">
+            class="flex items-center flex-wrap gap-2 border overflow-hidden font-thin bg-gray-100  text-gray-600 p-3 text-md dark:bg-darken dark:border-gray-700 dark:text-white dark:border-t   rounded-t-md">
             <button type="button" @click="editor.chain().focus().toggleBold().run()"
                 :disabled="!editor.can().chain().focus().toggleBold().run()"
                 :class="{ 'text-primary': editor.isActive('bold') }" class="">
@@ -233,6 +233,6 @@ onBeforeUnmount(() => {
             </button>
         </div>
 
-        <TiptapEditorContent class="w-full border px-2" :editor="editor" />
+        <TiptapEditorContent class="w-full border-x border-b px-2 rounded-b-md dark:border-gray-700 dark:bg-gray-800" :editor="editor" />
     </div>
 </template>

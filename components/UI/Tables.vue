@@ -10,36 +10,43 @@
             v-if="hasPageCount && hasColumnFilter">
             <div class="flex items-center gap-1.5" v-if="hasPageCount">
                 <span class="text-sm leading-5">Rows per page:</span>
-                <USelect v-model.number="pageCount" :options="[3, 5, 10, 20, 30, 40]" class="me-2 w-20" size="xs" :ui="{
-                    base:'dark:bg-red-500'
-                }" />
+                <USelect v-model.number="pageCount" :options="[3, 5, 10, 20, 30, 40]" class="me-2 w-20" size="xs"
+                    color="gray" />
             </div>
             <div class="flex gap-1.5 items-center" v-if="hasColumnFilter">
-                <UInput v-model="search" icon="i-heroicons-magnifying-glass-20-solid" placeholder="Search..." />
+                <UInput v-model="search" icon="i-heroicons-magnifying-glass-20-solid" color="gray"
+                    placeholder="Search..." />
                 <USelectMenu v-model="selectedColumns" :options="excludeSelectColumn" multiple>
-                    <UButton icon="i-heroicons-view-columns" color="gray" size="xs">
+                    <UButton icon="i-heroicons-view-columns" size="xs" color="gray" :ui="{
+                        color: {
+                            gray: {
+                                solid: 'bg-emerald-500 text-white hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-600'
+                            }
+                        }
+                    }">
                         Columns
                     </UButton>
+
                 </USelectMenu>
 
             </div>
         </div>
-        <UTable class="w-full"
-            :sort-button="{ icon: 'i-heroicons-sparkles-20-solid', variant: 'outline', size: 'xs', square: false }"
+        <UTable class="w-full text-xs" :sort-button="{ variant: 'outline', size: 'xs', square: false }"
             :rows="hasPagination ? paginatedData : data" :columns="columnsTable" :ui="{
+                base: base || 'border-t dark:border-gray-700 ',
                 td: {
-                    padding: 'px-4 py-2',
-                    base: hasBorder ? 'border text-sm' : 'text-sm'
+                    padding: td.padding || 'px-4 py-1',
+                    base: td.base || '',
                 },
                 tr: {
-                    base: 'odd:bg-white even:bg-slate-50 dark:odd:bg-gray-900 dark:even:bg-gray-800  '
+                    base: tr.base || 'odd:bg-white even:bg-slate-50 dark:odd:bg-gray-900 dark:even:bg-gray-800  '
                 },
                 th: {
-                    base: 'bg-gray-100 dark:bg-gun-powder-800 dark:text-slate-400 text-xs',
-
+                    padding: th.padding || 'py-5',
+                    base: th.base || 'bg-gray-100 dark:bg-darken dark:text-slate-400 text-xs',
                 },
-
-            }">
+            }
+                ">
             <template #empty-state>
                 <div class="flex flex-col items-center justify-center py-6 gap-3">
                     <span class="italic text-sm">NO DATA FOUND</span>
@@ -51,7 +58,7 @@
         </UTable>
 
         <div v-if="hasPagination"
-            class="flex flex-wrap justify-between items-center border-t dark:border-t-0 px-3 py-1 outline-none dark:bg-gun-powder-800">
+            class="flex flex-wrap justify-between items-center border-t  dark:border-gray-700 px-3 py-1 outline-none dark:bg-darken">
             <div>
                 <span class="text-sm leading-5">
                     Showing
@@ -64,7 +71,7 @@
                 </span>
             </div>
             <UPagination v-model="page" :max="5" :page-count="1" :total="totalPages" :ui="{
-                wrapper: 'flex items-center gap-1 py-2',
+                wrapper: 'flex items-center gap-1 py-1',
                 rounded: '!rounded-full min-w-[32px] justify-center',
                 default: {
                     activeButton: {
@@ -79,7 +86,22 @@
 </template>
 
 <script setup lang="ts">
+import type { TableProps } from '~/types';
+
 const props = defineProps({
+    base: String,
+    td: {
+        type: Object as PropType<TableProps>,
+        default: () => ({})
+    },
+    th: {
+        type: Object as PropType<TableProps>,
+        default: () => ({})
+    },
+    tr: {
+        type: Object as PropType<TableProps>,
+        default: () => ({})
+    },
     columns: {
         type: Array,
         required: true,
@@ -109,7 +131,8 @@ const props = defineProps({
     hasActionHeader: {
         type: Boolean,
         default: true
-    }
+    },
+
 
 
 })

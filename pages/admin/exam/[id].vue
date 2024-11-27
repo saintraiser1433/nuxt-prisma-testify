@@ -1,37 +1,23 @@
 <template>
     <div class="grid grid-cols-12 gap-2">
         <div class="col-span-12 lg:col-span-4">
-            <UCard class="w-full" :ui="{
-                base: '',
-                ring: '',
-                divide: 'divide-y divide-gray-200 dark:divide-gray-700',
-                header: { padding: 'px-4 py-5' },
-                body: { padding: 'px-3 py-1', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
-                footer: { padding: 'p-4' }
-            }">
+            <UICard  :body="{ padding: 'sm:px-3' }">
                 <template #header>
                     <h1 class="text-2xl lg:text-lg">Question Limit</h1>
                 </template>
                 <QuestionForm @data-quest-choice="submitQuestion" :form-data="data" :is-update="isUpdate"
                     @reset="resetInstance" />
-            </UCard>
+            </UICard>
 
         </div>
         <div class="col-span-12 lg:col-span-8">
-            <UCard class="w-full" :ui="{
-                base: '',
-                ring: '',
-                divide: 'divide-y divide-gray-200 dark:divide-gray-700',
-                header: { padding: 'px-4 py-5' },
-                body: { padding: 'px-0', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
-                footer: { padding: 'p-4' }
-            }">
+            <UICard>
                 <template #header>
                     <h1 class="text-2xl lg:text-lg">Question List</h1>
                 </template>
                 <QuestionList :question-data="question ?? []" @update="editQuestion" @delete="removeQuestion" />
-                <!-- <UITiptapEditor></UITiptapEditor> -->
-            </UCard>
+            
+            </UICard>
 
         </div>
 

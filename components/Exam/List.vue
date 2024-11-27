@@ -60,7 +60,13 @@ const handleAssign = (id: number) => {
 <template>
     <UITables :data="examData" :columns="columns">
         <template #action-header>
-            <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="toggleModal">
+            <UButton icon="i-heroicons-plus" color="gray" size="md" @click="toggleModal" :ui="{
+                color: {
+                    gray: {
+                        solid: 'bg-primary-500 text-white hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600'
+                    }
+                }
+            }">
                 Add Exam's
             </UButton>
         </template>

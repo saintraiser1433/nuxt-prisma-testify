@@ -1,28 +1,47 @@
 <template>
     <UForm :schema="schema" :state="formQuestion" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Exam Title" name="exam_title">
-            <UInput value model-value="Test" />
-        </UFormGroup>
-        <UFormGroup label="Enter Question" name="question" required>
-            <UITiptapEditor v-model="formQuestion.question"></UITiptapEditor>
-        </UFormGroup>
-        <div class="flex mb-2 border-b dark:border-colorBorder pb-2">
-            <UButton :ui="{ base: 'ml-auto' }" @click="addChoice"> <i-mingcute-plus-fill />Add Choices</UButton>
-        </div>
-        <div class="overflow-y-auto max-h-[400px] custom-scrollbar px-1  ">
+                <UInput color="gray" model-value="Test" :ui="{ base: 'uppercase' }" />
+            </UFormGroup>
+            <UFormGroup label="Enter Question" name="question" required>
+                <UITiptapEditor v-model="formQuestion.question" color="gray"></UITiptapEditor>
+            </UFormGroup>
+            <div class="flex mb-2 border-b dark:border-colorBorder pb-2 ">
+                <UButton icon="i-heroicons-plus" color="gray" size="md" @click="addChoice" :ui="{
+                    color: {
+                        gray: {
+                            solid: 'bg-primary-500 text-white hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600'
+                        }
+                    },
+                    base: 'ml-auto'
+                }">
+                    Add Choices
+                </UButton>
 
+            </div>
+
+        <div class="overflow-y-auto max-h-[400px] custom-scrollbar px-1  ">
             <transition-expand group mode="out-in">
                 <div v-for="(choice, index) in formQuestion.Choices" :key="choice.choices_id"
-                    class="flex flex-col gap-2 mb-5 p-2 rounded-lg border dark:border-gray-700 hover:shadow-sm">
-                    <div class="flex items-center justify-between border-b py-2">
+                    class="flex flex-col gap-2 mb-5 p-2 rounded-lg border dark:bg-darken dark:border-gray-700 hover:shadow-sm">
+                    <div class="flex items-center justify-between border-b dark:border-gray-700 py-2">
                         <div class="flex items-center gap-x-2">
-                            <span class="font-medium">Choice {{ convertToLetter(index) }} :</span>
+                            <span>Choice {{ convertToLetter(index) }} :</span>
                             <UCheckbox v-model="choice.status"
                                 :aria-label="'Mark choice ' + convertToLetter(index) + ' as correct'" />
                         </div>
+                        <UButton icon="i-tabler-trash" color="gray" size="xs" @click="removeChoices(index)"
+                            :aria-label="'Remove choice ' + convertToLetter(index)" :ui="{
+                                color: {
+                                    gray: {
+                                        solid: 'bg-carnation-500 text-white hover:bg-carnation-600 dark:bg-carnation-500 dark:hover:bg-carnation-600'
+                                    }
+                                },
+                                base: 'ml-auto'
+                            }">
 
-                        <UButton color="red" variant="solid" size="xs" icon="i-tabler-trash"
-                            @click="removeChoices(index)" :aria-label="'Remove choice ' + convertToLetter(index)" />
+                        </UButton>
+
                     </div>
 
                     <UITiptapEditor v-model="choice.description" />
@@ -30,13 +49,19 @@
 
             </transition-expand>
 
-            <!-- </TransitionGroup> -->
             <div class="space-y-2 mt-4">
                 <UButton v-if="isUpdate" color="red" variant="outline" @click="reset" block>
                     Reset Form
                 </UButton>
 
-                <UButton v-if="formQuestion.Choices?.length ?? 0 > 0" type="submit" color="emerald" block>
+                <UButton v-if="formQuestion.Choices?.length ?? 0 > 0" type="submit" color="gray" block :ui="{
+                    color: {
+                        gray: {
+                            solid: 'bg-emerald-500 text-white hover:bg-emerald-600 dark:bg-emerald-500 dark:text-white dark:hover:bg-emerald-600'
+                        }
+                    },
+                    base: 'ml-auto'
+                }">
                     {{ isUpdate ? 'Update Question' : 'Submit Question' }}
                 </UButton>
             </div>

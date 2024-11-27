@@ -1,15 +1,26 @@
 <template>
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Department Name" name="department_name" required>
-            <UInput v-model="state.department_name" :ui="{ base: 'capitalize' }" />
+            <UInput v-model="state.department_name" color="gray" :ui="{ base: 'capitalize' }" />
         </UFormGroup>
         <UFormGroup label="Status" name="status">
-            <UToggle v-model="state.status" />
+            <UToggle v-model="state.status" :ui="{
+                container:{
+                    base:'dark:bg-white'
+                },
+                active: 'bg-primary-500 dark:bg-primary-400',
+                inactive: 'bg-gray-400 dark:bg-primary-500',
+            }" />
         </UFormGroup>
-        <UButton type="submit" block>
-            Submit
-        </UButton>
+        <UButton type="submit" block color="gray" size="md" :ui="{
+            color: {
+                gray: {
+                    solid: 'bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 text-white hover:dark:bg-primary-600'
+                }
+            }
+        }">Submit</UButton>
     </UForm>
+
 </template>
 
 <script setup lang="ts">

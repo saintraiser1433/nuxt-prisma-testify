@@ -2,21 +2,31 @@
 
     <UForm :schema="schema" :state="formExam" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Exam Title" name="exam_title" required>
-            <UInput v-model="formExam.exam_title" :ui="{ base: 'uppercase' }" />
+            <UInput v-model="formExam.exam_title" color="gray" :ui="{ base: 'uppercase' }" />
         </UFormGroup>
         <UFormGroup label="Exam Description" name="description" required>
-            <UInput v-model="formExam.description" :ui="{ base: 'capitalize' }" />
+            <UInput v-model="formExam.description" color="gray" :ui="{ base: 'capitalize' }" />
         </UFormGroup>
         <UFormGroup label="Time Limit" name="time_limit" required>
-            <UInput type="number" v-model="formExam.time_limit" />
+            <UInput type="number" v-model="formExam.time_limit" color="gray" />
         </UFormGroup>
         <UFormGroup v-if="isUpdate" label="Status" name="status">
-            <UToggle v-model="formExam.status" />
+            <UToggle v-model="formExam.status" :ui="{
+                container: {
+                    base: 'dark:bg-white'
+                },
+                active: 'bg-primary-500 dark:bg-primary-400',
+                inactive: 'bg-gray-400 dark:bg-primary-500',
+            }" />
         </UFormGroup>
 
-        <UButton type="submit" block>
-            Submit
-        </UButton>
+        <UButton block color="gray" size="md" :ui="{
+            color: {
+                gray: {
+                    solid: 'bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 text-white hover:dark:bg-primary-600'
+                }
+            }
+        }">Submit</UButton>
     </UForm>
 </template>
 

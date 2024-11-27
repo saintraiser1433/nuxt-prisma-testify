@@ -58,9 +58,16 @@ const handleUpdate = (item: DeansModel) => {
 <template>
   <UITables :data="deansData" :columns="columns">
     <template #action-header>
-      <UButton icon="i-heroicons-plus" color="emerald" size="md" @click="toggleModal">
+      <UButton icon="i-heroicons-plus" color="gray" size="md" @click="toggleModal" :ui="{
+        color: {
+          gray: {
+            solid: 'bg-primary-500 text-white hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600'
+          }
+        }
+      }">
         Add Deans's
       </UButton>
+
     </template>
     <template #increment-data="{ row, index }">
       <span>{{ index + 1 }}</span>

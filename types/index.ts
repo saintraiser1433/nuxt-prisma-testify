@@ -196,6 +196,11 @@ export interface CardDefaultProps {
     divide?: string
 }
 
+export interface TableProps {
+    padding?: string,
+    base?: string
+}
+
 
 // base?: string,
 //     header?: {
