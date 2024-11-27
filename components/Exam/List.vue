@@ -81,14 +81,14 @@ const handleAssign = (id: number) => {
         </template>
         <template #actions-data="{ row, index }">
             <div class="flex gap-1">
-                <UButton color="primary" class="dark:text-white" variant="solid" size="sm"
+                <UButton color="primary" class="dark:text-white" variant="solid" size="xs"
                     @click="handleAssign(row.exam_id)">
                     <i-bx-show />
                 </UButton>
-                <UButton color="emerald" class="dark:text-white" variant="solid" size="sm" @click="handleUpdate(row)">
+                <UButton color="emerald" class="dark:text-white" variant="solid" size="xs" @click="handleUpdate(row)">
                     <i-bx-edit />
                 </UButton>
-                <UButton color="carnation" class="dark:text-white" variant="solid" size="sm"
+                <UButton color="carnation" class="dark:text-white" variant="solid" size="xs"
                     @click="handleDelete(row.exam_id)">
                     <i-icon-park-solid-people-delete />
                 </UButton>

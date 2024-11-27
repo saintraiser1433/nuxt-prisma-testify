@@ -1,11 +1,15 @@
 <template>
   <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
-  <UModal v-model="isOpen">
+  <UModal v-model="isOpen" prevent-close>
     <UICard :body="{
       padding: 'p-10'
     }">
       <template #header>
-        <h1 class="text-2xl lg:text-lg font-semibold">Course Information</h1>
+        <div class="flex items-center justify-between">
+          <h1 class="text-2xl lg:text-lg font-semibold">Course Information</h1>
+          <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+            @click="isOpen = false" />
+        </div>
       </template>
       <CourseForm :form-data="data" :is-update="isUpdate" @data-course="submitCourse"></CourseForm>
     </UICard>

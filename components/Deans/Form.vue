@@ -17,7 +17,7 @@
     <UFormGroup v-if="isUpdate" label="Status" name="status">
       <UToggle v-model="state.status" />
     </UFormGroup>
-    <UButton block color="gray" size="md" :ui="{
+    <UButton type="submit" block color="gray" size="md" :ui="{
       color: {
         gray: {
           solid: 'bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 text-white hover:dark:bg-primary-600'

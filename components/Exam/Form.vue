@@ -8,7 +8,8 @@
             <UInput v-model="formExam.description" color="gray" :ui="{ base: 'capitalize' }" />
         </UFormGroup>
         <UFormGroup label="Time Limit" name="time_limit" required>
-            <UInput type="number" v-model="formExam.time_limit" color="gray" />
+            <USelect v-model="formExam.time_limit" color="gray" :options="timeLimit" :ui="{ base: 'uppercase' }"
+                option-attribute="name" />
         </UFormGroup>
         <UFormGroup v-if="isUpdate" label="Status" name="status">
             <UToggle v-model="formExam.status" :ui="{
@@ -20,7 +21,7 @@
             }" />
         </UFormGroup>
 
-        <UButton block color="gray" size="md" :ui="{
+        <UButton type="submit" block color="gray" size="md" :ui="{
             color: {
                 gray: {
                     solid: 'bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 text-white hover:dark:bg-primary-600'
@@ -32,6 +33,26 @@
 
 <script setup lang="ts">
 import type { FormSubmitEvent } from '#ui/types'
+
+const timeLimit = [
+    { name: '10 minutes', value: 600 },
+    { name: '20 minutes', value: 1200 },
+    { name: '25 minutes', value: 1500 },
+    { name: '30 minutes', value: 1800 },
+    { name: '35 minutes', value: 2100 },
+    { name: '45 minutes', value: 2700 },
+    { name: '50 minutes', value: 3000 },
+    { name: '1 hour', value: 3600 },
+    { name: '1 hour and 30 minutes', value: 5400 },
+    { name: '2 hours', value: 7200 },
+    { name: '2 hour and 30 minutes', value: 9000 },
+    { name: '3 hours', value: 10800 },
+    { name: '3 hours and 30 minutes', value: 12600 },
+    { name: '4 hours', value: 14400 },
+    { name: '4 hours and 30 minutes', value: 16200 },
+    { name: '5 hours', value: 18000 },
+
+]
 
 const emits = defineEmits<{
     (e: 'dataExam', payload: ExamModel): void;
@@ -46,7 +67,8 @@ const props = defineProps({
         type: Boolean,
         required: true
     }
-})
+});
+
 
 const { formData, isUpdate } = toRefs(props)
 const { $joi } = useNuxtApp()

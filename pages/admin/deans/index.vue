@@ -1,11 +1,16 @@
 <template>
     <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
-    <UModal v-model="isOpen">
+    <UModal v-model="isOpen" prevent-close>
         <UICard :body="{
             padding: 'px-4'
         }">
             <template #header>
-                <h1 class="text-2xl lg:text-lg font-semibold">Deans Information</h1>
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl lg:text-lg font-semibold">Deans Information</h1>
+                    <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+                        @click="isOpen = false" />
+                </div>
+
             </template>
             <DeansForm :form-data="data" :department-data="transformDepartment" :is-update="isUpdate"
                 @data-Deans="submitDeans">
@@ -13,11 +18,15 @@
         </UICard>
     </UModal>
 
-    <UModal :ui="{ width: 'w-full lg:max-w-[1400px]' }" v-model="isOpenAssign">
+    <UModal :ui="{ width: 'w-full lg:max-w-[1400px]' }" v-model="isOpenAssign"  prevent-close >
         <UICard :body="{ padding: 'p-4', base: 'dark:bg-dark-body-950' }">
 
             <template #header>
-                <h1 class="text-2xl lg:text-lg font-semibold">Assign Deans</h1>
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl lg:text-lg font-semibold">Assign Deans</h1>
+                    <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+                        @click="isOpenAssign = false" />
+                </div>
             </template>
             <div class="grid grid-cols-12 gap-3">
                 <div class="col-span-12 lg:col-span-3">

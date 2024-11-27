@@ -9,7 +9,7 @@
         </template>
         <template #actions-data="{ row, index }">
             <div class="flex gap-1">
-                <UButton color="carnation" class="dark:text-white" variant="solid" size="sm"
+                <UButton color="carnation" class="dark:text-white" variant="solid" size="xs"
                     @click="handleDelete(row.deans_id, row.course_id)">
                     <i-bx-x />
                 </UButton>

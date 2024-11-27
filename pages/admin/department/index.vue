@@ -1,11 +1,16 @@
 <template>
     <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
-    <UModal v-model="isOpen">
+    <UModal v-model="isOpen" prevent-close>
         <UICard :body="{
             padding: 'px-4'
         }">
             <template #header>
-                <h1 class="text-2xl lg:text-lg">Department Information</h1>
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl lg:text-lg font-semibold">Department Information</h1>
+                    <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+                        @click="isOpen = false" />
+                </div>
+
             </template>
             <DepartmentForm :form-data="data" :is-update="isUpdate" @data-department="submitDepartment">
             </DepartmentForm>
@@ -16,7 +21,7 @@
         <div class="col-span-5">
             <UICard>
                 <template #header>
-                    <h1 class="text-2xl lg:text-lg">List of Department's</h1>
+                    <h1 class="text-2xl lg:text-lg font-semibold">List of Department's</h1>
                 </template>
                 <DepartmentList :department-data="departmentData" @update="editDepartment" @delete="removeDepartment"
                     @toggle-modal="toggleModal" />
