@@ -40,7 +40,8 @@ const props = defineProps({
 })
 
 const { formData, isUpdate } = toRefs(props)
-const { $id, $joi } = useNuxtApp();
+const { $username, $password, $joi } = useNuxtApp();
+
 
 const schema = $joi.object({
     first_name: $joi.string().required().messages({
@@ -70,8 +71,8 @@ const onSubmit = async (event: FormSubmitEvent<User>) => {
     if (!isUpdate.value) {
         data = {
             ...event.data,
-            username: $id,
-            password: $id
+            username: $username(),
+            password: $password()
         }
     } else {
         data = {

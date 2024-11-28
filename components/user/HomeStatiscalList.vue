@@ -29,8 +29,6 @@ const { examData } = toRefs(props)
 </script>
 <template>
   <UITables :data="examData" :columns="columns" :has-action-header="false">
-      
-
   </UITables>
 
 </template>

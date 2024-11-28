@@ -38,7 +38,6 @@ export default defineNuxtPlugin((event) => {
   addRouteMiddleware(
     "auth",
     (to, from) => {
-
       const { token, clearAuthTokens, info } = useAuthentication();
       const inf = JSON.parse(info.value);
 

@@ -35,14 +35,14 @@
             :rows="hasPagination ? paginatedData : data" :columns="columnsTable" :ui="{
                 base: base || 'border-t dark:border-gray-700 ',
                 td: {
-                    padding: td.padding || 'px-4 py-1',
+                    padding: td.padding || 'px-4 py-2',
                     base: td.base || '',
                 },
                 tr: {
                     base: tr.base || 'odd:bg-white even:bg-slate-50 dark:odd:bg-gray-900 dark:even:bg-gray-800  '
                 },
                 th: {
-                    padding: th.padding || 'py-5',
+                    padding: th.padding || 'py-3',
                     base: th.base || 'bg-gray-100 dark:bg-darken dark:text-slate-400 text-xs',
                 },
             }

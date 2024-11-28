@@ -157,6 +157,16 @@ export interface User {
     role?: Role
 }
 
+export interface Followup {
+    examineeId: string,
+    gender: string,
+    birth_date: string,
+    contact_number: string,
+    school: string,
+    email: string,
+    address: string
+}
+
 
 
 export type Role = 'admin' | 'examinee' | 'deans';

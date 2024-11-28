@@ -51,23 +51,6 @@
 
           </UPopover>
 
-          <!-- <ul
-              class="profile absolute right-0 p-1 text-sm rounded-md w-36 border shadow-md hidden text-gray-500 bg-gray-100 dark:text-fontBase dark:bg-darken dark:border-colorBorder group-hover:block">
-              <li class="list__item-nav">
-                <NuxtLink class="flex gap-2 items-center px-1" to="/">
-                  <i-iconamoon-profile-circle />Profile
-                </NuxtLink>
-              </li>
-              <li class="list__item-nav">
-                <NuxtLink class="flex gap-2 items-center px-1" to="/"><i-fa-cogs />Settings</NuxtLink>
-              </li>
-              <li class="list__item-nav">
-                <button class="flex gap-2 items-center px-1" @click="handleSignOut()">
-                  <i-majesticons-logout-half-circle-line />Logout
-                </button>
-              </li>
-            </ul> -->
-
         </li>
       </ul>
     </div>

@@ -81,6 +81,7 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     '@morev/vue-transitions/nuxt',
     "nuxt-tiptap-editor",
+    "@nuxt/image",
   ],
   tiptap: {
     prefix: 'Tiptap',

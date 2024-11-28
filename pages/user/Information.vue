@@ -1,48 +1,62 @@
 <template>
-    <div class="w-8/12 mx-auto translate-y-0 lg:translate-y-1/2">
-        <UCard class="w-full" :ui="{
+    <div class="w-8/12 mx-auto translate-y-0 lg:translate-y-1/4">
+        <UICard :body="{ padding: 'sm:px-4' }" :header="{ padding: 'sm:p-0 p-0', }">
+            <template #header>
+                <div class="bg-[url('@/assets/images/bgheaders.png')] w-full h-20 bg-cover flex items-center px-3">
+                    <h2 class="text-2xl font-semibold text-white">FOLLOW UP INFORMATION</h2>
+                </div>
+            </template>
+            <h2 class="text-sm border-b border-gray-300 dark:border-gray-700 pb-2 mb-4 font-semibold">Date Examination:
+                {{ dateNow
+                }} </h2>
+            <UForm :schema="schema" :state="formFollowup" class="gap-2 grid grid-cols-2" @submit="onSubmit">
+                <UFormGroup class="col-span-2 lg:col-span-1" label="Gender" name="gender" required>
+                    <USelect v-model.number="formFollowup.gender" color="gray" :options="gender"
+                        option-attribute="name" />
+                </UFormGroup>
+                <UFormGroup class="col-span-2 lg:col-span-1" label="Birth Date" name="birth_date" required>
+                    <UInput type="date" v-model="formFollowup.birth_date" color="gray" />
+                </UFormGroup>
+                <UFormGroup class="col-span-2 lg:col-span-1" label="Contact Number" name="contact_number" required>
+                    <UInput type="number" v-model="formFollowup.contact_number" color="gray" />
+                </UFormGroup>
+                <UFormGroup class="col-span-2 lg:col-span-1" label="Email" name="email" required>
+                    <UInput type="email" v-model="formFollowup.email" color="gray" />
+                </UFormGroup>
+                <UFormGroup class="col-span-2 lg:col-span-1" label="School Graduated" name="school" required>
+                    <UInput v-model="formFollowup.school" color="gray" />
+                </UFormGroup>
+                <UFormGroup class="col-span-2 lg:col-span-1" label="Address" name="address" required>
+                    <UTextarea v-model="formFollowup.address" :rows="4" size="lg" color="gray" />
+
+                </UFormGroup>
+
+                <div class="col-span-2 border-t dark:border-gray-600 pt-2">
+                    <UButton type="submit" color="gray" size="md" :ui="{
+                        color: {
+                            gray: {
+                                solid: 'bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500 text-white hover:dark:bg-emerald-600'
+                            }
+                        }
+                    }">Submit</UButton>
+                </div>
+
+            </UForm>
+
+        </UICard>
+        <!-- <UCard class="w-full" :ui="{
             base: 'overflow-hidden  ',
             ring: '',
             body: { padding: 'sm:p-0 p-0' },
             header: { padding: '' },
             footer: { padding: '' },
 
-        }">
-            <template #header>
-                <div class="bg-[url('@/assets/images/bgheaders.png')] w-full h-20 bg-cover flex items-center px-3">
-                    <h2 class="text-2xl font-semibold text-white">FOLLOW UP INFORMATION</h2>
-                </div>
-            </template>
-            <div class="p-3">
-                <h2 class="text-sm border-b border-gray-200 pb-2 mb-2">Date Examination: {{ dateNow }} </h2>
-                <UForm :schema="schema" :state="formFollowup" class="gap-2 grid grid-cols-2" @submit="onSubmit">
-                    <UFormGroup class="col-span-2 lg:col-span-1" label="Gender" name="gender" required>
-                        <USelect v-model.number="formFollowup.gender" :options="gender" option-attribute="name" />
-                    </UFormGroup>
-                    <UFormGroup class="col-span-2 lg:col-span-1" label="Birth Date" name="birth_date" required>
-                        <UInput type="date" v-model="formFollowup.birth_date" />
-                    </UFormGroup>
-                    <UFormGroup class="col-span-2 lg:col-span-1" label="Contact Number" name="contact_number" required>
-                        <UInput type="number" v-model="formFollowup.contact_number" />
-                    </UFormGroup>
-                    <UFormGroup class="col-span-2 lg:col-span-1" label="Email" name="email" required>
-                        <UInput type="email" v-model="formFollowup.email" />
-                    </UFormGroup>
-                    <UFormGroup class="col-span-2 lg:col-span-1" label="School Graduated" name="school" required>
-                        <UInput type="number" v-model="formFollowup.school" />
-                    </UFormGroup>
-                    <UFormGroup class="col-span-2 lg:col-span-1" label="Address" name="address" required>
-                        <UTextarea v-model="formFollowup.address" :rows="4" size="lg" />
-                        
-                    </UFormGroup>
-                    
-                    <div class="col-span-2 ml-auto border-t pt-2 w-full">
-                        <UButton color="emerald"  variant="solid">Submit</UButton>
-                    </div>
-                   
-                </UForm>
-            </div>
-        </UCard>
+        }"> -->
+
+        <!-- <div class="p-3">
+                
+            </div> -->
+        <!-- </UCard> -->
 
     </div>
 </template>

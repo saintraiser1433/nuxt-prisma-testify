@@ -24,25 +24,31 @@
         <li><i-pixelarticons-add-grid /></li>
         <li><i-mdi-bell-outline /></li>
         <li>
-          <div class="w-9 h-9 cursor-pointer relative group">
-            <img src="@/assets/images/avatar.png" class="w-full h-full rounded-full" alt="Avatar Logo" />
-            <ul
-              class="profile absolute right-0 p-1 text-sm rounded-md w-36 border shadow-md hidden text-gray-500 bg-gray-100 dark:text-fontBase dark:bg-darken dark:border-colorBorder group-hover:block">
-              <li class="list__item-nav">
-                <NuxtLink class="flex gap-2 items-center px-1" to="/">
-                  <i-iconamoon-profile-circle />Profile
-                </NuxtLink>
-              </li>
-              <li class="list__item-nav">
-                <NuxtLink class="flex gap-2 items-center px-1" to="/"><i-fa-cogs />Settings</NuxtLink>
-              </li>
-              <li class="list__item-nav">
-                <button class="flex gap-2 items-center px-1" @click="handleSignOut()">
-                  <i-majesticons-logout-half-circle-line />Logout
-                </button>
-              </li>
-            </ul>
-          </div>
+
+          <UPopover>
+            <div class="w-9 h-9 cursor-pointer relative">
+              <img src="@/assets/images/avatar.png" class="w-full h-full rounded-full" alt="Avatar Logo" />
+            </div>
+            <template #panel>
+              <ul class="grid grid-cols-1 divide-y dark:divide-gray-700 dark:bg-darken content-center  text-sm ">
+                <li class="p-2 hover:bg-gray-100 hover:dark:bg-gray-700">
+                  <NuxtLink class="flex gap-2 items-center px-1" to="/">
+                    <i-iconamoon-profile-circle />Profile
+                  </NuxtLink>
+                </li>
+                <li class="p-2 hover:bg-gray-100 hover:dark:bg-gray-700">
+                  <NuxtLink class="flex gap-2 items-center px-1" to="/"><i-fa-cogs />Settings</NuxtLink>
+                </li>
+                <li class="p-2 hover:bg-gray-100 hover:dark:bg-gray-700">
+                  <button class="flex gap-2 items-center px-1" @click="handleSignOut()">
+                    <i-majesticons-logout-half-circle-line />Logout
+                  </button>
+                </li>
+              </ul>
+            </template>
+
+          </UPopover>
+
         </li>
       </ul>
     </div>

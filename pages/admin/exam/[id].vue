@@ -3,7 +3,7 @@
         <div class="col-span-12 lg:col-span-4">
             <UICard  :body="{ padding: 'sm:px-3' }">
                 <template #header>
-                    <h1 class="text-2xl lg:text-lg">Question Limit</h1>
+                    <h1 class="text-2xl lg:text-lg font-semibold">Question Limit</h1>
                 </template>
                 <QuestionForm @data-quest-choice="submitQuestion" :form-data="data" :is-update="isUpdate"
                     @reset="resetInstance" />
@@ -13,7 +13,7 @@
         <div class="col-span-12 lg:col-span-8">
             <UICard>
                 <template #header>
-                    <h1 class="text-2xl lg:text-lg">Question List</h1>
+                    <h1 class="text-2xl lg:text-lg font-semibold">Question List</h1>
                 </template>
                 <QuestionList :question-data="question ?? []" @update="editQuestion" @delete="removeQuestion" />
             

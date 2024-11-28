@@ -3,14 +3,14 @@
     <div class="w-full rounded-lg shadow-lg bg-white dark:bg-cardColor">
       <!-- <form @submit.prevent="handleSignIn"> -->
       <div class="grid grid-cols-2">
-        <div class="col-span-2 lg:col-span-1 py-6 px-10">
+        <div class="col-span-2 lg:col-span-1 py-6 px-8">
           <div class="py-5">
             <h1 class="text-2xl font-semibold uppercase text-gray-600 dark:text-gray-300">
               Welcome Back
             </h1>
             <span class="text-xs">Please enter login details below</span>
           </div>
-
+          
           <UForm :schema="schema" :state="state" class="space-y-5" @submit="onSubmit">
             <UFormGroup label="Username" name="username">
               <UInput v-model="state.username" color="gray" :ui="{
@@ -49,8 +49,6 @@ definePageMeta({
 });
 
 const { setToast } = useToasts();
-const username = ref("");
-const password = ref("");
 const { $joi } = useNuxtApp()
 const { signIn, info } = useAuthentication();
 

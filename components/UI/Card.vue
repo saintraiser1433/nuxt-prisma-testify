@@ -6,7 +6,7 @@
       divide:'divide-t dark:divide-gray-700',
       header: { padding: header?.padding || 'px-4 py-5', base: header?.padding || 'dark:bg-darken' },
       body: { padding: body?.padding || '', base: body?.base || 'dark:bg-darken' },
-      footer: { padding: header?.padding || '', base: footer?.base || '' }
+      footer: { padding: footer?.padding || '', base: footer?.base || 'dark:bg-darken' }
     }">
       <template v-if="hasHeader" #header>
         <slot name="header"> </slot>

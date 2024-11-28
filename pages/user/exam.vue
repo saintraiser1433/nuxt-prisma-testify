@@ -1,16 +1,12 @@
 <template>
     <div>
-        <UCard :ui="{
-            base: 'static overflow-hidden',
-            ring: '',
-            body: { padding: 'sm:p-0 p-0', base: 'h-[65vh] lg:h-[71vh] w-full overflow-y-auto' },
-            header: { padding: '' },
-            footer: { padding: '' },
-
-        }">
+        <UICard :body="{ padding: 'sm:p-0 p-0', base: 'h-[65vh] lg:h-[71vh] w-full overflow-y-auto' }"
+            :header="{ padding: 'sm:p-0 p-0' }" :footer="{
+                base: 'flex justify-center items-center py-2 dark:bg-darken'
+            }">
             <template #header>
                 <div
-                    class="bg-[url('@/assets/images/bgheaders.png')] w-full h-16 bg-cover flex gap-2 justify-between items-center px-3 text-sm lg:text-2xl font-semibold text-white">
+                    class="bg-[url('@/assets/images/bgheaders.png')] w-full h-16 bg-cover flex gap-2 justify-between items-center px-3 text-xs lg:text-2xl font-semibold text-white">
                     <h2>EXAM TITLE: LEARNING IN FILIPINO USING BLAH</h2>
                     <h2>ITEMS: 0/76</h2>
                 </div>
@@ -18,7 +14,9 @@
             <template #default>
 
                 <UITables :data="question ?? []" :columns="columns" :has-border="true" :has-column-filter="false"
-                    :hasActionHeader="false" :has-pagination="false" :has-page-count="false">
+                    :hasActionHeader="false" :has-pagination="false" :has-page-count="false" :td="{
+                        base: 'border dark:border-gray-700 align-top py-5'
+                    }">
                     <template #increment-data="{ row, index }">
                         <p class="text-center font-bold">{{ index + 1 }}</p>
                     </template>
@@ -38,12 +36,21 @@
                 </UITables>
 
             </template>
-            <template #footer>
+            <!-- <template #footer>
                 <UButton type="submit" block>
                     Submit
                 </UButton>
+            </template> -->
+            <template #footer>
+                <UButton type="submit" color="gray" size="md" :ui="{
+                    color: {
+                        gray: {
+                            solid: 'bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500 text-white hover:dark:bg-emerald-600'
+                        }
+                    }
+                }">Submit Exam</UButton>
             </template>
-        </UCard>
+        </UICard>
 
 
     </div>

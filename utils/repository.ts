@@ -1,4 +1,5 @@
 import type { NitroFetchRequest, $Fetch } from 'nitropack'
+import type { Followup } from '~/types'
 
 export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
     //course
@@ -171,6 +172,15 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
         return fetch<T>(`/file`, {
             method: 'POST',
             body: file
+        })
+    },
+
+
+    async addFollowup(body: Followup): Promise<T> {
+
+        return fetch<T>('/examinee/followup', {
+            method: 'POST',
+            body: body
         })
     },
 
