@@ -1,24 +1,24 @@
 <template>
     <UForm :schema="schema" :state="formQuestion" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Exam Title" name="exam_title">
-                <UInput color="gray" model-value="Test" :ui="{ base: 'uppercase' }" />
-            </UFormGroup>
-            <UFormGroup label="Enter Question" name="question" required>
-                <UITiptapEditor v-model="formQuestion.question" color="gray"></UITiptapEditor>
-            </UFormGroup>
-            <div class="flex mb-2 border-b dark:border-colorBorder pb-2 ">
-                <UButton icon="i-heroicons-plus" color="gray" size="md" @click="addChoice" :ui="{
-                    color: {
-                        gray: {
-                            solid: 'bg-primary-500 text-white hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600'
-                        }
-                    },
-                    base: 'ml-auto'
-                }">
-                    Add Choices
-                </UButton>
+            <UInput color="gray" :model-value="examTitle" :ui="{ base: 'uppercase' }" />
+        </UFormGroup>
+        <UFormGroup label="Enter Question" name="question" required>
+            <UITiptapEditor v-model="formQuestion.question" color="gray"></UITiptapEditor>
+        </UFormGroup>
+        <div class="flex mb-2 border-b dark:border-colorBorder pb-2 ">
+            <UButton icon="i-heroicons-plus" color="gray" size="md" @click="addChoice" :ui="{
+                color: {
+                    gray: {
+                        solid: 'bg-primary-500 text-white hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600'
+                    }
+                },
+                base: 'ml-auto'
+            }">
+                Add Choices
+            </UButton>
 
-            </div>
+        </div>
 
         <div class="overflow-y-auto max-h-[400px] custom-scrollbar px-1  ">
             <transition-expand group mode="out-in">
@@ -89,8 +89,7 @@ const props = defineProps({
         required: true
     }
 })
-
-const route = useRoute();
+const { params, meta } = useRoute();
 const { isUpdate, formData } = toRefs(props)
 const { $joi } = useNuxtApp()
 
@@ -126,7 +125,7 @@ const formQuestion = ref<QuestionModel>({
 
 
 
-// const examTitle = computed(() => route.meta.examTitle)
+const examTitle = computed(() => String(meta.examTitle))
 
 const addChoice = () => {
     if (!formQuestion.value.Choices) {
@@ -144,7 +143,7 @@ const removeChoices = (index: number) => {
 
 
 const onSubmit = (event: FormSubmitEvent<QuestionModel>) => {
-    emits('dataQuestChoice', { ...event.data, exam_id: Number(route.params.id) })
+    emits('dataQuestChoice', { ...event.data, exam_id: Number(params.id) })
 }
 //watchers
 

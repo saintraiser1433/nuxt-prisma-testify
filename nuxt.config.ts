@@ -29,39 +29,39 @@ export default defineNuxtConfig({
       ],
     },
   },
-  auth: {
-    // globalAppMiddleware: true,
-    // baseURL: process.env.BASE_API_URL,
-    // provider: {
-    //   type: 'local',
-    //   endpoints: {
-    //     signIn: { path: '/login', method: 'post' },
-    //     signOut: { path: '/logout', method: 'post' },
-    //     signUp: { path: '/register', method: 'post' },
-    //     getSession: { path: '/session', method: 'get' },
-    //   },
-    //   pages: {
-    //     login: '/auth',
-    //   },
-    //   token: {
-    //     signInResponseTokenPointer: '/token',
-    //     type: 'Bearer',
-    //     cookieName: 'auth.token',
-    //     headerName: 'Authorization',
-    //     maxAgeInSeconds: 1800,
-    //     cookieDomain: 'sidebase.io',
-    //     secureCookieAttribute: false,
-    //     httpOnlyCookieAttribute: false,
-    //   },
-    // },
+  // auth: {
+  // globalAppMiddleware: true,
+  // baseURL: process.env.BASE_API_URL,
+  // provider: {
+  //   type: 'local',
+  //   endpoints: {
+  //     signIn: { path: '/login', method: 'post' },
+  //     signOut: { path: '/logout', method: 'post' },
+  //     signUp: { path: '/register', method: 'post' },
+  //     getSession: { path: '/session', method: 'get' },
+  //   },
+  //   pages: {
+  //     login: '/auth',
+  //   },
+  //   token: {
+  //     signInResponseTokenPointer: '/token',
+  //     type: 'Bearer',
+  //     cookieName: 'auth.token',
+  //     headerName: 'Authorization',
+  //     maxAgeInSeconds: 1800,
+  //     cookieDomain: 'sidebase.io',
+  //     secureCookieAttribute: false,
+  //     httpOnlyCookieAttribute: false,
+  //   },
+  // },
 
-    // sessionRefresh: {
-    //   enablePeriodically: true,
-    //   enableOnWindowFocus: true,
-    // }
+  // sessionRefresh: {
+  //   enablePeriodically: true,
+  //   enableOnWindowFocus: true,
+  // }
 
 
-  },
+  // },
 
   colorMode: {
     classSuffix: "",
@@ -77,7 +77,6 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "unplugin-icons/nuxt",
     "@vueuse/nuxt",
-    "@sidebase/nuxt-auth",
     "@nuxt/ui",
     '@morev/vue-transitions/nuxt',
     "nuxt-tiptap-editor",

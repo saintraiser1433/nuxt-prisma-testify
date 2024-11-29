@@ -18,7 +18,7 @@
                     <UInput type="date" v-model="formFollowup.birth_date" color="gray" />
                 </UFormGroup>
                 <UFormGroup class="col-span-2 lg:col-span-1" label="Contact Number" name="contact_number" required>
-                    <UInput type="number" v-model="formFollowup.contact_number" color="gray" />
+                    <UInput type="text" v-model="formFollowup.contact_number" color="gray" />
                 </UFormGroup>
                 <UFormGroup class="col-span-2 lg:col-span-1" label="Email" name="email" required>
                     <UInput type="email" v-model="formFollowup.email" color="gray" />
@@ -44,33 +44,37 @@
             </UForm>
 
         </UICard>
-        <!-- <UCard class="w-full" :ui="{
-            base: 'overflow-hidden  ',
-            ring: '',
-            body: { padding: 'sm:p-0 p-0' },
-            header: { padding: '' },
-            footer: { padding: '' },
 
-        }"> -->
-
-        <!-- <div class="p-3">
-                
-            </div> -->
-        <!-- </UCard> -->
 
     </div>
 </template>
 
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import type { FormSubmitEvent } from '#ui/types'
+
 definePageMeta({
     requiredRole: 'examinee',
-    layout: 'user'
+    layout: 'user',
+    middleware: ['check-information']
 })
-const { $datefns } = useNuxtApp();
-const dateNow = $datefns.format(new Date(), "MMMM d, yyyy");
 
+useSeoMeta({
+    title: 'Testify Information',
+    description: 'This is information page',
+    ogTitle: 'Testify Information',
+    ogDescription: 'This is information page',
+});
+
+
+
+const { $api, $datefns, $joi } = useNuxtApp();
+
+const dateNow = $datefns.format(new Date(), "MMMM d, yyyy");
+const { info } = useAuthentication();
+const { setToast } = useToasts();
+const followUp = repository<ApiResponse<Followup>>($api)
+const inf = JSON.parse(info.value);
 
 const gender = [
     {
@@ -84,6 +88,7 @@ const gender = [
 ]
 
 
+
 const formFollowup = ref<FollowupModel>({
     gender: undefined,
     birth_date: undefined,
@@ -91,9 +96,9 @@ const formFollowup = ref<FollowupModel>({
     school: undefined,
     email: undefined,
     address: undefined,
+
 });
 
-const { $joi } = useNuxtApp()
 
 const schema = $joi.object({
     gender: $joi.string().required().messages({
@@ -119,10 +124,26 @@ const schema = $joi.object({
 })
 
 
-const onSubmit = async (event: FormSubmitEvent<DepartmentModel>) => {
-    // emits('dataDepartment', event.data)
-    console.log('submitted');
+const onSubmit = async (event: FormSubmitEvent<Followup>) => {
+    try {
+        if (inf) {
+            const data = {
+                ...event.data,
+                ...{ examineeId: inf.id }
+            }
+            await followUp.addFollowup(data);
+            await navigateTo({ name: 'user-exam' });
+        } else {
+            setToast('error', 'Cant find id');
+        }
+    } catch (err: any) {
+        setToast('error', err.value?.data.message || 'An error occurred');
+    }
+
+
 }
+
+
 </script>
 
 

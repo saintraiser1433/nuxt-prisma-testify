@@ -48,6 +48,13 @@ definePageMeta({
     // middleware: ['checkRole'],
 })
 
+useSeoMeta({
+  title: 'Testify Signup Page',
+  description: 'Testify Signup',
+  ogTitle: 'Testify Signup Page',
+  ogDescription: 'Testify Signup'
+});
+
 
 
 

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+
 const columns = [{
     key: "increment",
     label: '#',
@@ -40,6 +41,12 @@ const props = defineProps({
 
 const { examData } = toRefs(props)
 
+const formatTime = (totalSeconds: number) => {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+};
 
 const toggleModal = () => {
     emits('toggleModal');
@@ -78,6 +85,9 @@ const handleAssign = (id: number) => {
         </template>
         <template #description-data="{ row, index }">
             <span class="capitalize">{{ row.description }}</span>
+        </template>
+        <template #time_limit-data="{ row, index }">
+            <span class="capitalize">{{ formatTime(row.time_limit) }}</span>
         </template>
         <template #actions-data="{ row, index }">
             <div class="flex gap-1">

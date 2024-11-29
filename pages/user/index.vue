@@ -109,6 +109,15 @@ definePageMeta({
     requiredRole: 'examinee',
     layout: 'user'
 })
+
+useSeoMeta({
+  title: 'Testify User Home Page',
+  description: 'This is signup page',
+  ogTitle: 'Testify User Home Page',
+  ogDescription: 'This is signup page',
+});
+
+
 const shouldRefetch = ref(0);
 const nuxtApp = useNuxtApp()
 

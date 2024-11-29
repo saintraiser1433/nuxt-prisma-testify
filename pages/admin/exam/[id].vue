@@ -1,7 +1,7 @@
 <template>
     <div class="grid grid-cols-12 gap-2">
         <div class="col-span-12 lg:col-span-4">
-            <UICard  :body="{ padding: 'sm:px-3' }">
+            <UICard :body="{ padding: 'sm:px-3' }">
                 <template #header>
                     <h1 class="text-2xl lg:text-lg font-semibold">Question Limit</h1>
                 </template>
@@ -11,12 +11,13 @@
 
         </div>
         <div class="col-span-12 lg:col-span-8">
+    
             <UICard>
                 <template #header>
                     <h1 class="text-2xl lg:text-lg font-semibold">Question List</h1>
                 </template>
                 <QuestionList :question-data="question ?? []" @update="editQuestion" @delete="removeQuestion" />
-            
+
             </UICard>
 
         </div>
@@ -28,19 +29,20 @@
 <script setup lang="ts">
 definePageMeta({
     requiredRole: 'admin',
-
+    middleware: 'check-exam'
 })
 
 const { setToast } = useToasts()
 const { setAlert } = useAlert()
-const route = useRoute().params;
+const { params } = useRoute();
 const data = ref<QuestionModel>({})
 const isUpdate = ref(false)
 const nuxtApp = useNuxtApp()
+
 const questionRepo = repository<ApiResponse<QuestionModel>>(nuxtApp.$api)
 const shouldRefetch = ref(0);
 
-const { data: question, status, error } = await useAPI<QuestionModel[]>(`/question/${route.id}`, {
+const { data: question, status, error } = await useAPI<QuestionModel[]>(`/question/${params.id}`, {
     watch: [shouldRefetch],
     getCachedData(key) {
         const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]

@@ -18,7 +18,7 @@
         </UICard>
     </UModal>
 
-    <UModal :ui="{ width: 'w-full lg:max-w-[1400px]' }" v-model="isOpenAssign"  prevent-close >
+    <UModal :ui="{ width: 'w-full lg:max-w-[1400px]' }" v-model="isOpenAssign" prevent-close>
         <UICard :body="{ padding: 'p-4', base: 'dark:bg-dark-body-950' }">
 
             <template #header>
@@ -77,13 +77,12 @@ definePageMeta({
     requiredRole: 'admin',
     // middleware: ['checkRole'],
 })
-useHead({
+
+useSeoMeta({
     title: 'Testify Deans Module',
-    meta: [
-        { name: "description", content: 'CRUD for Deans' },
-        { property: "og:title", content: 'Testify Deans Module' },
-        { property: "og:description", content: 'CRUD for Deans' },
-    ],
+    description: 'CRUD for Deans',
+    ogTitle: 'Testify Deans Module',
+    ogDescription: 'CRUD for Deans'
 });
 
 

@@ -15,7 +15,6 @@
     "@nuxt/image": "^1.8.1",
     "@nuxt/ui": "^2.19.2",
     "@pinia/nuxt": "^0.5.5",
-    "@sidebase/nuxt-auth": "^0.9.4",
     "@tiptap/core": "^2.10.0",
     "@tiptap/extension-image": "^2.10.0",
     "@tiptap/extension-table": "^2.10.0",

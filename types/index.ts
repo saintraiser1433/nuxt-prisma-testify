@@ -158,13 +158,13 @@ export interface User {
 }
 
 export interface Followup {
-    examineeId: string,
-    gender: string,
-    birth_date: string,
-    contact_number: string,
-    school: string,
-    email: string,
-    address: string
+    examineeId?: string,
+    gender?: string,
+    birth_date?: string,
+    contact_number?: string,
+    school?: string,
+    email?: string,
+    address?: string
 }
 
 

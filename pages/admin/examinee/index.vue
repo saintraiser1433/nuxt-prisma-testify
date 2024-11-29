@@ -38,13 +38,12 @@
 definePageMeta({
   requiredRole: 'admin',
 })
-useHead({
+
+useSeoMeta({
   title: 'Testify Examinee Module',
-  meta: [
-    { name: "description", content: 'CRUD for Examinee' },
-    { property: "og:title", content: 'Testify Examinee Module' },
-    { property: "og:description", content: 'CRUD for Examinee' },
-  ],
+  description: 'CRUD for Examinee',
+  ogTitle: 'Testify Examinee Module',
+  ogDescription: 'CRUD for Examinee'
 });
 
 

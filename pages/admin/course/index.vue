@@ -34,17 +34,14 @@
 <script setup lang="ts">
 definePageMeta({
   requiredRole: 'admin',
-  // middleware: ['checkRole'],
 })
-useHead({
-  title: 'Testify course Module',
-  meta: [
-    { name: "description", content: 'CRUD for course' },
-    { property: "og:title", content: 'Testify course Module' },
-    { property: "og:description", content: 'CRUD for course' },
-  ],
-});
 
+useSeoMeta({
+  title: 'Testify Course Module',
+  description: 'CRUD for course',
+  ogTitle: 'Testify course Module',
+  ogDescription: 'CRUD for course'
+});
 
 
 

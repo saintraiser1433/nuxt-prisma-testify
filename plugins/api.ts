@@ -1,6 +1,6 @@
 export default defineNuxtPlugin((nuxtApp) => {
     const config = useRuntimeConfig()
-    const { signOut, clearAuthTokens, info } = useAuthentication()
+    const { signOut, info } = useAuthentication()
     const api = $fetch.create({
         baseURL: config.public.baseURL,
         onRequest({ request, options, error }) {

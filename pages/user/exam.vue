@@ -62,6 +62,15 @@ definePageMeta({
     requiredRole: 'examinee',
     layout: 'user'
 })
+
+useSeoMeta({
+    title: 'Testify User Exam',
+    description: 'This is an examination page',
+    ogTitle: 'Testify User Exam',
+    ogDescription: 'This is an examination page',
+});
+
+
 const value = ref('system')
 const columns = [{
     key: 'increment',
