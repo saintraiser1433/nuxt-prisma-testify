@@ -43,7 +43,7 @@
                 },
                 th: {
                     padding: th.padding || 'py-3',
-                    base: th.base || 'bg-gray-100 dark:bg-darken dark:text-slate-400 text-xs',
+                    base: th.base || 'w-25 bg-gray-100 dark:bg-darken dark:text-slate-400 text-xs',
                 },
             }
                 ">

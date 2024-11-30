@@ -18,7 +18,10 @@
                         base: 'border dark:border-gray-700 align-top py-5'
                     }">
                     <template #increment-data="{ row, index }">
-                        <p class="text-center font-bold">{{ index + 1 }}</p>
+                        <td class="font-bold"
+                            style="max-width: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            {{ index + 1 }}
+                        </td>
                     </template>
                     <template #question-data="{ row, index }">
                         <td class="lg:max-w-6xl whitespace-normal text-wrap">
@@ -36,11 +39,7 @@
                 </UITables>
 
             </template>
-            <!-- <template #footer>
-                <UButton type="submit" block>
-                    Submit
-                </UButton>
-            </template> -->
+
             <template #footer>
                 <UButton type="submit" color="gray" size="md" :ui="{
                     color: {
@@ -75,6 +74,7 @@ const value = ref('system')
 const columns = [{
     key: 'increment',
     label: '#',
+    class:'w-10 max-w-[10rem]',
     sortable: true
 }, {
     key: 'question',
