@@ -26,8 +26,8 @@
                     <template #question-data="{ row, index }">
                         <td class="lg:max-w-6xl whitespace-normal text-wrap">
                             <p class="font-bold" v-html="row.question"></p>
-                            <URadioGroup v-model="selectedAnswers[index]" @click="pushData(index)" color="primary" size="xl"
-                                :options="row.choices" :ui="{
+                            <URadioGroup v-model="selectedAnswers[index]" @click="pushData(index)" color="primary"
+                                size="xl" :options="row.choices" :ui="{
                                     fieldset: 'lg:grid lg:grid-cols-2 lg:gap-5 lg: pt-2 cursor-pointer  ',
                                 }">
                                 <template #label="{ option, index }">
@@ -72,9 +72,18 @@ useSeoMeta({
     ogTitle: 'Testify User Exam',
     ogDescription: 'This is an examination page',
 });
+type submitAnswer = {
+    question_id: number,
+    examinee_id: string,
+    choices_id: string,
+    exam_id: number
+}
+
 
 const { userId } = useAuthentication();
-const data = ref([]);
+
+
+const data = ref<submitAnswer[]>([]);
 const selectedAnswers = ref<Record<number, string>>({})
 const columns = [{
     key: 'increment',
@@ -112,19 +121,21 @@ const { data: question, status, error } = await useAPI(`/exam/available/${examDa
 })
 
 
-const pushData = (index:number) => {
+const pushData = (index: number) => {
 
     data.value.push({
         examinee_id: userId,
-        choices_id:selectedAnswers.value[index],
-        question_id: question.value[index].question_id
-        exam_id:examData.value,
+        choices_id: question.value[index].choices[index].value,
+        question_id: question.value[index].question_id,
+        exam_id: Number(examData.value),
     })
+
+
 }
 
 
 const submitExam = () => {
-
+    console.log(data);
 }
 
 
