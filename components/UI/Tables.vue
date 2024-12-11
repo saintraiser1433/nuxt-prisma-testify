@@ -31,8 +31,12 @@
 
             </div>
         </div>
-        <UTable class="w-full text-xs" :sort-button="{ variant: 'outline', size: 'xs', square: false }"
-            :rows="hasPagination ? paginatedData : data" :columns="columnsTable" :ui="{
+
+
+        <UTable :loading="isLoading" :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
+            :progress="{ color: 'primary', animation: 'carousel' }"
+            :sort-button="{ variant: 'outline', size: 'xs', square: false }"
+            :rows="hasPagination ? paginatedData : data" :columns="columnsTable" class="w-full text-xs" :ui="{
                 base: base || 'border-t dark:border-gray-700 ',
                 td: {
                     padding: td.padding || 'px-4 py-2',
@@ -132,6 +136,11 @@ const props = defineProps({
         type: Boolean,
         default: true
     },
+
+    isLoading: {
+        type: Boolean,
+        default: false,
+    }
 
 
 

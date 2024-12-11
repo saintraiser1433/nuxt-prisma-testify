@@ -226,6 +226,13 @@ export interface TableProps {
 //     }
 
 
+export interface SubmitExamModel {
+    examinee_id: number,
+    exam_id: number,
+    question_id: number,
+    choices_id: number
+}
+
 
 import { format, parse, parseISO, getDay } from 'date-fns';
 

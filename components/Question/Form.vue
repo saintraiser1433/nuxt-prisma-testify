@@ -1,7 +1,7 @@
 <template>
     <UForm :schema="schema" :state="formQuestion" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Exam Title" name="exam_title">
-            <UInput color="gray" :model-value="examTitle" :ui="{ base: 'uppercase' }" />
+            <UInput color="gray" :model-value="examTitle" readonly :ui="{ base: 'uppercase' }" />
         </UFormGroup>
         <UFormGroup label="Enter Question" name="question" required>
             <UITiptapEditor v-model="formQuestion.question" color="gray"></UITiptapEditor>
@@ -25,10 +25,9 @@
                 <div v-for="(choice, index) in formQuestion.Choices" :key="choice.choices_id"
                     class="flex flex-col gap-2 mb-5 p-2 rounded-lg border dark:bg-darken dark:border-gray-700 hover:shadow-sm">
                     <div class="flex items-center justify-between border-b dark:border-gray-700 py-2">
-                        <div class="flex items-center gap-x-2">
+                        <div class="flex flex-row items-center gap-x-2">
                             <span>Choice {{ convertToLetter(index) }} :</span>
-                            <UCheckbox v-model="choice.status"
-                                :aria-label="'Mark choice ' + convertToLetter(index) + ' as correct'" />
+                            <UCheckbox v-model="choice.status" :aria-label="'Mark choice ' + convertToLetter(index) + ' as correct'" />
                         </div>
                         <UButton icon="i-tabler-trash" color="gray" size="xs" @click="removeChoices(index)"
                             :aria-label="'Remove choice ' + convertToLetter(index)" :ui="{

@@ -1,4 +1,4 @@
-import type { DecodeJWT, refreshTokenModel } from "~/types";
+import type { refreshTokenModel } from "~/types";
 import { jwtDecode } from 'jwt-decode';
 import { useStorage } from '@vueuse/core';
 export const useAuthentication = () => {
@@ -6,6 +6,7 @@ export const useAuthentication = () => {
     const token = useStorage<any>('token', null);
     const rToken = useStorage<any>('refreshToken', null);
     const info = useStorage<any>('info', null);
+    const userId = JSON.parse(info.value);
     const signIn = async (data: User) => {
         const result = await $fetch<Token>(`${config.public.baseURL}/auth/signIn`, {
             method: "POST",
@@ -14,7 +15,7 @@ export const useAuthentication = () => {
                 password: data.password,
             },
         });
-        const decodedToken = jwtDecode<DecodeJWT>(result.token.accessToken);
+        const decodedToken = jwtDecode(result.token.accessToken);
         token.value = result.token.accessToken
         info.value = JSON.stringify(decodedToken)
         rToken.value = result.token.refreshToken
@@ -60,5 +61,5 @@ export const useAuthentication = () => {
 
 
 
-    return { info, token, refreshToken, signIn, signOut, clearAuthTokens }
+    return { info, token, refreshToken, signIn, signOut, clearAuthTokens, userId }
 }

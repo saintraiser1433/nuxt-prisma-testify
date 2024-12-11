@@ -1,5 +1,5 @@
 import type { NitroFetchRequest, $Fetch } from 'nitropack'
-import type { Followup } from '~/types'
+import type { Followup, SubmitExamModel } from '~/types'
 
 export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
     //course
@@ -190,10 +190,24 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
         return fetch<T>(`/followup/${id}`, {
             method: 'GET',
         })
-    }
+    },
+
+    async getCheckExistingExam(id: string): Promise<T> {
+        return fetch<T>(`/exam/existing/${id}`, {
+            method: 'GET',
+        })
+    },
 
 
     //end
+
+    async submitExam(body: SubmitExamModel): Promise<T> {
+
+        return fetch<T>('/followup', {
+            method: 'POST',
+            body: body
+        })
+    },
 
 
 

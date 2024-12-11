@@ -29,6 +29,10 @@ const props = defineProps({
         required: true,
         default: () => [],
     },
+    isLoading: {
+        type: Boolean,
+        default: true
+    }
 
 })
 
@@ -49,12 +53,12 @@ const handleUpdate = (item: DepartmentModel) => {
 </script>
 
 <template>
-    <UITables :data="departmentData" :columns="columns">
+    <UITables :isLoading="isLoading" :data="departmentData" :columns="columns">
         <template #action-header>
             <UButton icon="i-heroicons-plus" color="gray" size="md" @click="toggleModal" :ui="{
-                color:{
+                color: {
                     gray: {
-                        solid:'bg-primary-500 text-white hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600'
+                        solid: 'bg-primary-500 text-white hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600'
                     }
                 }
             }">

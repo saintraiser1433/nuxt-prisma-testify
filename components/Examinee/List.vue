@@ -30,10 +30,14 @@ const props = defineProps({
         required: true,
         default: () => [],
     },
+    isLoading: {
+        type: Boolean,
+        default: false,
+    }
 
 })
 
-const { examineeData } = toRefs(props)
+const { examineeData,isLoading } = toRefs(props)
 
 
 const toggleModal = () => {
@@ -51,7 +55,7 @@ const handleUpdate = (item: User) => {
 </script>
 
 <template>
-    <UITables :data="examineeData" :columns="columns">
+    <UITables :is-loading="isLoading" :data="examineeData" :columns="columns">
         <template #action-header>
             <UButton icon="i-heroicons-plus" color="gray" size="md" @click="toggleModal" :ui="{
                 color:{

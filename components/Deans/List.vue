@@ -36,10 +36,13 @@ const props = defineProps({
     required: true,
     default: () => [],
   },
-
+  isLoading: {
+    type: Boolean,
+    default: false,
+  }
 })
 
-const { deansData } = toRefs(props)
+const { deansData, isLoading } = toRefs(props)
 
 
 const assignDeans = (id: number, fullname: string) => {
@@ -56,7 +59,7 @@ const handleUpdate = (item: DeansModel) => {
 </script>
 
 <template>
-  <UITables :data="deansData" :columns="columns">
+  <UITables :is-loading="isLoading" :data="deansData" :columns="columns">
     <template #action-header>
       <UButton icon="i-heroicons-plus" color="gray" size="md" @click="toggleModal" :ui="{
         color: {

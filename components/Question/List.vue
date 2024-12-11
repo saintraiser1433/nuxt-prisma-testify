@@ -25,10 +25,14 @@ const props = defineProps({
         type: Array as PropType<QuestionModel[]>,
         required: true,
         default: () => [],
+    },
+    isLoading: {
+        type: Boolean,
+        default: false,
     }
 })
 
-const { questionData } = toRefs(props)
+const { questionData, isLoading } = toRefs(props)
 
 const handleUpdate = (val: QuestionModel) => {
     emits('update', val)
@@ -39,9 +43,10 @@ const handleDelete = (id: number) => {
 
 </script>
 <template>
-    <UITables :data="questionData" :hasBorder="true" :columns="columns" :has-action-header="false" :td="{
-        base: 'border dark:border-gray-700 align-top py-5'
-    }">
+    <UITables :is-loading="isLoading" :data="questionData" :hasBorder="true" :columns="columns"
+        :has-action-header="false" :td="{
+            base: 'border dark:border-gray-700 align-top py-5'
+        }">
         <template #increment-data="{ row, index }">
             <span class="font-bold">{{ index + 1 }}</span>
         </template>
@@ -52,9 +57,10 @@ const handleDelete = (id: number) => {
                     <div class="lg:col-span-4 col-span-12" v-for="(choices, index) in row.Choices"
                         :key="choices.choices_id">
 
-                        <p :class="{ 'text-success': choices.status }"
+                        <p :class="{ 'text-success': choices.status }" class="flex gap-2"
                             v-html="letterWithText(index, choices.description)"></p>
                     </div>
+
                 </div>
             </td>
         </template>

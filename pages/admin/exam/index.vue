@@ -23,7 +23,7 @@
 
                     <h1 class="text-2xl lg:text-lg font-semibold">List of Exam's</h1>
                 </template>
-                <ExamList :exam-data="examData" @toggle-modal="toggleModal" @assign="routeToQuestion" @update="editExam"
+                <ExamList :is-loading="status" :exam-data="examData" @toggle-modal="toggleModal" @assign="routeToQuestion" @update="editExam"
                     @delete="removeExam" />
 
             </UICard>
@@ -60,27 +60,37 @@ const examRepo = repository<ApiResponse<ExamModel>>($api)
 const examData = ref<ExamModel[]>([])
 const isOpen = ref(false);
 const data = ref<ExamModel>({})
-const { data: exam, error, status } = await useAPI<ExamModel[]>('/exam', {
-    getCachedData(key) {
-        const data = payload.data[key] || stat.data[key]
-        if (!data) {
-            return
+const status = ref(false);
+/* Exam */
+
+const fetchExaminee = async () => {
+    status.value = true;
+    try {
+        const { data, error } = await useAPI<ExamModel[]>('/exam', {
+            getCachedData(key) {
+                const data = payload.data[key] || stat.data[key]
+                return data;
+            },
+            server: false
+        })
+
+        if (error.value) {
+            throw new Error(error.value.message || 'Failed to fetch items')
         }
-        return data;
-    },
 
-})
-
-if (exam && exam.value) {
-    examData.value = exam.value;
-} else {
-    console.error(error.value)
-    setToast('error', error.value?.data.message || 'An error occurred');
+        examData.value = data.value || [];
+    } catch (error) {
+        setToast('error', error instanceof Error ? error.message : 'An unexpected error occurred')
+    } finally {
+        status.value = false;
+    }
 }
 
+fetchExaminee();
 
 
-/* Exam */
+
+
 
 const submitExam = async (response: ExamModel) => {
     try {

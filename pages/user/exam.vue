@@ -26,9 +26,10 @@
                     <template #question-data="{ row, index }">
                         <td class="lg:max-w-6xl whitespace-normal text-wrap">
                             <p class="font-bold" v-html="row.question"></p>
-                            <URadioGroup v-model="value" color="primary" size="xl" :options="row.choices" :ui="{
-                                fieldset: 'lg:grid lg:grid-cols-2 lg:gap-5 lg: pt-2 cursor-pointer  ',
-                            }">
+                            <URadioGroup v-model="selectedAnswers[index]" @click="pushData(index)" color="primary" size="xl"
+                                :options="row.choices" :ui="{
+                                    fieldset: 'lg:grid lg:grid-cols-2 lg:gap-5 lg: pt-2 cursor-pointer  ',
+                                }">
                                 <template #label="{ option, index }">
                                     <p class="text-sm break-words whitespace-normal" v-html="option.label"></p>
                                 </template>
@@ -41,7 +42,7 @@
             </template>
 
             <template #footer>
-                <UButton type="submit" color="gray" size="md" :ui="{
+                <UButton type="submit" color="gray" size="md" @click="submitExam" :ui="{
                     color: {
                         gray: {
                             solid: 'bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500 text-white hover:dark:bg-emerald-600'
@@ -57,9 +58,12 @@
 
 
 <script lang="ts" setup>
+import type { SubmitExamModel } from '~/types';
+
 definePageMeta({
     requiredRole: 'examinee',
-    layout: 'user'
+    layout: 'user',
+    middleware: 'next-question'
 })
 
 useSeoMeta({
@@ -69,12 +73,13 @@ useSeoMeta({
     ogDescription: 'This is an examination page',
 });
 
-
-const value = ref('system')
+const { userId } = useAuthentication();
+const data = ref([]);
+const selectedAnswers = ref<Record<number, string>>({})
 const columns = [{
     key: 'increment',
     label: '#',
-    class:'w-10 max-w-[10rem]',
+    class: 'w-10 max-w-[10rem]',
     sortable: true
 }, {
     key: 'question',
@@ -83,17 +88,13 @@ const columns = [{
 }]
 
 
-const nuxtApp = useNuxtApp()
+const { $api } = useNuxtApp()
+
+const examData = useState('exam')
+// const exam = repository<ApiResponse<SubmitExamModel>>($api)
 
 
-const { data: question, status, error } = await useAPI(`/question/4`, {
-    getCachedData(key) {
-        const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
-        if (!data) {
-            return
-        }
-        return data;
-    },
+const { data: question, status, error } = await useAPI(`/exam/available/${examData.value}`, {
     transform: (data: any) => {
         // return data;
         return data.map((item: any) => ({
@@ -106,8 +107,27 @@ const { data: question, status, error } = await useAPI(`/question/4`, {
             })
             )
         }))
-    }
+    },
+
 })
+
+
+const pushData = (index:number) => {
+
+    data.value.push({
+        examinee_id: userId,
+        choices_id:selectedAnswers.value[index],
+        question_id: question.value[index].question_id
+        exam_id:examData.value,
+    })
+}
+
+
+const submitExam = () => {
+
+}
+
+
 
 
 

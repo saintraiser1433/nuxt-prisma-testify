@@ -23,8 +23,8 @@
         <template #header>
           <h1 class="text-2xl lg:text-lg  font-semibold">List of Examinee's</h1>
         </template>
-        <ExamineeList :examinee-data="transformData" @toggle-modal="toggleModal" @update="editExaminee"
-          @delete="removeExaminee" />
+        <ExamineeList :is-loading="status" :examinee-data="transformData" @toggle-modal="toggleModal"
+          @update="editExaminee" @delete="removeExaminee" />
       </UICard>
 
     </div>
@@ -56,24 +56,35 @@ const examineeRepo = repository<ApiResponse<User>>($api)
 const examineeData = ref<User[]>([])
 const isOpen = ref(false);
 const data = ref<User>({})
+const status = ref(false);
 
-const { data: examinee, error, status } = await useAPI<User[]>('/examinee', {
-  getCachedData(key) {
-    const data = payload.data[key] || stat.data[key]
-    if (!data) {
-      return
+
+const fetchExaminee = async () => {
+  status.value = true;
+  try {
+    const { data, error } = await useAPI<User[]>('/examinee', {
+      getCachedData(key) {
+        const data = payload.data[key] || stat.data[key]
+        return data;
+      },
+      server: false
+    })
+
+    if (error.value) {
+      throw new Error(error.value.message || 'Failed to fetch items')
     }
-    return data;
-  },
 
-})
-
-if (examinee && examinee.value) {
-  examineeData.value = examinee.value;
-} else {
-  console.error(error.value)
-  setToast('error', error.value?.data.message || 'An error occurred');
+    examineeData.value = data.value || [];
+  } catch (error) {
+    setToast('error', error instanceof Error ? error.message : 'An unexpected error occurred')
+  } finally {
+    status.value = false;
+  }
 }
+
+fetchExaminee();
+
+
 
 const transformData = computed(() => {
   return examineeData.value.map((item) => {

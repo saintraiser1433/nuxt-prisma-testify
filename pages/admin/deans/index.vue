@@ -13,7 +13,7 @@
 
             </template>
             <DeansForm :form-data="data" :department-data="transformDepartment" :is-update="isUpdate"
-                @data-Deans="submitDeans">
+                @data-deans="submitDeans">
             </DeansForm>
         </UICard>
     </UModal>
@@ -59,8 +59,8 @@
                 <template #header>
                     <h1 class="text-2xl lg:text-lg font-semibold">List of Deans's</h1>
                 </template>
-                <DeansList :deans-data="transformDeans" @toggle-modal="toggleModal" @assign="toggleAssignDeans"
-                    @update="editDeans" />
+                <DeansList :is-loading="statusDean" :deans-data="transformDeans" @toggle-modal="toggleModal"
+                    @assign="toggleAssignDeans" @update="editDeans" />
             </UICard>
 
         </div>
@@ -98,7 +98,7 @@ const data = ref<DeansModel>({})
 
 /* Department */
 const departmentData = ref<DepartmentModel[]>([])
-const { data: department, error: errordept, status: statusdept } = await useAPI<DepartmentModel[]>('/department', {
+const { data: department, error: errordept } = await useAPI<DepartmentModel[]>('/department', {
     getCachedData(key) {
         const data = payload.data[key] || stat.data[key]
         if (!data) {
@@ -162,7 +162,7 @@ const submitAssign = async (data: AssignDeansModel) => {
         shouldAssign.value++
         setToast('success', response.message)
     } catch (err: any) {
-        setToast('error', error.value?.data.message || 'An error occurred')
+        setToast('error', err.value?.data.message || 'An error occurred')
     }
 }
 
@@ -187,23 +187,38 @@ const removeAssign = async (deansId: number, courseId: number) => {
 /* Deans */
 const deansRepo = repository<ApiResponse<DeansModel>>($api)
 const deansData = ref<DeansModel[]>([])
-const { data: deans, error, status } = await useAPI<DeansModel[]>('/deans', {
-    getCachedData(key) {
-        const data = payload.data[key] || stat.data[key]
-        if (!data) {
-            return
+const statusDean = ref(false);
+
+const fetchDeans = async () => {
+    statusDean.value = true;
+    try {
+        const { data, error } = await useAPI<DeansModel[]>('/deans', {
+            getCachedData(key) {
+                const data = payload.data[key] || stat.data[key]
+                if (!data) {
+                    return
+                }
+                return data;
+            },
+
+        })
+        if (error.value) {
+            throw new Error(error.value.message || 'Failed to fetch items')
         }
-        return data;
-    },
-    server: false
-
-})
-
-if (deans && deans.value) {
-    deansData.value = deans.value;
-} else {
-    setToast('error', error.value?.message || 'An error occurred');
+        deansData.value = data.value || [];
+    } catch (error) {
+        setToast('error', error instanceof Error ? error.message : 'An unexpected error occurred')
+    } finally {
+        statusDean.value = false;
+    }
 }
+    
+await fetchDeans();
+
+
+
+
+
 
 const transformDeans = computed(() => {
     return deansData.value.map((item) => {
@@ -222,6 +237,7 @@ const transformDeans = computed(() => {
         }
     })
 })
+
 
 
 const submitDeans = async (response: DeansModel) => {

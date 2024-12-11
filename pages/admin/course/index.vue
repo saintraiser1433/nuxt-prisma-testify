@@ -21,7 +21,8 @@
         <template #header>
           <h1 class="text-2xl lg:text-lg font-semibold">List of Course's</h1>
         </template>
-        <CourseList :course-data="courseData" @update="editCourse" @delete="removeCourse" @toggleModal="toggleModal" />
+        <CourseList :is-loading="status" :course-data="courseData" @update="editCourse" @delete="removeCourse"
+          @toggleModal="toggleModal" />
       </UICard>
     </div>
   </div>
@@ -53,24 +54,34 @@ const courseRepo = repository<ApiResponse<CourseModel>>($api)
 const courseData = ref<CourseModel[]>([])
 const isOpen = ref(false);
 const data = ref<CourseModel>({})
-
+const status = ref(false);
 /* course */
-const { data: course, error, status } = await useAPI<CourseModel[]>('/course', {
-  getCachedData(key) {
-    const data = payload.data[key] || stat.data[key]
-    if (!data) {
-      return
+
+const fetchCourse = async () => {
+  status.value = true;
+  try {
+    const { data: course, error } = await useAPI<CourseModel[]>('/course', {
+      getCachedData(key) {
+        const data = payload.data[key] || stat.data[key]
+        if (!data) {
+          return
+        }
+        return data;
+      },
+
+    })
+    if (error.value) {
+      throw new Error(error.value.message || 'Failed to fetch items')
     }
-    return data;
-  },
-
-})
-
-if (course && course.value) {
-  courseData.value = course.value;
-} else {
-  setToast('error', error.value?.data.message || 'An error occurred');
+    courseData.value = course.value || [];
+  } catch (error) {
+    setToast('error', error instanceof Error ? error.message : 'An unexpected error occurred')
+  } finally {
+    status.value = false;
+  }
 }
+
+await fetchCourse();
 
 
 

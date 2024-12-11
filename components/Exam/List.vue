@@ -36,10 +36,14 @@ const props = defineProps({
         required: true,
         default: () => [],
     },
+    isLoading: {
+        type: Boolean,
+        default: false,
+    }
 
 })
 
-const { examData } = toRefs(props)
+const { examData, isLoading } = toRefs(props)
 
 const formatTime = (totalSeconds: number) => {
     const hours = Math.floor(totalSeconds / 3600);
@@ -65,7 +69,7 @@ const handleAssign = (id: number) => {
 </script>
 
 <template>
-    <UITables :data="examData" :columns="columns">
+    <UITables :is-loading="isLoading" :data="examData" :columns="columns">
         <template #action-header>
             <UButton icon="i-heroicons-plus" color="gray" size="md" @click="toggleModal" :ui="{
                 color: {

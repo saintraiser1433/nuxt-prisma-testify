@@ -1,6 +1,6 @@
 <template>
 
-    <UITables :data="assignData" :columns="assignColumns">
+    <UITables :is-loading="isLoading" :data="assignData" :columns="assignColumns">
         <template #increment-data="{ row, index }">
             <span>{{ index + 1 }}</span>
         </template>
@@ -44,11 +44,15 @@ const props = defineProps({
         type: Array as PropType<AssignDeansModel[]>,
         required: true,
         default: () => [],
+    },
+    isLoading: {
+        type: Boolean,
+        default: false,
     }
 
 });
 
-const { assignData } = toRefs(props);
+const { assignData, isLoading } = toRefs(props);
 
 const handleDelete = (deans_id: number, course_id: number) => {
     emits('delete', deans_id, course_id)

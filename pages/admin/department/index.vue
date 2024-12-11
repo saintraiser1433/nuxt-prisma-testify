@@ -23,8 +23,8 @@
                 <template #header>
                     <h1 class="text-2xl lg:text-lg font-semibold">List of Department's</h1>
                 </template>
-                <DepartmentList :department-data="departmentData" @update="editDepartment" @delete="removeDepartment"
-                    @toggle-modal="toggleModal" />
+                <DepartmentList :is-loading="status" :department-data="departmentData" @update="editDepartment"
+                    @delete="removeDepartment" @toggle-modal="toggleModal" />
             </UICard>
         </div>
     </div>
@@ -57,24 +57,37 @@ const departmentRepo = repository<ApiResponse<DepartmentModel>>($api)
 const departmentData = ref<DepartmentModel[]>([])
 const isOpen = ref(false);
 const data = ref<DepartmentModel>({})
+const status = ref(false);
 
-const { data: department, error, status } = await useAPI<DepartmentModel[]>('/department', {
-    getCachedData(key) {
-        const data = payload.data[key] || stat.data[key]
-        if (!data) {
-            return
+
+const fetchDepartment = async () => {
+    status.value = true;
+    try {
+        const { data: department, error: errordept } = await useAPI<DepartmentModel[]>('/department', {
+            getCachedData(key) {
+                const data = payload.data[key] || stat.data[key]
+                return data;
+            },
+            server: false
+        })
+
+        if (errordept.value) {
+            throw new Error(errordept.value.message || 'Failed to fetch items')
         }
-        return data;
-    },
 
-})
-
-if (department && department.value) {
-    departmentData.value = department.value;
-} else {
-    console.error(error.value)
-    setToast('error', error.value?.data.message || 'An error occurred');
+        departmentData.value = department.value || [];
+    } catch (error) {
+        setToast('error', error instanceof Error ? error.message : 'An unexpected error occurred')
+    } finally {
+        status.value = false;
+    }
 }
+
+fetchDepartment();
+
+
+
+
 
 const submitDepartment = async (response: DepartmentModel) => {
     try {
