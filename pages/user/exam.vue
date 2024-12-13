@@ -23,17 +23,17 @@
                             {{ index + 1 }}
                         </td>
                     </template>
-                    <template #question-data="{ row, index }">
+                    <template #question-data="{ row, index: indexQuestion }">
                         <td class="lg:max-w-6xl whitespace-normal text-wrap">
                             <p class="font-bold" v-html="row.question"></p>
-                            <URadioGroup v-model="selectedAnswers[index]" @click="pushData(index)" color="primary"
-                                size="xl" :options="row.choices" :ui="{
-                                    fieldset: 'lg:grid lg:grid-cols-2 lg:gap-5 lg: pt-2 cursor-pointer  ',
-                                }">
-                                <template #label="{ option, index }">
-                                    <p class="text-sm break-words whitespace-normal" v-html="option.label"></p>
-                                </template>
-                            </URadioGroup>
+                            <div class="grid grid-cols-2 gap-5 mt-2">
+                                <URadio v-for="(method, index) of row.choices" v-model="row.selectedChoice"
+                                    @click="pushData(indexQuestion, index)" :key="method.value" v-bind="method">
+                                    <template #label="{ label }">
+                                        <div v-html="label"></div>
+                                    </template>
+                                </URadio>
+                            </div>
                         </td>
                     </template>
 
@@ -82,9 +82,8 @@ type submitAnswer = {
 
 const { info } = useAuthentication();
 const inf = JSON.parse(info.value);
-
 const data = ref<submitAnswer[]>([]);
-const selectedAnswers = ref<Record<number, string>>({})
+// const selectedAnswers = ref<Record<number, string>>({})
 const columns = [{
     key: 'increment',
     label: '#',
@@ -109,6 +108,7 @@ const { data: question, status, error } = await useAPI(`/exam/available/${examDa
         return data.map((item: any) => ({
             question_id: item.question_id,
             question: item.question,
+            selectedChoice: null,
             choices: item.Choices.map((choice: any) => ({
                 label: choice.description,
                 value: choice.choices_id,
@@ -121,11 +121,12 @@ const { data: question, status, error } = await useAPI(`/exam/available/${examDa
 })
 
 
-const pushData = (index: number) => {
+const pushData = (indexQuestion: number, indexChoice: number) => {
+
     data.value.push({
         examinee_id: inf.id,
-        choices_id: question.value[index].choices[index].value,
-        question_id: question.value[index].question_id,
+        choices_id: question.value[indexQuestion].choices[indexChoice].value,
+        question_id: question.value[indexQuestion].question_id,
         exam_id: Number(examData.value),
     })
 
@@ -134,7 +135,7 @@ const pushData = (index: number) => {
 
 
 const submitExam = () => {
-    console.log(data);
+
 }
 
 
