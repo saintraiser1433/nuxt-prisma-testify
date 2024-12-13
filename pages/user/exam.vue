@@ -80,8 +80,8 @@ type submitAnswer = {
 }
 
 
-const { userId } = useAuthentication();
-
+const { info } = useAuthentication();
+const inf = JSON.parse(info.value);
 
 const data = ref<submitAnswer[]>([]);
 const selectedAnswers = ref<Record<number, string>>({})
@@ -122,9 +122,8 @@ const { data: question, status, error } = await useAPI(`/exam/available/${examDa
 
 
 const pushData = (index: number) => {
-
     data.value.push({
-        examinee_id: userId,
+        examinee_id: inf.id,
         choices_id: question.value[index].choices[index].value,
         question_id: question.value[index].question_id,
         exam_id: Number(examData.value),
