@@ -15,8 +15,8 @@ export const useAuthentication = () => {
             },
         });
         const decodedToken = jwtDecode(result.token.accessToken);
-        token.value = result.token.accessToken
         info.value = JSON.stringify(decodedToken)
+        token.value = result.token.accessToken
         rToken.value = result.token.refreshToken
         return;
     }
@@ -42,6 +42,7 @@ export const useAuthentication = () => {
                 'Authorization': `Bearer ${rToken.value}`
             }
         })
+
         token.value = result.accessToken
         return;
     }

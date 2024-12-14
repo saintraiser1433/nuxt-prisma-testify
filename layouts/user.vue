@@ -32,7 +32,7 @@ watch(idle, async (newValue: boolean) => {
 
 useIntervalFn(() => {
   refreshToken();
-}, 300000);
+}, 1000);
 </script>
 
 <style scoped></style>

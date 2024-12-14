@@ -227,10 +227,13 @@ export interface TableProps {
 
 
 export interface SubmitExamModel {
-    examinee_id: number,
+    examinee_id: string,
     exam_id: number,
-    question_id: number,
-    choices_id: number
+    details: {
+        question_id: number,
+        choices_id: number
+    }[]
+
 }
 
 

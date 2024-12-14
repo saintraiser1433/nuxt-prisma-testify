@@ -58,7 +58,7 @@
 
 
 <script lang="ts" setup>
-import type { SubmitExamModel } from '~/types';
+
 
 definePageMeta({
     requiredRole: 'examinee',
@@ -72,18 +72,13 @@ useSeoMeta({
     ogTitle: 'Testify User Exam',
     ogDescription: 'This is an examination page',
 });
-type submitAnswer = {
-    question_id: number,
-    examinee_id: string,
-    choices_id: string,
-    exam_id: number
-}
+
 
 
 const { info } = useAuthentication();
 const inf = JSON.parse(info.value);
-const data = ref<submitAnswer[]>([]);
-// const selectedAnswers = ref<Record<number, string>>({})
+const data = ref<any[]>([]);
+const { setToast } = useToasts();
 const columns = [{
     key: 'increment',
     label: '#',
@@ -96,10 +91,11 @@ const columns = [{
 }]
 
 
-const { $api } = useNuxtApp()
-
+const nuxtApp = useNuxtApp()
+const repo = repository<ApiResponse<SubmitExamModel>>(nuxtApp.$api);
 const examData = useState('exam')
-// const exam = repository<ApiResponse<SubmitExamModel>>($api)
+
+
 
 
 const { data: question, status, error } = await useAPI(`/exam/available/${examData.value}`, {
@@ -122,19 +118,31 @@ const { data: question, status, error } = await useAPI(`/exam/available/${examDa
 
 
 const pushData = (indexQuestion: number, indexChoice: number) => {
-
     data.value.push({
+
         examinee_id: inf.id,
+        exam_id: Number(examData.value),
         choices_id: question.value[indexQuestion].choices[indexChoice].value,
         question_id: question.value[indexQuestion].question_id,
-        exam_id: Number(examData.value),
     })
 
 
 }
 
 
-const submitExam = () => {
+
+const submitExam = async () => {
+    const mydata = {
+        examinee_id: inf.id,
+        exam_id: Number(examData.value),
+        details: data.value.map((item) => ({
+            choices_id: Number(item.choices_id),
+            question_id: Number(item.question_id)
+        }))
+    }
+    const response = await repo.submitExam(mydata);
+    
+    setToast('success', 'Successfully added');
 
 }
 

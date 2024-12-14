@@ -203,7 +203,7 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
 
     async submitExam(body: SubmitExamModel): Promise<T> {
 
-        return fetch<T>('/followup', {
+        return fetch<T>('/answer', {
             method: 'POST',
             body: body
         })
