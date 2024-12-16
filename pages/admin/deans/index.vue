@@ -212,7 +212,7 @@ const fetchDeans = async () => {
         statusDean.value = false;
     }
 }
-    
+
 await fetchDeans();
 
 
@@ -256,6 +256,7 @@ const submitDeans = async (response: DeansModel) => {
         isUpdate.value = false;
 
     } catch (error: any) {
+        console.error(error.data.error);
         setToast('error', error.data.error || 'An error occurred');
     }
 }

@@ -9,6 +9,5 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (!exam) {
         return nuxtApp.runWithContext(() => navigateTo({ name: "user" }));
     }
-    useState('exam', () => exam.exam_id);
     return;
 })
