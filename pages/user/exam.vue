@@ -51,7 +51,7 @@
                     }">Submit Exam</UButton>
                 </template>
             </UICard>
-            {{ examData }}
+       
 
         </div>
     </template>
@@ -96,8 +96,9 @@ const columns = [{
 const nuxtApp = useNuxtApp()
 const repo = repository<ApiResponse<SubmitExamModel>>(nuxtApp.$api);
 const checkingExam = repository(nuxtApp.$api);
-const examData = useState('exam')
+const store = useExamStore();
 const shouldRefetch = ref(0);
+
 
 
 
@@ -118,6 +119,7 @@ const { data: question, status, error } = await useAPI(`/exam/available/${inf.id
             )
         }))
     },
+    watch: [shouldRefetch]
 
 
 })
@@ -165,6 +167,7 @@ const submitExam = async () => {
         if (checkExistingExam && checkExistingExam.length > 0) {
             data.value = [];
             shouldRefetch.value++;
+            store.setExam();
             setToast('success', 'Successfully added');
         } else {
             navigateTo({ name: 'user' })

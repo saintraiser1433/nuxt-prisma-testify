@@ -16,29 +16,43 @@
                         </div>
                     </div>
 
-                    <div class="text-center mt-20 text-2xl text-gray-700 border-b border-gray-300 pb-5">
+                    <div class="text-center mt-20 text-2xl text-gray-700 border-b border-gray-200 pb-5">
                         <h2 class="dark:text-gray-300 font-semibold">Hello!</h2>
                         <h2 class="dark:text-gray-300 font-semibold">Decosta, John Rey N.</h2>
                     </div>
 
-                    <div class="text-center mt-5 font-semibold text-2xl gap-1">
+                    <div class="text-center text-gray-600 py-5 font-semibold text-2xl gap-1">
                         <span class="pr-1">Score: </span>
-                        <span class="text-danger">10</span>
-                        <span>/20</span>
+                        <span class="text-danger">{{ answer?.correct }}</span>
+                        <span>/{{ answer?.questions ?? 0 }}</span>
                     </div>
-                    <h2 class="text-center mt-5 text-1xl font-semibold pb-2 text-black dark:text-gray-300">Exam Finished
-                        0 out of 4
+
+                    <h2 v-if="!isFinished" class="text-center text-1xl font-semibold pb-2 text-black dark:text-gray-300">
+                        Exam Finished 0 out of 4
                     </h2>
                     <template #footer>
-                        <UButton type="button" :to="{ name: 'user-information' }" color="gray" size="lg" block :ui="{
-                            color: {
-                                gray: {
-                                    solid: 'bg-emerald-500 text-white rounded-none hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-600'
-                                }
-                            },
-                            base: 'ml-auto'
-                        }">TAKE THE EXAM</UButton>
+                        <div v-if="isFinished"
+                            class="text-center py-3 text-1xl font-semibold pb-2 uppercase text-gray-800 dark:text-gray-300">
+                            You already taken the exam!
+                        </div>
+                        <div v-else>
+
+                            <UButton type="button" :to="{ name: 'user-information' }" color="gray" size="lg" block :ui="{
+                                color: {
+                                    gray: {
+                                        solid: 'bg-emerald-500 text-white rounded-none hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-600'
+                                    }
+                                },
+                                base: 'ml-auto'
+                            }">
+                                TAKE THE EXAM
+                            </UButton>
+                        </div>
                     </template>
+
+
+
+
                 </UICard>
             </div>
             <div class="col-span-12 lg:col-span-9">
@@ -102,6 +116,7 @@
             </div>
         </div>
     </div>
+  
 </template>
 
 <script setup lang="ts">
@@ -111,18 +126,48 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Testify User Home Page',
-  description: 'This is signup page',
-  ogTitle: 'Testify User Home Page',
-  ogDescription: 'This is signup page',
+    title: 'Testify User Home Page',
+    description: 'This is signup page',
+    ogTitle: 'Testify User Home Page',
+    ogDescription: 'This is signup page',
 });
 
 
-const shouldRefetch = ref(0);
+interface Answerss {
+    correct: number,
+    questions: number,
+    examCnt: number,
+    examAttempt: number
+}
+
+
+const { info } = useAuthentication();
+const inf = JSON.parse(info.value);
 const nuxtApp = useNuxtApp()
+const store = useExamStore();
+const shouldRefetch = computed(() => store.refetch)
+
+
 
 
 const { data: exam } = await useAPI<ExamModel[]>('/exam', {
+
+    getCachedData(key) {
+        const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+        if (!data) {
+            return
+        }
+        return data;
+    }
+})
+
+
+
+
+const isFinished = computed(() => answer?.value?.examCnt === answer?.value?.examAttempt);
+
+
+const { data: answer } = await useAPI<Answerss>(`/answer/${inf.id}`, {
     watch: [shouldRefetch],
     getCachedData(key) {
         const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
