@@ -90,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TableProps } from '~/types';
+
 
 const props = defineProps({
     base: String,

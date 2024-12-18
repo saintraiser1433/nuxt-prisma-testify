@@ -233,6 +233,8 @@ onBeforeUnmount(() => {
             </button>
         </div>
 
-        <TiptapEditorContent class="w-full border-x border-b px-2 rounded-b-md dark:border-gray-700 dark:bg-gray-800" :editor="editor" />
+        <TiptapEditorContent
+            class="w-full h-28 border-x border-b px-2 rounded-b-md dark:border-gray-700 dark:bg-gray-800"
+            :editor="editor" />
     </div>
 </template>

@@ -1,5 +1,5 @@
 import type { NitroFetchRequest, $Fetch } from 'nitropack'
-import type { Followup, SubmitExamModel } from '~/types'
+
 
 export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
     //course

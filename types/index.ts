@@ -212,19 +212,6 @@ export interface TableProps {
 }
 
 
-// base?: string,
-//     header?: {
-//         padding?: string,
-//         base?: string,
-//     },
-//     body?: {
-//         padding?: string,
-//         base?: string
-//     },
-//     footer?: {
-//         padding?: string
-//     }
-
 
 export interface SubmitExamModel {
     examinee_id: string,
@@ -234,6 +221,29 @@ export interface SubmitExamModel {
         choices_id: number
     }[]
 
+}
+
+export interface ExamChoice {
+    value: number;
+    label: string;
+}
+export interface ExamQuestion {
+    question_id: number;
+    question: string;
+    selectedChoice?: number | null;
+    choices: ExamChoice[];
+}
+
+export interface ExamDetails {
+    exam_id: number;
+    time_limit: number;
+    exam_title: string;
+    data: ExamQuestion[];
+}
+
+export interface ExamAnswerDetails {
+    question_id: number,
+    choices_id: number
 }
 
 

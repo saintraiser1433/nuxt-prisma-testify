@@ -3,8 +3,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     const repo = repository(nuxtApp.$api);
     const { info } = useAuthentication();
     const inf = JSON.parse(info.value);
-    const response = await repo.getFollowup(inf.id);
 
+
+    const response = await repo.getFollowup(inf.id);
     if (response) {
         return nuxtApp.runWithContext(() => navigateTo({ name: "user-exam" }));
     }

@@ -48,11 +48,11 @@ const handleDelete = (id: number) => {
             base: 'border dark:border-gray-700 align-top py-5'
         }">
         <template #increment-data="{ row, index }">
-            <span class="font-bold">{{ index + 1 }}</span>
+            <span class="font-semibold">{{ index + 1 }}</span>
         </template>
         <template #question-data="{ row, index }">
             <td class="max-w-lg whitespace-normal text-wrap">
-                <p class="font-bold text-warning" v-html="row.question"></p>
+                <p class="font-bold" v-html="row.question"></p>
                 <div class="grid grid-cols-12 gap-2 mt-2">
                     <div class="lg:col-span-4 col-span-12" v-for="(choices, index) in row.Choices"
                         :key="choices.choices_id">

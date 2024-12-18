@@ -1,6 +1,6 @@
     <template>
         <div>
-            <div class="absolute end-5 bottom-14">
+            <div class="absolute end-5 bottom-20">
                 <UButton variant="solid" color="neon-carrot" size="lg">
                     <i-fluent-emoji-flat-magnifying-glass-tilted-left></i-fluent-emoji-flat-magnifying-glass-tilted-left>
                     Find my missing
@@ -13,12 +13,11 @@
                 <template #header>
                     <div
                         class="bg-[url('@/assets/images/bgheaders.png')] w-full h-16 bg-cover flex gap-2 justify-between items-center px-3 text-xs lg:text-2xl font-semibold text-white">
-                        <h2>EXAM TITLE: LEARNING IN FILIPINO USING BLAH</h2>
+                        <h2 class="uppercase">EXAM TITLE: LEARNING IN FILIPINO USING BLAH</h2>
                         <h2>ITEMS: 0/76</h2>
                     </div>
                 </template>
                 <template #default>
-
                     <UITables :data="question?.data ?? []" :columns="columns" :has-border="true"
                         :has-column-filter="false" :hasActionHeader="false" :has-pagination="false"
                         :has-page-count="false" :td="{
@@ -68,29 +67,9 @@
 
 
 <script lang="ts" setup>
-interface ExamChoice {
-    value: number;
-    label: string;
-}
-interface ExamQuestion {
-    question_id: number;
-    question: string;
-    selectedChoice?: number | null;
-    choices: ExamChoice[];
-}
-
-interface ExamDetails {
-    exam_id: number;
-    time_limit: number;
-    exam_title: string;
-    data: ExamQuestion[];
-}
-
-
 definePageMeta({
     requiredRole: 'examinee',
     layout: 'user',
-    // middleware: 'next-question'
 })
 
 useSeoMeta({
@@ -102,26 +81,12 @@ useSeoMeta({
 
 
 
-interface ExamAnswerHeader {
-    examinee_id: string,
-    exam_id: number,
-    details: ExamAnswerDetails[]
-}
-
-interface ExamAnswerDetails {
-    examinee_id: number,
-    exam_id: number,
-    question_id: number,
-    choices_id: number
-}
-
 
 const { info } = useAuthentication();
 const inf = JSON.parse(info.value);
-const data = ref<ExamAnswerHeader>({
-    exam
-});
 const { setToast } = useToasts();
+
+
 const columns = [{
     key: 'increment',
     label: '#',
@@ -139,15 +104,10 @@ const repo = repository<ApiResponse<SubmitExamModel>>(nuxtApp.$api);
 const checkingExam = repository(nuxtApp.$api);
 const store = useExamStore();
 const shouldRefetch = ref(0);
-
-
-
-
+const answerData = ref<ExamAnswerDetails[]>([])
 
 const { data: question, status, error } = await useAPI<ExamDetails>(`/exam/available/${inf.id}`, {
     watch: [shouldRefetch]
-
-
 })
 
 if (error.value) {
@@ -158,70 +118,64 @@ if (error.value) {
 
 
 const pushData = (indexQuestion: number, indexChoice: number) => {
-    const checkValue = data.value.findIndex((item) => item.question_id === question?.value?.data[indexQuestion].question_id);
-    const newEntry = {
-        examinee_id: inf.id,
-        exam_id: question?.value?.exam_id,
-        choices_id: question?.value?.data[indexQuestion].choices[indexChoice].value,
-        question_id: question?.value?.data[indexQuestion].question_id,
+    if (!question?.value?.data || !question.value.data[indexQuestion]) {
+        setToast('error', 'Invalid question data')
+        return;
+    }
+    const currentQuestion = question.value.data[indexQuestion];
+    const currentChoice = currentQuestion.choices[indexChoice];
+    if (!currentChoice) {
+        setToast('error', 'Invalid choice')
+        return;
+    }
+    const checkValue = answerData.value.findIndex(
+        (item) => item.question_id === currentQuestion.question_id
+    );
+    const newEntry: ExamAnswerDetails = {
+        choices_id: currentChoice.value,
+        question_id: currentQuestion.question_id,
     };
 
     if (checkValue !== -1) {
-        data.value[checkValue] = newEntry;
+        answerData.value[checkValue] = newEntry;
     } else {
-        data.value.push(newEntry);
+        answerData.value.push(newEntry);
     }
 
 }
-
-
-
 
 
 const submitExam = async () => {
 
-    if (data.value.length !== question.value?.data.length) {
+    if (answerData.value.length !== question.value?.data.length) {
         setToast('error', 'Please answer all questions');
         return;
     }
 
-    //     const mydata = {
-    //         examinee_id: inf.id,
-    //         exam_id: question.value[0].exam_id,
-    //         details: data.value.map((item) => ({
-    //             choices_id: Number(item.choices_id),
-    //             question_id: Number(item.question_id)
-    //         }))
-    //     }
+    const db = {
+        examinee_id: inf.id,
+        exam_id: question.value.exam_id,
+        details: answerData.value
+    }
+    try {
+        await repo.submitExam(db);
+        const checkExistingExam = await checkingExam.getCheckExistingExam<[]>(inf.id);
+        if (checkExistingExam && checkExistingExam.length > 0) {
+            answerData.value = [];
+            shouldRefetch.value++;
+            store.setExam();
+            setToast('success', 'Successfully added');
+        } else {
+            navigateTo({ name: 'user' })
+        }
 
-    //     try {
-    //         await repo.submitExam(mydata);
-    //         const checkExistingExam = await checkingExam.getCheckExistingExam<ExamType[]>(inf.id);
-    //         if (checkExistingExam && checkExistingExam.length > 0) {
-    //             data.value = [];
-    //             shouldRefetch.value++;
-    //             store.setExam();
-    //             setToast('success', 'Successfully added');
-    //         } else {
-    //             navigateTo({ name: 'user' })
-    //         }
-
-    //     } catch (err: any) {
-    //         setToast('error', err.data.error || 'Error submitting exam');
-    //         console.error(err.data.error);
-    //     }
-
-
-
+    } catch (err: any) {
+        setToast('error', err.data.error || 'Error submitting exam');
+        console.error(err.data.error);
+    }
 }
-
-
-
-
-
 
 </script>
 
 
 
-<style scoped></style>

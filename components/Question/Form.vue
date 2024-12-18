@@ -27,7 +27,8 @@
                     <div class="flex items-center justify-between border-b dark:border-gray-700 py-2">
                         <div class="flex flex-row items-center gap-x-2">
                             <span>Choice {{ convertToLetter(index) }} :</span>
-                            <UCheckbox v-model="choice.status" :aria-label="'Mark choice ' + convertToLetter(index) + ' as correct'" />
+                            <UCheckbox v-model="choice.status"
+                                :aria-label="'Mark choice ' + convertToLetter(index) + ' as correct'" />
                         </div>
                         <UButton icon="i-tabler-trash" color="gray" size="xs" @click="removeChoices(index)"
                             :aria-label="'Remove choice ' + convertToLetter(index)" :ui="{
