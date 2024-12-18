@@ -35,8 +35,8 @@
 
                                 <p class="font-bold" v-html="row.question"></p>
                                 <div class="grid grid-cols-2 gap-5 mt-2">
-                                    <URadio v-for="(method, index) of row.choices" v-model="row.selectedChoice" :key="method.choices_id"
-                                        v-bind="method">
+                                    <URadio v-for="(method, index) of row.choices" v-model="row.selectedChoice"
+                                        @click="pushData(indexQuestion, index)" :key="method.value" v-bind="method">
 
                                         <template #label="{ label }">
                                             <div v-html="label"></div>
@@ -50,7 +50,7 @@
 
                 </template>
 
-                <!-- <template #footer>
+                <template #footer>
                     <UButton type="submit" color="gray" size="md" @click="submitExam" :ui="{
                         color: {
                             gray: {
@@ -58,7 +58,7 @@
                             }
                         }
                     }">Submit Exam</UButton>
-                </template> -->
+                </template>
             </UICard>
 
 
@@ -69,8 +69,8 @@
 
 <script lang="ts" setup>
 interface ExamChoice {
-    choices_id: number;
-    description: string;
+    value: number;
+    label: string;
 }
 interface ExamQuestion {
     question_id: number;
@@ -102,9 +102,25 @@ useSeoMeta({
 
 
 
+interface ExamAnswerHeader {
+    examinee_id: string,
+    exam_id: number,
+    details: ExamAnswerDetails[]
+}
+
+interface ExamAnswerDetails {
+    examinee_id: number,
+    exam_id: number,
+    question_id: number,
+    choices_id: number
+}
+
+
 const { info } = useAuthentication();
 const inf = JSON.parse(info.value);
-const data = ref<any[]>([]);
+const data = ref<ExamAnswerHeader>({
+    exam
+});
 const { setToast } = useToasts();
 const columns = [{
     key: 'increment',
@@ -141,56 +157,63 @@ if (error.value) {
 }
 
 
-// const pushData = (indexQuestion: number, indexChoice: number) => {
-//     data.value.push({
-//         examinee_id: inf.id,
-//         exam_id: question.value[indexQuestion].exam_id,
-//         choices_id: question.value[indexQuestion].choices[indexChoice].value,
-//         question_id: question.value[indexQuestion].question_id,
-//     })
+const pushData = (indexQuestion: number, indexChoice: number) => {
+    const checkValue = data.value.findIndex((item) => item.question_id === question?.value?.data[indexQuestion].question_id);
+    const newEntry = {
+        examinee_id: inf.id,
+        exam_id: question?.value?.exam_id,
+        choices_id: question?.value?.data[indexQuestion].choices[indexChoice].value,
+        question_id: question?.value?.data[indexQuestion].question_id,
+    };
 
+    if (checkValue !== -1) {
+        data.value[checkValue] = newEntry;
+    } else {
+        data.value.push(newEntry);
+    }
 
-// }
-
-
-
-
-// const submitExam = async () => {
-
-//     if (data.value.length !== question.value.length) {
-//         setToast('error', 'Please answer all questions');
-//         return;
-//     }
-
-//     const mydata = {
-//         examinee_id: inf.id,
-//         exam_id: question.value[0].exam_id,
-//         details: data.value.map((item) => ({
-//             choices_id: Number(item.choices_id),
-//             question_id: Number(item.question_id)
-//         }))
-//     }
-
-//     try {
-//         await repo.submitExam(mydata);
-//         const checkExistingExam = await checkingExam.getCheckExistingExam<ExamType[]>(inf.id);
-//         if (checkExistingExam && checkExistingExam.length > 0) {
-//             data.value = [];
-//             shouldRefetch.value++;
-//             store.setExam();
-//             setToast('success', 'Successfully added');
-//         } else {
-//             navigateTo({ name: 'user' })
-//         }
-
-//     } catch (err: any) {
-//         setToast('error', err.data.error || 'Error submitting exam');
-//         console.error(err.data.error);
-//     }
+}
 
 
 
-// }
+
+
+const submitExam = async () => {
+
+    if (data.value.length !== question.value?.data.length) {
+        setToast('error', 'Please answer all questions');
+        return;
+    }
+
+    //     const mydata = {
+    //         examinee_id: inf.id,
+    //         exam_id: question.value[0].exam_id,
+    //         details: data.value.map((item) => ({
+    //             choices_id: Number(item.choices_id),
+    //             question_id: Number(item.question_id)
+    //         }))
+    //     }
+
+    //     try {
+    //         await repo.submitExam(mydata);
+    //         const checkExistingExam = await checkingExam.getCheckExistingExam<ExamType[]>(inf.id);
+    //         if (checkExistingExam && checkExistingExam.length > 0) {
+    //             data.value = [];
+    //             shouldRefetch.value++;
+    //             store.setExam();
+    //             setToast('success', 'Successfully added');
+    //         } else {
+    //             navigateTo({ name: 'user' })
+    //         }
+
+    //     } catch (err: any) {
+    //         setToast('error', err.data.error || 'Error submitting exam');
+    //         console.error(err.data.error);
+    //     }
+
+
+
+}
 
 
 
