@@ -53,7 +53,10 @@ const { setAlert } = useAlert()
 const courseRepo = repository<ApiResponse<CourseModel>>($api)
 const courseData = ref<CourseModel[]>([])
 const isOpen = ref(false);
-const data = ref<CourseModel>({})
+const data = ref<CourseModel>({
+  description: "",
+  score: 0
+})
 const status = ref(false);
 /* course */
 
@@ -134,7 +137,10 @@ const removeCourse = (id: number) => {
 }
 
 const toggleModal = () => {
-  data.value = {}
+  data.value = {
+    description: "",
+    score: 0
+  }
   isOpen.value = true;
   isUpdate.value = false
 }

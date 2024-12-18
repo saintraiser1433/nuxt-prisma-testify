@@ -3,7 +3,7 @@
   <UCard class="w-full" :ui="{
     base: defaults?.base || 'overflow-hidden',
     shadow: 'shadow-lg',
-    divide: 'divide-0 divide-gray-200 dark:divide-gray-800',
+    divide: 'divide-0 divide-gray-200 dark:divide-gray-700',
     header: { padding: header?.padding || 'px-4 py-5', base: header?.padding || 'dark:bg-darken' },
     body: { padding: body?.padding || '', base: body?.base || 'dark:bg-darken' },
     footer: { padding: footer?.padding || '', base: footer?.base || 'dark:bg-darken' }

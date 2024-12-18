@@ -16,18 +16,19 @@
                         </div>
                     </div>
 
-                    <div class="text-center mt-20 text-2xl text-gray-700 border-b border-gray-200 pb-5">
+                    <div class="text-center mt-20 text-2xl text-gray-700 border-b border-gray-200 dark:border-gray-700 pb-5">
                         <h2 class="dark:text-gray-300 font-semibold">Hello!</h2>
                         <h2 class="dark:text-gray-300 font-semibold">Decosta, John Rey N.</h2>
                     </div>
 
-                    <div class="text-center text-gray-600 py-5 font-semibold text-2xl gap-1">
+                    <div class="text-center text-gray-600 dark:text-gray-300 py-5 font-semibold text-2xl gap-1">
                         <span class="pr-1">Score: </span>
                         <span class="text-danger">{{ answer?.correct }}</span>
                         <span>/{{ answer?.questions ?? 0 }}</span>
                     </div>
 
-                    <h2 v-if="!isFinished" class="text-center text-1xl font-semibold pb-2 text-black dark:text-gray-300">
+                    <h2 v-if="!isFinished"
+                        class="text-center text-1xl font-semibold pb-2 text-black dark:text-gray-300">
                         Exam Finished 0 out of 4
                     </h2>
                     <template #footer>
@@ -110,13 +111,13 @@
                             <NuxtImg src="/images/enroll.png" quality="80" width="64" height="64" />
                         </div>
                     </template>
-                    <UserHomeCourseList :exam-data="exam ?? []" />
+                    <UserHomeCourseList :course-data="coursesData ?? []" />
                 </UICard>
 
             </div>
         </div>
     </div>
-  
+
 </template>
 
 <script setup lang="ts">
@@ -146,8 +147,14 @@ const inf = JSON.parse(info.value);
 const nuxtApp = useNuxtApp()
 const store = useExamStore();
 const shouldRefetch = computed(() => store.refetch)
+const isFinished = computed(() => answer?.value?.examCnt === answer?.value?.examAttempt);
+const coursesData = computed(() => {
+    if (!course.value || !answer.value) return []
 
-
+    return course.value.filter((item) =>
+         item.score <= (answer?.value?.correct ?? 0)
+    )
+})
 
 
 const { data: exam } = await useAPI<ExamModel[]>('/exam', {
@@ -162,11 +169,6 @@ const { data: exam } = await useAPI<ExamModel[]>('/exam', {
 })
 
 
-
-
-const isFinished = computed(() => answer?.value?.examCnt === answer?.value?.examAttempt);
-
-
 const { data: answer } = await useAPI<Answerss>(`/answer/${inf.id}`, {
     watch: [shouldRefetch],
     getCachedData(key) {
@@ -177,4 +179,20 @@ const { data: answer } = await useAPI<Answerss>(`/answer/${inf.id}`, {
         return data;
     }
 })
+
+
+const { data: course } = await useAPI<CourseModel[]>(`/course`, {
+    watch: [shouldRefetch],
+    getCachedData(key) {
+        const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+        if (!data) {
+            return
+        }
+        return data;
+    }
+})
+
+
+
+
 </script>

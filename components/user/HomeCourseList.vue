@@ -1,35 +1,33 @@
 <script setup lang="ts">
 const columns = [{
-  key: "exam_title",
-  label: 'Exam Title',
-  sortable: false
+  key: "increment",
+  label: '#',
 }, {
-  key: 'exam_title',
-  label: 'Percentage',
-  sortable: false
+  key: 'description',
+  label: 'Course',
 }, {
   key: 'score',
-  label: 'Score',
-  sortable: false
-
+  label: 'Score Attained',
 }]
 
 
 const props = defineProps({
-  examData: {
-    type: Object as PropType<ExamModel[]>,
+  courseData: {
+    type: Object as PropType<CourseModel[]>,
     required: true
   }
 })
 
-const { examData } = toRefs(props)
+const { courseData } = toRefs(props)
 
 
 
 </script>
 <template>
-  <UITables :data="examData" :columns="columns" :has-action-header="false">
-    
+  <UITables :data="courseData" :columns="columns" :has-action-header="false">
+    <template #increment-data="{ row, index }">
+      <span>{{ index + 1 }}</span>
+    </template>
 
   </UITables>
 

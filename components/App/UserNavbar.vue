@@ -6,6 +6,10 @@
         <span class="sprite sprite-small-lg ml-2"></span>
         <h2 class="font-semibold">Testify</h2>
       </div>
+      <div v-if="checkRoute" class="flex justify-center items-center gap-3">
+        <h3>Time Remaining:</h3>
+        <h1 class="text-danger">{{ timelimit }}</h1>
+      </div>
       <ul class="flex justify-between items-center gap-3">
         <li>
           <a href="google.com">
@@ -57,9 +61,18 @@
 
 <script setup>
 const colorMode = useColorMode();
+const route = useRoute();
+const store = useExamStore();
+
 const setColorTheme = (theme) => {
   colorMode.preference = theme;
 };
+
+
+
+const timelimit = computed(() => store.timelimit);
+const checkRoute = computed(() => route.path === '/user/exam');
+
 
 const { signOut, info } = useAuthentication();
 const parse = JSON.parse(info.value);

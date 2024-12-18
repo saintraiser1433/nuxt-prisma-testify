@@ -13,8 +13,8 @@ interface Timestamped {
 // Course Model
 export interface CourseModel extends Timestamped {
     course_id?: number;
-    description?: string;
-    score?: number;
+    description: string;
+    score: number;
     AssignDeans?: AssignDeansModel[]; // Optional relationship
 }
 
