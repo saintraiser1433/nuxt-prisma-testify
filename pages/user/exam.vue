@@ -13,8 +13,8 @@
                 <template #header>
                     <div
                         class="bg-[url('@/assets/images/bgheaders.png')] w-full h-16 bg-cover flex gap-2 justify-between items-center px-3 text-xs lg:text-2xl font-semibold text-white">
-                        <h2 class="uppercase">EXAM TITLE: LEARNING IN FILIPINO USING BLAH</h2>
-                        <h2>ITEMS: 0/76</h2>
+                        <h2 class="uppercase">EXAM TITLE: {{ question?.exam_title ?? 'NO EXAM' }}</h2>
+                        <h2>ITEMS: {{ answerData.length }}/{{ question?.data.length ?? 0 }}</h2>
                     </div>
                 </template>
                 <template #default>
@@ -59,7 +59,6 @@
                     }">Submit Exam</UButton>
                 </template>
             </UICard>
-
 
         </div>
 
@@ -115,6 +114,11 @@ if (error.value) {
     navigateTo({ name: 'user' })
 
 }
+
+
+
+
+
 
 
 const pushData = (indexQuestion: number, indexChoice: number) => {
@@ -173,7 +177,11 @@ const submitExam = async () => {
         setToast('error', err.data.error || 'Error submitting exam');
         console.error(err.data.error);
     }
+
+
 }
+
+
 
 </script>
 

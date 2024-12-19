@@ -45,23 +45,23 @@ const handleDelete = (id: number) => {
 <template>
     <UITables :is-loading="isLoading" :data="questionData" :hasBorder="true" :columns="columns"
         :has-action-header="false" :td="{
-            base: 'border dark:border-gray-700 align-top py-5'
+            base: 'border dark:border-gray-700 align-top py-2'
         }">
         <template #increment-data="{ row, index }">
             <span class="font-semibold">{{ index + 1 }}</span>
         </template>
         <template #question-data="{ row, index }">
             <td class="max-w-lg whitespace-normal text-wrap">
-                <p class="font-bold" v-html="row.question"></p>
-                <div class="grid grid-cols-12 gap-2 mt-2">
-                    <div class="lg:col-span-4 col-span-12" v-for="(choices, index) in row.Choices"
+                <p class="font-bold mb-2" v-html="row.question"></p>
+                <ol>
+                    <li class="capitalize mx-5" v-for="(choices, index) in row.Choices"
                         :key="choices.choices_id">
-
-                        <p :class="{ 'text-success': choices.status }" class="flex gap-2"
-                            v-html="letterWithText(index, choices.description)"></p>
-                    </div>
-
-                </div>
+                        <p :class="{ 'text-success': choices.status }"
+                            v-html="choices.description"></p>
+                    </li>
+                </ol>
+                
+                
             </td>
         </template>
         <template #actions-data="{ row, index }">
@@ -77,3 +77,14 @@ const handleDelete = (id: number) => {
         </template>
     </UITables>
 </template>
+
+
+<style scoped>
+ol {
+    list-style-type: upper-alpha;
+    columns: 2;
+    -webkit-columns: 2;
+    -moz-columns: 2;
+
+}
+</style>
