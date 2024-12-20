@@ -5,9 +5,6 @@ const columns = [{
 }, {
   key: 'description',
   label: 'Course',
-}, {
-  key: 'score',
-  label: 'Score Attained',
 }]
 
 
@@ -27,6 +24,9 @@ const { courseData } = toRefs(props)
   <UITables :data="courseData" :columns="columns" :has-action-header="false">
     <template #increment-data="{ row, index }">
       <span>{{ index + 1 }}</span>
+    </template>
+    <template #description-data="{ row, index }">
+      <span class="capitalize">{{ row.description }}</span>
     </template>
 
   </UITables>

@@ -167,9 +167,10 @@ const submitExam = async () => {
         if (checkExistingExam && checkExistingExam.length > 0) {
             answerData.value = [];
             shouldRefetch.value++;
-            store.setExam();
+
             setToast('success', 'Successfully added');
         } else {
+            store.setExam();
             navigateTo({ name: 'user' })
         }
 

@@ -16,15 +16,16 @@
                         </div>
                     </div>
 
-                    <div class="text-center mt-20 text-2xl text-gray-700 border-b border-gray-200 dark:border-gray-700 pb-5">
+                    <div
+                        class="text-center mt-20 text-2xl text-gray-700 border-b border-gray-200 dark:border-gray-700 pb-5">
                         <h2 class="dark:text-gray-300 font-semibold">Hello!</h2>
                         <h2 class="dark:text-gray-300 font-semibold">Decosta, John Rey N.</h2>
                     </div>
 
                     <div class="text-center text-gray-600 dark:text-gray-300 py-5 font-semibold text-2xl gap-1">
                         <span class="pr-1">Score: </span>
-                        <span class="text-danger">{{ answer?.correct }}</span>
-                        <span>/{{ answer?.questions ?? 0 }}</span>
+                        <span class="text-danger">{{ score?.correct }}</span>
+                        <span>/{{ score?.questions ?? 0 }}</span>
                     </div>
 
                     <h2 v-if="!isFinished"
@@ -95,7 +96,17 @@
                             </li>
                         </ul>
                     </div>
-                    <UserHomeStatiscalList :exam-data="exam ?? []" />
+                    <div class="grid grid-cols-12 gap-2">
+                        <div class="col-span-8">
+                            <UserHomeStatiscalList :summary-data="summary ?? []" />
+                        </div>
+                        <div class="col-span-4">
+                            <UserHomeStatiscalList :summary-data="summary ?? []" />
+                        </div>
+
+
+                    </div>
+
                 </UICard>
 
             </div>
@@ -134,12 +145,9 @@ useSeoMeta({
 });
 
 
-interface Answerss {
-    correct: number,
-    questions: number,
-    examCnt: number,
-    examAttempt: number
-}
+
+
+
 
 
 const { info } = useAuthentication();
@@ -147,50 +155,29 @@ const inf = JSON.parse(info.value);
 const nuxtApp = useNuxtApp()
 const store = useExamStore();
 const shouldRefetch = computed(() => store.refetch)
-const isFinished = computed(() => answer?.value?.examCnt === answer?.value?.examAttempt);
+const isFinished = computed(() => score?.value?.examCnt === score?.value?.examAttempt);
 const coursesData = computed(() => {
-    if (!course.value || !answer.value) return []
+    if (!course.value || !score.value) return []
 
     return course.value.filter((item) =>
-         item.score <= (answer?.value?.correct ?? 0)
+        item.score <= (score?.value?.correct ?? 0)
     )
 })
 
 
-const { data: exam } = await useAPI<ExamModel[]>('/exam', {
-
-    getCachedData(key) {
-        const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
-        if (!data) {
-            return
-        }
-        return data;
-    }
-})
+const { data: summary } = await useAPI<GetSummary[]>(`/results/summary/${inf.id}`)
 
 
-const { data: answer } = await useAPI<Answerss>(`/answer/${inf.id}`, {
+const { data: score } = await useAPI<GetScore>(`/results/${inf.id}`, {
     watch: [shouldRefetch],
-    getCachedData(key) {
-        const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
-        if (!data) {
-            return
-        }
-        return data;
-    }
 })
 
 
 const { data: course } = await useAPI<CourseModel[]>(`/course`, {
     watch: [shouldRefetch],
-    getCachedData(key) {
-        const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
-        if (!data) {
-            return
-        }
-        return data;
-    }
 })
+
+
 
 
 

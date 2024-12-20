@@ -246,6 +246,22 @@ export interface ExamAnswerDetails {
     choices_id: number
 }
 
+export interface GetScore {
+    correct: number,
+    questions: number,
+    examCnt: number,
+    examAttempt: number
+}
+
+export interface GetSummary {
+    exam_id: number,
+    exam_title: string,
+    percentage:number,
+    total_correct_answer: number,
+    total_questions: number,
+    success_rate: number
+}
+
 
 import { format, parse, parseISO, getDay } from 'date-fns';
 
