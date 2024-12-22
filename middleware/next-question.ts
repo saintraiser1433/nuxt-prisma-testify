@@ -1,7 +1,7 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    type examsAvailable = { exam_id: number };
+
     const nuxtApp = useNuxtApp();
-    const repo = repository<examsAvailable>(nuxtApp.$api);
+    const repo = repository(nuxtApp.$api);
     const { info } = useAuthentication();
     const inf = JSON.parse(info.value);
 

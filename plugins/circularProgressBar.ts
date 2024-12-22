@@ -1,6 +1,5 @@
-import "vue3-circle-progress/dist/circle-progress.css";
-import CircleProgress from "vue3-circle-progress";
+import { CircleProgressBar } from 'circle-progress.vue';
 
 export default defineNuxtPlugin((nuxt) => {
-    nuxt.vueApp.use(CircleProgress)
+    nuxt.vueApp.component('CircleProgressBar', CircleProgressBar)
 })

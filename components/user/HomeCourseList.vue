@@ -23,10 +23,10 @@ const { courseData } = toRefs(props)
 <template>
   <UITables :data="courseData" :columns="columns" :has-action-header="false">
     <template #increment-data="{ row, index }">
-      <span>{{ index + 1 }}</span>
+      <span class="font-bold">{{ index + 1 }}</span>
     </template>
     <template #description-data="{ row, index }">
-      <span class="capitalize">{{ row.description }}</span>
+      <span class="uppercase">{{ row.description }}</span>
     </template>
 
   </UITables>

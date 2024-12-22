@@ -69,7 +69,7 @@
                             <NuxtImg src="/images/data.png" quality="80" width="64" height="64" />
                         </div>
                     </template>
-                    <div class="flex items-center gap-2 px-3 mt-5">
+                    <div class="flex items-center gap-2 px-3 mt-5 border-b pb-3">
                         <div class="self-start">
                             <p>Legends:</p>
                         </div>
@@ -97,11 +97,16 @@
                         </ul>
                     </div>
                     <div class="grid grid-cols-12 gap-2">
-                        <div class="col-span-8">
+                        <div class="col-span-9">
                             <UserHomeStatiscalList :summary-data="summary ?? []" />
                         </div>
-                        <div class="col-span-4">
-                            <UserHomeStatiscalList :summary-data="summary ?? []" />
+                        <div class="flex items-center flex-col col-span-3 gap-2 py-3">
+                            <h1>YOUR RATINGS</h1>
+                            <CircleProgressBar stroke-width="16" size="200" color-filled="#062d19"
+                                :color-unfilled="getPercentage.color" animation-duration="1s"
+                                :value="getPercentage.percentage" :max="100" percentage rounded>
+                                <span class="font-bold"> {{ getPercentage.detail }}</span>
+                            </CircleProgressBar>
                         </div>
 
 
@@ -152,7 +157,6 @@ useSeoMeta({
 
 const { info } = useAuthentication();
 const inf = JSON.parse(info.value);
-const nuxtApp = useNuxtApp()
 const store = useExamStore();
 const shouldRefetch = computed(() => store.refetch)
 const isFinished = computed(() => score?.value?.examCnt === score?.value?.examAttempt);
@@ -162,6 +166,45 @@ const coursesData = computed(() => {
     return course.value.filter((item) =>
         item.score <= (score?.value?.correct ?? 0)
     )
+})
+// <span class="text-danger">{{ score?.correct }}</span>
+// <span>/{{ score?.questions ?? 0 }}</span>
+const getPercentage = computed(() => {
+    let percentage = 0.00;
+    let detail;
+    let color;
+    if (!score.value?.correct || !score.value?.questions) {
+        return {
+            percentage: 0.00,
+            color: '#4b0406',
+            detail: detail = 'NOT YET EXAM'
+        };
+    }
+
+    percentage = (score.value?.correct / score.value?.questions) * 100;
+    if (percentage >= 0.00 && percentage <= 50.99) {
+        color = '#4b0406';
+        detail = 'POOR';
+    } else if (percentage >= 51.00 && percentage <= 69.99) {
+        color = '#8482f7';
+        detail = 'GOOD';
+    } else if (percentage >= 70.00 && percentage <= 89.99) {
+        color = '#063646';
+        detail = 'VERY GOOD';
+    } else if (percentage >= 90.00 && percentage <= 100) {
+        color = '#062d19';
+        detail = 'EXCELLENT';
+    } else {
+        color = '#4b0406';
+        detail = 'NOT EXAM YET';
+    }
+
+
+    return {
+        percentage,
+        color,
+        detail
+    }
 })
 
 

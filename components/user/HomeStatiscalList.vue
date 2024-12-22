@@ -1,10 +1,7 @@
 <script setup lang="ts">
-
-
 const columns = [{
   key: "exam_title",
   label: 'Exam Title',
-
   sortable: false
 }, {
   key: 'success_rate',
@@ -47,9 +44,13 @@ const defineLegends = (rate: number): legendColor => {
 
 </script>
 <template>
-  <UITables :data="summaryData" :columns="columns" :has-border="true" :has-action-header="false" :td="{
-    base: 'border dark:border-gray-700 align-top'
-  }">
+  <UITables :data="summaryData" :columns="columns" :has-border="true" :has-action-header="false"
+    :has-column-filter="false" :td="{
+      base: 'border dark:border-gray-700 align-top'
+    }">
+    <template #exam_title-data="{ row, index }">
+      <span class="uppercase font-bold">{{ row.exam_title }}</span>
+    </template>
     <template #success_rate-data="{ row, index }">
       <UProgress :value="row.success_rate" size="lg" :color="defineLegends(row.success_rate)" indicator />
     </template>

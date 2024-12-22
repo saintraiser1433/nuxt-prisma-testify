@@ -1,13 +1,13 @@
 export const useExamStore = defineStore('examStore', {
     state: () => ({
         refetch: 0,
-        timelimit: 1
+        timelimit: ''
     }),
     actions: {
         setExam() {
             this.refetch++;
         },
-        setTimeLimit(payload: number) {
+        setTimeLimit(payload: string) {
             this.timelimit = payload;
         },
     },

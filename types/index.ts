@@ -215,7 +215,7 @@ export interface TableProps {
 
 export interface SubmitExamModel {
     examinee_id: string,
-    exam_id: number,
+    exam_id?: number,
     details: {
         question_id: number,
         choices_id: number
@@ -256,15 +256,17 @@ export interface GetScore {
 export interface GetSummary {
     exam_id: number,
     exam_title: string,
-    percentage:number,
+    percentage: number,
     total_correct_answer: number,
     total_questions: number,
     success_rate: number
 }
 
 
-import { format, parse, parseISO, getDay } from 'date-fns';
 
+
+
+import { format, parse, parseISO, getDay } from 'date-fns';
 declare module '#app' {
     interface NuxtApp {
         $datefns: {

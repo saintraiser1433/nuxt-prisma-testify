@@ -29,6 +29,7 @@
     "@vueuse/core": "^11.1.0",
     "@vueuse/nuxt": "^11.1.0",
     "bcrypt": "^5.1.1",
+    "circle-progress.vue": "^3.3.0",
     "date-fns": "^4.1.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
@@ -41,8 +42,7 @@
     "tiptap-extension-resize-image": "^1.2.1",
     "vue": "latest",
     "vue-router": "latest",
-    "vue-sweetalert2": "^5.0.11",
-    "vue3-circle-progress": "^1.0.7"
+    "vue-sweetalert2": "^5.0.11"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.263",

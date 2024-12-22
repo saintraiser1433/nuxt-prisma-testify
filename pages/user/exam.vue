@@ -59,7 +59,7 @@
                     }">Submit Exam</UButton>
                 </template>
             </UICard>
-
+            {{ shouldRefetch }}
         </div>
 
     </template>
@@ -69,6 +69,7 @@
 definePageMeta({
     requiredRole: 'examinee',
     layout: 'user',
+    middleware: 'next-question'
 })
 
 useSeoMeta({
@@ -77,15 +78,6 @@ useSeoMeta({
     ogTitle: 'Testify User Exam',
     ogDescription: 'This is an examination page',
 });
-
-
-
-
-const { info } = useAuthentication();
-const inf = JSON.parse(info.value);
-const { setToast } = useToasts();
-
-
 const columns = [{
     key: 'increment',
     label: '#',
@@ -98,26 +90,24 @@ const columns = [{
 }]
 
 
-const nuxtApp = useNuxtApp()
+const nuxtApp = useNuxtApp();
+const { info } = useAuthentication();
+const inf = JSON.parse(info.value);
+const { setToast } = useToasts();
 const repo = repository<ApiResponse<SubmitExamModel>>(nuxtApp.$api);
-const checkingExam = repository(nuxtApp.$api);
+const checkExamRepo = repository(nuxtApp.$api);
 const store = useExamStore();
 const shouldRefetch = ref(0);
 const answerData = ref<ExamAnswerDetails[]>([])
 
+const remainingSeconds = ref(0);
+const displayTime = ref('00:00:00');
+let countDownInterval: ReturnType<typeof setInterval> | null = null;
+
+
 const { data: question, status, error } = await useAPI<ExamDetails>(`/exam/available/${inf.id}`, {
-    watch: [shouldRefetch]
+    watch: [shouldRefetch],
 })
-
-if (error.value) {
-    setToast('error', error.value.data.message)
-    navigateTo({ name: 'user' })
-
-}
-
-
-
-
 
 
 
@@ -150,37 +140,79 @@ const pushData = (indexQuestion: number, indexChoice: number) => {
 
 
 const submitExam = async () => {
-
-    if (answerData.value.length !== question.value?.data.length) {
+    if (remainingSeconds.value > 0 && answerData.value.length !== question.value?.data.length) {
         setToast('error', 'Please answer all questions');
         return;
     }
-
     const db = {
         examinee_id: inf.id,
-        exam_id: question.value.exam_id,
+        exam_id: question?.value?.exam_id,
         details: answerData.value
     }
     try {
         await repo.submitExam(db);
-        const checkExistingExam = await checkingExam.getCheckExistingExam<[]>(inf.id);
-        if (checkExistingExam && checkExistingExam.length > 0) {
-            answerData.value = [];
-            shouldRefetch.value++;
-
-            setToast('success', 'Successfully added');
-        } else {
-            store.setExam();
-            navigateTo({ name: 'user' })
-        }
+        answerData.value = [];
+        shouldRefetch.value++;
 
     } catch (err: any) {
-        setToast('error', err.data.error || 'Error submitting exam');
-        console.error(err.data.error);
+        setToast('error', err.data.message || 'Error submitting exam');
+    }
+}
+
+const formatTime = (totalSeconds: number) => {
+    const hours = Math.floor(totalSeconds / 3600);
+    const mins = Math.floor((totalSeconds % 3600) / 60);
+    const secs = totalSeconds % 60;
+
+    const formattedHours = hours < 10 ? '0' + hours : hours;
+    const formattedMins = mins < 10 ? '0' + mins : mins;
+    const formattedSecs = secs < 10 ? '0' + secs : secs;
+
+    return `${formattedHours}:${formattedMins}:${formattedSecs}`;
+}
+
+const startCountdown = (timelimit: number = 0) => {
+    if (countDownInterval) {
+        clearInterval(countDownInterval);
+    }
+    if (timelimit > 0) {
+        remainingSeconds.value = timelimit;
+        displayTime.value = formatTime(timelimit);
+
+        countDownInterval = setInterval(() => {
+            if (remainingSeconds.value > 0) {
+                remainingSeconds.value--;
+                displayTime.value = formatTime(remainingSeconds.value);
+                store.setTimeLimit(displayTime.value);
+            } else {
+                setToast('warning', 'Time\'s up');
+                if (countDownInterval) {
+                    clearInterval(countDownInterval);
+                }
+                submitExam();
+            }
+        }, 1000);
+    }
+}
+
+watch(() => question.value?.time_limit, (newVal) => {
+    if (newVal) {
+        startCountdown(newVal);
     }
 
+}, {
+    deep: true,
+    immediate: true
+})
 
-}
+
+
+
+onUnmounted(() => {
+    if (countDownInterval) {
+        clearInterval(countDownInterval);
+    }
+});
 
 
 
