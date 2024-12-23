@@ -95,20 +95,21 @@ const { info } = useAuthentication();
 const inf = JSON.parse(info.value);
 const { setToast } = useToasts();
 const repo = repository<ApiResponse<SubmitExamModel>>(nuxtApp.$api);
-const checkExamRepo = repository(nuxtApp.$api);
 const store = useExamStore();
 const shouldRefetch = ref(0);
 const answerData = ref<ExamAnswerDetails[]>([])
 
-const remainingSeconds = ref(0);
-const displayTime = ref('00:00:00');
-let countDownInterval: ReturnType<typeof setInterval> | null = null;
 
 
+const handleTimeUp = async () => {
+    setToast('warning', 'Time\'s up');
+    await submitExam();
+};
 const { data: question, status, error } = await useAPI<ExamDetails>(`/exam/available/${inf.id}`, {
     watch: [shouldRefetch],
 })
 
+const { remainingSeconds, startTimer } = useExamTimer(question.value?.time_limit ?? 0, handleTimeUp)
 
 
 const pushData = (indexQuestion: number, indexChoice: number) => {
@@ -141,8 +142,8 @@ const pushData = (indexQuestion: number, indexChoice: number) => {
 
 const submitExam = async () => {
     if (remainingSeconds.value > 0 && answerData.value.length !== question.value?.data.length) {
-        setToast('error', 'Please answer all questions');
-        return;
+        throw new Error('Please answer all questions')
+        // return;
     }
     const db = {
         examinee_id: inf.id,
@@ -159,60 +160,22 @@ const submitExam = async () => {
     }
 }
 
-const formatTime = (totalSeconds: number) => {
-    const hours = Math.floor(totalSeconds / 3600);
-    const mins = Math.floor((totalSeconds % 3600) / 60);
-    const secs = totalSeconds % 60;
 
-    const formattedHours = hours < 10 ? '0' + hours : hours;
-    const formattedMins = mins < 10 ? '0' + mins : mins;
-    const formattedSecs = secs < 10 ? '0' + secs : secs;
-
-    return `${formattedHours}:${formattedMins}:${formattedSecs}`;
-}
-
-const startCountdown = (timelimit: number = 0) => {
-    if (countDownInterval) {
-        clearInterval(countDownInterval);
-    }
-    if (timelimit > 0) {
-        remainingSeconds.value = timelimit;
-        displayTime.value = formatTime(timelimit);
-
-        countDownInterval = setInterval(() => {
-            if (remainingSeconds.value > 0) {
-                remainingSeconds.value--;
-                displayTime.value = formatTime(remainingSeconds.value);
-                store.setTimeLimit(displayTime.value);
-            } else {
-                setToast('warning', 'Time\'s up');
-                if (countDownInterval) {
-                    clearInterval(countDownInterval);
-                }
-                submitExam();
-            }
-        }, 1000);
-    }
-}
-
-watch(() => question.value?.time_limit, (newVal) => {
-    if (newVal) {
-        startCountdown(newVal);
-    }
-
-}, {
-    deep: true,
-    immediate: true
+onMounted(() => {
+    startTimer();
+   
 })
 
 
 
-
-onUnmounted(() => {
-    if (countDownInterval) {
-        clearInterval(countDownInterval);
+watch(() => error.value, async (newVal) => {
+    if (newVal) {
+        store.setExam();
+        await navigateTo({ name: 'user' })
     }
-});
+})
+
+
 
 
 

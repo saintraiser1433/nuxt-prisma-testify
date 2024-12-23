@@ -5,7 +5,7 @@
       padding: 'px-4'
     }">
       <template #header>
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between ">
           <h1 class="text-2xl lg:text-lg font-semibold">Examinee Information</h1>
           <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
             @click="isOpen = false" />
@@ -18,14 +18,14 @@
   </UModal>
 
   <div class="grid grid-cols-5 gap-5">
-    <div class="col-span-5">
+    <div class="col-span-5" >
       <UICard>
         <template #header>
           <h1 class="text-2xl lg:text-lg  font-semibold">List of Examinee's</h1>
         </template>
         <ExamineeList :is-loading="status" :examinee-data="transformData" @toggle-modal="toggleModal"
           @update="editExaminee" @delete="removeExaminee" />
-      </UICard>
+        </UICard>
 
     </div>
   </div>

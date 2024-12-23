@@ -12,7 +12,7 @@
       <slot name="header"> </slot>
     </template>
     <slot></slot>
-    <template #footer>
+    <template v-if="hasFooter" #footer>
       <slot name="footer"> </slot>
     </template>
   </UCard>
@@ -28,6 +28,10 @@ defineProps({
   hasHeader: {
     type: Boolean,
     default: true,
+  },
+  hasFooter: {
+    type: Boolean,
+    default: false,
   },
   header: {
     type: Object as PropType<CardProps>,
