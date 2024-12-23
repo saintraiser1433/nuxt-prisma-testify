@@ -74,7 +74,7 @@
 import type { FormSubmitEvent } from '#ui/types'
 
 
-const { convertToLetter } = useConvertLetter()
+
 const emits = defineEmits<{
     (e: 'dataQuestChoice', payload: QuestionModel): void;
     (e: 'reset'): void;

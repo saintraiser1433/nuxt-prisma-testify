@@ -6,7 +6,8 @@
                     Find my missing
                 </UButton>
             </div>
-            <UICard :body="{ padding: 'sm:p-0 p-0', base: 'h-[65vh] lg:h-[71vh] w-full overflow-y-auto' }"
+            <UICard :has-footer="true"
+                :body="{ padding: 'sm:p-0 p-0', base: 'h-[65vh] lg:h-[71vh] w-full overflow-y-auto' }"
                 :header="{ padding: 'sm:p-0 p-0' }" :footer="{
                     base: 'flex justify-center items-center py-2 dark:bg-darken'
                 }">
@@ -59,7 +60,7 @@
                     }">Submit Exam</UButton>
                 </template>
             </UICard>
-            {{ shouldRefetch }}
+
         </div>
 
     </template>
@@ -143,7 +144,6 @@ const pushData = (indexQuestion: number, indexChoice: number) => {
 const submitExam = async () => {
     if (remainingSeconds.value > 0 && answerData.value.length !== question.value?.data.length) {
         throw new Error('Please answer all questions')
-        // return;
     }
     const db = {
         examinee_id: inf.id,
@@ -163,7 +163,6 @@ const submitExam = async () => {
 
 onMounted(() => {
     startTimer();
-   
 })
 
 

@@ -4,25 +4,9 @@
             <p>Legends:</p>
         </div>
         <ul class="flex text-sm items-center gap-5 flex-row flex-wrap">
-            <li variant="subtle" :color="map.color" v-for="map in legends" :key="map"></li>
-            <li>
-                <UBadge variant="subtle" color="carnation" size="lg">
-                    POOR 50 Below %
-                </UBadge>
-            </li>
-            <li>
-                <UBadge variant="subtle" color="primary" size="lg">
-                    GOOD 51-69 %
-                </UBadge>
-            </li>
-            <li>
-                <UBadge variant="subtle" color="cyan" size="lg">
-                    VERY GOOD 70 - 89%
-                </UBadge>
-            </li>
-            <li>
-                <UBadge variant="subtle" color="emerald" size="lg">
-                    EXCELLENT 90-100 %
+            <li v-for="map in legends" :key="map.label">
+                <UBadge variant="subtle" :color="map.color" size="lg">
+                    {{ map.label }}
                 </UBadge>
             </li>
         </ul>
@@ -30,17 +14,27 @@
 
 </template>
 <script lang="ts" setup>
-interface LegendModel {
-    label: string,
-    value: string,
-    color: string
-}
 
-const props = defineProps({
-    legends: Object as PropType<LegendModel>
-})
+const legends: LegendModel[] = [
+    {
+        label: 'POOR 50 Below %',
+        color: 'carnation'
+    },
+    {
+        label: 'GOOD 51-69 %',
+        color: 'primary'
+    },
+    {
+        label: 'VERY GOOD 70 - 89%',
+        color: 'cyan'
+    },
+    {
+        label: 'EXCELLENT 90-100 %',
+        color: 'emerald'
+    },
+]
 
-const { legends } = toRefs(props);
+
 
 
 

@@ -6,12 +6,10 @@
                     padding: 'sm:p-0 p-0'
                 }">
                     <template #header>
-                        <div class="bg-[url('@/assets/images/bgheaders.png')] w-full h-20 bg-cover">
-                        </div>
+                        <UserDashboardHeader />
                     </template>
                     <div class="flex justify-center relative">
                         <div class="rounded-full h-32 w-32 inline-block p-1 absolute -top-14 bg-white shadow-md ">
-                            <!-- <img src="@/assets/images/studentf.png"> -->
                             <NuxtImg src="/images/studentf.png" quality="80" width="128" height="128" />
                         </div>
                     </div>
@@ -61,31 +59,12 @@
                 <UICard :header="{
                     padding: 'sm:p-0 p-0'
                 }">
-                    <!-- body: { padding: 'sm:pt-0 sm:pb-5 sm:px-0' }, -->
                     <template #header>
-                        <div
-                            class="bg-[url('@/assets/images/bgheaders.png')] w-full h-20 bg-cover flex justify-between items-center px-5 ">
-                            <h1 class="text-gray-100 text-2xl font-bold">STATISCAL DASHBOARD</h1>
-                            <NuxtImg src="/images/data.png" quality="80" width="64" height="64" />
-                        </div>
+                        <UserDashboardHeader title="STATISTICAL DASHBOARD" icon="/images/data.png" />
                     </template>
-                   
-                    <div class="grid grid-cols-12 gap-2">
-                        <div class="col-span-9">
-                            <UserHomeStatiscalList :summary-data="summary ?? []" />
-                        </div>
-                        <div class="flex items-center flex-col col-span-3 gap-2 py-3">
-                            <h1>YOUR RATINGS</h1>
-                            <CircleProgressBar stroke-width="16" size="200" color-filled="#062d19"
-                                :color-unfilled="color" animation-duration="1s" :value="percentage" :max="100"
-                                percentage rounded>
-                                <span class="font-bold"> {{ detail }}</span>
-                            </CircleProgressBar>
-                        </div>
-
-
-                    </div>
-
+                    <UserDashboardLegends />
+                    <UserDashboardStatiscal :summary-data="summary ?? []" :percentage="percentage" :hex-color="hexColor"
+                        :label="detail" />
                 </UICard>
 
             </div>
@@ -95,13 +74,9 @@
                     padding: 'sm:p-0 p-0'
                 }">
                     <template #header>
-                        <div
-                            class="bg-[url('@/assets/images/bgheaders.png')] w-full h-20 bg-cover flex justify-between items-center px-3">
-                            <h2 class="text-2xl font-semibold text-white">MY RECOMMENDED COURSES</h2>
-                            <NuxtImg src="/images/enroll.png" quality="80" width="64" height="64" />
-                        </div>
+                        <UserDashboardHeader title="MY RECOMMENDED COURSES" icon="/images/enroll.png" />
                     </template>
-                    <UserHomeCourseList :course-data="coursesData ?? []" />
+                    <UserTableCourseList :course-data="coursesData ?? []" />
                 </UICard>
             </div>
         </div>
@@ -122,6 +97,8 @@ useSeoMeta({
     ogDescription: 'This is signup page',
 });
 
+
+
 const { info } = useAuthentication();
 const inf = JSON.parse(info.value);
 const store = useExamStore();
@@ -137,14 +114,14 @@ const coursesData = computed(() => {
 
 
 
-const { data: summary } = await useAPI<GetSummary[]>(`/results/summary/${inf.id}`)
+const { data: summary } = await useAPI<Summary[]>(`/results/summary/${inf.id}`)
 
 
 const { data: score } = await useAPI<GetScore>(`/results/${inf.id}`, {
     watch: [shouldRefetch],
 })
 
-const { percentage, color, detail } = usePercentage(score?.value?.correct, score?.value?.questions);
+const { percentage, hexColor, detail } = usePercentage(score?.value?.correct, score?.value?.questions);
 const { data: course } = await useAPI<CourseModel[]>(`/course`, {
     watch: [shouldRefetch],
 })

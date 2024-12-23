@@ -253,13 +253,20 @@ export interface GetScore {
     examAttempt: number
 }
 
-export interface GetSummary {
+export interface Summary {
     exam_id: number,
     exam_title: string,
     percentage: number,
     total_correct_answer: number,
     total_questions: number,
     success_rate: number
+}
+
+//Legend
+type LegendColor = 'red' | 'orange' | 'amber' | 'yellow' | 'lime' | 'green' | 'emerald' | 'teal' | 'rose' | 'primary' | 'carnation' | 'cyan'
+export interface LegendModel {
+    label: string,
+    color: LegendColor
 }
 
 

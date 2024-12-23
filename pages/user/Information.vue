@@ -2,9 +2,8 @@
     <div class="w-8/12 mx-auto translate-y-0 lg:translate-y-1/4">
         <UICard :body="{ padding: 'sm:px-4' }" :header="{ padding: 'sm:p-0 p-0', }">
             <template #header>
-                <div class="bg-[url('@/assets/images/bgheaders.png')] w-full h-20 bg-cover flex items-center px-3">
-                    <h2 class="text-2xl font-semibold text-white">FOLLOW UP INFORMATION</h2>
-                </div>
+                <UserDashboardHeader title="FOLLOW UP INFORMATION" icon="/images/data.png" />
+
             </template>
             <h2 class="text-sm border-b border-gray-300 dark:border-gray-700 pb-2 mb-4 font-semibold">Date Examination:
                 {{ dateNow
@@ -70,12 +69,12 @@ useSeoMeta({
 
 const { $api, $datefns, $joi } = useNuxtApp();
 
-const dateNow = $datefns.format(new Date(), "MMMM d, yyyy");
+
 const { info } = useAuthentication();
 const { setToast } = useToasts();
 const followUp = repository<ApiResponse<Followup>>($api)
 const inf = JSON.parse(info.value);
-
+const dateNow = $datefns.format(new Date(), "MMMM d, yyyy");
 const gender = [
     {
         name: 'Male',
