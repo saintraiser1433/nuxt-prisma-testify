@@ -6,7 +6,7 @@ export const usePercentage = (totalCorrect: number | undefined, totalQuestion: n
         return {
             percentage: 0.00,
             hexColor: '#4b0406',
-            detail: detail = 'NOT YET EXAM'
+            detail: detail = 'POOR'
         };
     }
 

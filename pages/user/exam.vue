@@ -12,6 +12,10 @@
                     base: 'flex justify-center items-center py-2 dark:bg-darken'
                 }">
                 <template #header>
+                    <UserDashboardHeader :title="examTitle">
+                        <h2 class="text-white font-semibold">ITEMS: {{ answerData.length }}/{{ question?.data.length ?? 0 }}</h2>
+                    </UserDashboardHeader>
+
                     <div
                         class="bg-[url('@/assets/images/bgheaders.png')] w-full h-16 bg-cover flex gap-2 justify-between items-center px-3 text-xs lg:text-2xl font-semibold text-white">
                         <h2 class="uppercase">EXAM TITLE: {{ question?.exam_title ?? 'NO EXAM' }}</h2>
@@ -100,6 +104,7 @@ const store = useExamStore();
 const shouldRefetch = ref(0);
 const answerData = ref<ExamAnswerDetails[]>([])
 
+const examTitle = computed(() => `Exam Title: ${question.value?.exam_title}` || 'No Exam');
 
 
 const handleTimeUp = async () => {
