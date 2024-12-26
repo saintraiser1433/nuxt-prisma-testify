@@ -6,7 +6,7 @@
         <span class="sprite sprite-small-lg ml-2"></span>
         <h2 class="font-semibold">Testify</h2>
       </div>
-      <div v-if="checkRoute" class="flex justify-center items-center gap-3">
+      <div v-if="checkRoute" class="flex justify-center items-center gap-3 font-bold">
         <h3>Time Remaining:</h3>
         <h1 class="text-danger">{{ timelimit }}</h1>
       </div>

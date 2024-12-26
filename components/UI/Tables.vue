@@ -38,6 +38,8 @@
             :sort-button="{ variant: 'outline', size: 'xs', square: false }"
             :rows="hasPagination ? paginatedData : data" :columns="columnsTable" class="w-full text-xs" :ui="{
                 base: base || 'border-t dark:border-gray-700 ',
+                thead: 'static',
+                wrapper:'static',
                 td: {
                     padding: td.padding || 'px-4 py-2',
                     base: td.base || '',
@@ -47,7 +49,7 @@
                 },
                 th: {
                     padding: th.padding || 'py-3',
-                    base: th.base || 'w-25 bg-gray-100 dark:bg-darken dark:text-slate-400 text-xs',
+                    base: th.base || 'w-25 bg-gray-100 dark:bg-darken dark:text-slate-400 text-xs ',
                 },
             }
                 ">
@@ -59,6 +61,7 @@
             <template v-for="(_, name) in $slots" #[name]="slotData">
                 <slot :name="name" v-bind="slotData" />
             </template>
+
         </UTable>
 
         <div v-if="hasPagination"
@@ -91,7 +94,12 @@
 
 <script setup lang="ts">
 
-
+const rows = [
+    {
+        key:'increment',
+        
+    }
+]
 const props = defineProps({
     base: String,
     td: {

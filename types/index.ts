@@ -191,6 +191,7 @@ export interface TokenStatus {
 }
 
 export interface ApiResponse<T> {
+    status: number,
     message: string,
     data?: T,
 }
@@ -268,6 +269,8 @@ export interface LegendModel {
     label: string,
     color: LegendColor
 }
+
+export type ProgressColor = 'rose' | 'primary' | 'cyan' | 'emerald';
 
 
 

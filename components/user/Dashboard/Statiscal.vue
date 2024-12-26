@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-type ProgressColor = 'rose' | 'primary' | 'cyan' | 'emerald';
+
 const columns = [{
   key: "exam_title",
   label: 'Exam Title',

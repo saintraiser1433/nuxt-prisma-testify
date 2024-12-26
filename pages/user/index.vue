@@ -17,7 +17,7 @@
                     <div
                         class="text-center mt-20 text-2xl text-gray-700 border-b border-gray-200 dark:border-gray-700 pb-5">
                         <h2 class="dark:text-gray-300 font-semibold">Hello!</h2>
-                        <h2 class="dark:text-gray-300 font-semibold">Decosta, John Rey N.</h2>
+                        <h2 class="dark:text-gray-300 font-semibold uppercase">{{ examineeName }}</h2>
                     </div>
 
                     <div class="text-center text-gray-600 dark:text-gray-300 py-5 font-semibold text-2xl gap-1">
@@ -28,7 +28,7 @@
 
                     <h2 v-if="!isFinished"
                         class="text-center text-1xl font-semibold pb-2 text-black dark:text-gray-300">
-                        Exam Finished 0 out of 4
+                        {{ examAttempts }}
                     </h2>
                     <template #footer>
                         <div v-if="isFinished"
@@ -98,37 +98,36 @@ useSeoMeta({
 });
 
 
-
 const { info } = useAuthentication();
 const inf = JSON.parse(info.value);
+
+
+//fetch list of courses base on score
 const store = useExamStore();
 const shouldRefetch = computed(() => store.refetch)
-const isFinished = computed(() => score?.value?.examCnt === score?.value?.examAttempt);
-
 const coursesData = computed(() => {
     if (!course.value || !score.value) return []
     return course.value.filter((item) =>
         item.score <= (score?.value?.correct ?? 0)
     )
 })
-
-
-
-const { data: summary } = await useAPI<Summary[]>(`/results/summary/${inf.id}`)
-
-
-const { data: score } = await useAPI<GetScore>(`/results/${inf.id}`, {
-    watch: [shouldRefetch],
-})
-
-const { percentage, hexColor, detail } = usePercentage(score?.value?.correct, score?.value?.questions);
 const { data: course } = await useAPI<CourseModel[]>(`/course`, {
     watch: [shouldRefetch],
 })
 
 
 
-
+//statistical details
+const examineeName = computed(() => `${inf.last_name}, ${inf.first_name} ${inf.middle_name[0]}.`)
+const isFinished = computed(() => score?.value?.examCnt === score?.value?.examAttempt);
+const examAttempts = computed(() => `Exam Finished ${score.value?.examAttempt ?? 0} out of ${score.value?.examCnt ?? 0}`)
+const { data: summary } = await useAPI<Summary[]>(`/results/summary/${inf.id}`, {
+    watch: [shouldRefetch],
+})
+const { data: score } = await useAPI<GetScore>(`/results/${inf.id}`, {
+    watch: [shouldRefetch],
+})
+const { percentage, hexColor, detail } = usePercentage(score?.value?.correct, score?.value?.questions);
 
 
 </script>

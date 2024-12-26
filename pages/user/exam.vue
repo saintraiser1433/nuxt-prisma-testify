@@ -1,53 +1,49 @@
     <template>
         <div>
             <div class="absolute end-5 bottom-20">
-                <UButton variant="solid" color="neon-carrot" size="lg">
-                    <i-fluent-emoji-flat-magnifying-glass-tilted-left></i-fluent-emoji-flat-magnifying-glass-tilted-left>
+                <UButton type="button" @click="findMissing" variant="solid" color="neon-carrot" size="lg">
+                    <i-fluent-emoji-flat-magnifying-glass-tilted-left />
                     Find my missing
                 </UButton>
             </div>
             <UICard :has-footer="true"
-                :body="{ padding: 'sm:p-0 p-0', base: 'h-[65vh] lg:h-[71vh] w-full overflow-y-auto' }"
+                :body="{ padding: 'sm:p-0 p-0', base: 'h-[73vh] lg:h-[76vh] w-full overflow-y-auto' }"
                 :header="{ padding: 'sm:p-0 p-0' }" :footer="{
                     base: 'flex justify-center items-center py-2 dark:bg-darken'
                 }">
                 <template #header>
                     <UserDashboardHeader :title="examTitle">
-                        <h2 class="text-white font-semibold">ITEMS: {{ answerData.length }}/{{ question?.data.length ?? 0 }}</h2>
+                        <h1 class="text-white font-bold">ITEMS ANSWERED: {{ answerCount }}/{{ totalQuestions }}</h1>
                     </UserDashboardHeader>
 
-                    <div
-                        class="bg-[url('@/assets/images/bgheaders.png')] w-full h-16 bg-cover flex gap-2 justify-between items-center px-3 text-xs lg:text-2xl font-semibold text-white">
-                        <h2 class="uppercase">EXAM TITLE: {{ question?.exam_title ?? 'NO EXAM' }}</h2>
-                        <h2>ITEMS: {{ answerData.length }}/{{ question?.data.length ?? 0 }}</h2>
-                    </div>
+
                 </template>
                 <template #default>
-                    <UITables :data="question?.data ?? []" :columns="columns" :has-border="true"
-                        :has-column-filter="false" :hasActionHeader="false" :has-pagination="false"
-                        :has-page-count="false" :td="{
-                            base: 'border dark:border-gray-700 align-top py-5'
+                    <UITables :data="questionData" :columns="columns" :has-border="true" :has-column-filter="false"
+                        :hasActionHeader="false" :has-pagination="false" :has-page-count="false" :td="{
+                            base: 'border dark:border-gray-700 align-top',
+                            padding: 'p-0'
+                        }" :tr="{
+                            base: highlightMissing
                         }">
                         <template #increment-data="{ row, index }">
-                            <td class="font-bold"
-                                style="max-width: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <div class="font-bold p-5" :id="index + 1">
                                 {{ index + 1 }}
-                            </td>
+                            </div>
                         </template>
                         <template #question-data="{ row, index: indexQuestion }">
-                            <td class="lg:max-w-6xl whitespace-normal text-wrap">
-
+                            <div class="w-full h-full p-5 text-wrap">
                                 <p class="font-bold" v-html="row.question"></p>
                                 <div class="grid grid-cols-2 gap-5 mt-2">
-                                    <URadio v-for="(method, index) of row.choices" v-model="row.selectedChoice"
-                                        @click="pushData(indexQuestion, index)" :key="method.value" v-bind="method">
-
+                                    <URadio v-for="(method, index) of row.choices" :ui="{ base: 'cursor-pointer' }"
+                                        v-model="row.selectedChoice" @click="pushData(indexQuestion, index)"
+                                        :key="method.value" v-bind="method">
                                         <template #label="{ label }">
                                             <div v-html="label"></div>
                                         </template>
                                     </URadio>
                                 </div>
-                            </td>
+                            </div>
                         </template>
 
                     </UITables>
@@ -64,7 +60,6 @@
                     }">Submit Exam</UButton>
                 </template>
             </UICard>
-
         </div>
 
     </template>
@@ -83,41 +78,42 @@ useSeoMeta({
     ogTitle: 'Testify User Exam',
     ogDescription: 'This is an examination page',
 });
-const columns = [{
-    key: 'increment',
-    label: '#',
-    class: 'w-10 max-w-[10rem]',
-    sortable: true
-}, {
-    key: 'question',
-    label: 'Question',
-    sortable: true
-}]
-
+const columns = [
+    {
+        key: 'increment',
+        label: '#',
+        class: 'w-10',
+        sortable: true,
+    },
+    {
+        key: 'question',
+        label: 'Question',
+        sortable: true,
+    }
+];
 
 const nuxtApp = useNuxtApp();
 const { info } = useAuthentication();
-const inf = JSON.parse(info.value);
+const { setAlert } = useAlert();
 const { setToast } = useToasts();
-const repo = repository<ApiResponse<SubmitExamModel>>(nuxtApp.$api);
-const store = useExamStore();
+const inf = JSON.parse(info.value);
+
+
+
+//rendering list of questions
 const shouldRefetch = ref(0);
-const answerData = ref<ExamAnswerDetails[]>([])
-
-const examTitle = computed(() => `Exam Title: ${question.value?.exam_title}` || 'No Exam');
-
-
-const handleTimeUp = async () => {
-    setToast('warning', 'Time\'s up');
-    await submitExam();
-};
 const { data: question, status, error } = await useAPI<ExamDetails>(`/exam/available/${inf.id}`, {
     watch: [shouldRefetch],
 })
+const questionData = computed(() => question.value?.data ?? []);
+const totalQuestions = computed(() => question.value?.data.length ?? 0);
+const answerCount = computed(() => answerData.value.length);
+const examTitle = computed(() =>
+    question.value?.exam_title ? `EXAM TITLE: ${question.value.exam_title}` : 'NO EXAM AVAILABLE'
+);
 
-const { remainingSeconds, startTimer } = useExamTimer(question.value?.time_limit ?? 0, handleTimeUp)
-
-
+//selecting choices
+const answerData = ref<ExamAnswerDetails[]>([])
 const pushData = (indexQuestion: number, indexChoice: number) => {
     if (!question?.value?.data || !question.value.data[indexQuestion]) {
         setToast('error', 'Invalid question data')
@@ -142,44 +138,94 @@ const pushData = (indexQuestion: number, indexChoice: number) => {
     } else {
         answerData.value.push(newEntry);
     }
+    isHighlightActive.value = false;
+    isHighlightActive.value = true;
 
 }
 
-
+//submission of exam 
+const repo = repository<ApiResponse<SubmitExamModel>>(nuxtApp.$api);
+const { remainingSeconds, startTimerWithCallBack } = useExamTimer()
+const store = useExamStore();
 const submitExam = async () => {
     if (remainingSeconds.value > 0 && answerData.value.length !== question.value?.data.length) {
-        throw new Error('Please answer all questions')
+        setToast('error', 'Please answer all questions before proceeding');
+        return;
     }
+
     const db = {
         examinee_id: inf.id,
         exam_id: question?.value?.exam_id,
         details: answerData.value
     }
-    try {
-        await repo.submitExam(db);
-        answerData.value = [];
-        shouldRefetch.value++;
 
-    } catch (err: any) {
-        setToast('error', err.data.message || 'Error submitting exam');
-    }
+    setAlert('info', 'Once submitted your answer will be processed ', '', 'Submit').then(
+        async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const { status, message } = await repo.submitExam(db);
+                    if (status === 201) {
+                        answerData.value = [];
+                        shouldRefetch.value++;
+                    } else {
+                        setToast('error', message || 'An error occurred');
+                    }
+                } catch (error: any) {
+                    setToast('error', error.data.message || 'An error occurred');
+                }
+            }
+        }
+    )
+
 }
+const handleTimeUp = async () => {
+    setToast('warning', 'Time\'s up');
+    await submitExam();
+};
 
+watch(
+    [
+        () => question.value?.time_limit,
+        () => error.value
+    ],
+    async ([timeLimit, errorValue]) => {
+        if (timeLimit) {
+            startTimerWithCallBack(timeLimit, handleTimeUp);
+        }
 
-onMounted(() => {
-    startTimer();
-})
-
-
-
-watch(() => error.value, async (newVal) => {
-    if (newVal) {
-        store.setExam();
-        await navigateTo({ name: 'user' })
+        if (errorValue) {
+            store.setExam();
+            await navigateTo({ name: 'user' });
+        }
+    },
+    {
+        immediate: true,
+        deep: true
     }
-})
+);
 
 
+//highlighting the missing questions
+const isHighlightActive = ref(false);
+const missingQuestionIndex = computed(() => {
+    const answerQuestionId = answerData.value.map(item => item.question_id);
+    return questionData.value
+        .map((item, index) => answerQuestionId.includes(item.question_id) ? -1 : index + 1)
+        .filter(index => index !== -1);
+});
+const highlightMissing = computed(() => {
+    if (!isHighlightActive.value) return ''; // Return no styles if highlighting is not active
+
+    return missingQuestionIndex.value
+        .map(index => `[&:nth-child(${index})]:bg-red-400 dark:[&:nth-child(${index})]:bg-gray-600`)
+        .join(' ');
+});
+
+const findMissing = () => {
+    isHighlightActive.value = true;
+    const element = document.getElementById(String(missingQuestionIndex.value[0]));
+    element?.scrollIntoView({ behavior: 'smooth' });
+};
 
 
 

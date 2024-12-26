@@ -17,7 +17,6 @@
 
 
 <script setup lang="ts">
-import type { FormSubmitEvent } from '#ui/types'
 
 definePageMeta({
     requiredRole: 'examinee',
@@ -37,23 +36,30 @@ useSeoMeta({
 const { $api, $datefns } = useNuxtApp();
 const { info } = useAuthentication();
 const { setToast } = useToasts();
-const followUp = repository<ApiResponse<Followup>>($api)
+
 const inf = JSON.parse(info.value);
+
+
+//date
 const dateNow = computed(() =>
     $datefns.format(new Date(), "MMMM d, yyyy")
 );
 
 
-
-const onSubmit = async (response:Followup) => {
+//submit information
+const followUp = repository<ApiResponse<Followup>>($api)
+const onSubmit = async (onResponse: Followup) => {
     try {
         if (inf) {
             const data = {
-                ...response,
+                ...onResponse,
                 ...{ examineeId: inf.id }
             }
-            await followUp.addFollowup(data);
-            await navigateTo({ name: 'user-exam' });
+            const response = await followUp.addFollowup(data);
+            if (response.status === 201) {
+                await navigateTo({ name: 'user-exam' });
+            }
+
         } else {
             setToast('error', 'Cant find id');
         }
