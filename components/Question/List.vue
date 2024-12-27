@@ -14,7 +14,7 @@ const columns = [{
 
 }]
 
-const { letterWithText } = useConvertLetter();
+
 const emits = defineEmits<{
     (e: 'update', payload: QuestionModel): void;
     (e: 'delete', id: number): void;

@@ -45,7 +45,7 @@
                     base: td.base || '',
                 },
                 tr: {
-                    base: tr.base || 'odd:bg-white even:bg-slate-50 dark:odd:bg-gray-900 dark:even:bg-gray-800  '
+                    base: tr.base || ' odd:bg-white even:bg-slate-50 dark:odd:bg-gray-900 dark:even:bg-gray-800  '
                 },
                 th: {
                     padding: th.padding || 'py-3',
@@ -94,12 +94,6 @@
 
 <script setup lang="ts">
 
-const rows = [
-    {
-        key:'increment',
-        
-    }
-]
 const props = defineProps({
     base: String,
     td: {

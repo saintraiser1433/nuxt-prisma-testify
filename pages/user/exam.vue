@@ -19,12 +19,11 @@
 
                 </template>
                 <template #default>
+
                     <UITables :data="questionData" :columns="columns" :has-border="true" :has-column-filter="false"
                         :hasActionHeader="false" :has-pagination="false" :has-page-count="false" :td="{
                             base: 'border dark:border-gray-700 align-top',
                             padding: 'p-0'
-                        }" :tr="{
-                            base: highlightMissing
                         }">
                         <template #increment-data="{ row, index }">
                             <div class="font-bold p-5" :id="index + 1">
@@ -61,7 +60,6 @@
                 </template>
             </UICard>
         </div>
-
     </template>
 
 
@@ -82,12 +80,13 @@ const columns = [
     {
         key: 'increment',
         label: '#',
-        class: 'w-10',
         sortable: true,
+        rowClass: '[&:nth-child(1)]:bg-red-400 w-10'
     },
     {
         key: 'question',
         label: 'Question',
+        rowClass: '[&:nth-child(2)]:bg-red-400',
         sortable: true,
     }
 ];
@@ -96,6 +95,7 @@ const nuxtApp = useNuxtApp();
 const { info } = useAuthentication();
 const { setAlert } = useAlert();
 const { setToast } = useToasts();
+
 const inf = JSON.parse(info.value);
 
 
@@ -114,6 +114,7 @@ const examTitle = computed(() =>
 
 //selecting choices
 const answerData = ref<ExamAnswerDetails[]>([])
+const { isHighlightActive, scrollToFirstMissing, highlightMissing } = useExamHighlight(questionData, answerData);
 const pushData = (indexQuestion: number, indexChoice: number) => {
     if (!question?.value?.data || !question.value.data[indexQuestion]) {
         setToast('error', 'Invalid question data')
@@ -138,8 +139,7 @@ const pushData = (indexQuestion: number, indexChoice: number) => {
     } else {
         answerData.value.push(newEntry);
     }
-    isHighlightActive.value = false;
-    isHighlightActive.value = true;
+
 
 }
 
@@ -148,34 +148,52 @@ const repo = repository<ApiResponse<SubmitExamModel>>(nuxtApp.$api);
 const { remainingSeconds, startTimerWithCallBack } = useExamTimer()
 const store = useExamStore();
 const submitExam = async () => {
-    if (remainingSeconds.value > 0 && answerData.value.length !== question.value?.data.length) {
+    if (answerData.value.length !== question.value?.data.length) {
         setToast('error', 'Please answer all questions before proceeding');
         return;
     }
+
+
 
     const db = {
         examinee_id: inf.id,
         exam_id: question?.value?.exam_id,
         details: answerData.value
     }
+    if (remainingSeconds.value > 0) {
+        setAlert('info', 'Once submitted your answer will be processed ', '', 'Submit').then(
+            async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const { status, message } = await repo.submitExam(db);
+                        if (status === 201) {
 
-    setAlert('info', 'Once submitted your answer will be processed ', '', 'Submit').then(
-        async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    const { status, message } = await repo.submitExam(db);
-                    if (status === 201) {
-                        answerData.value = [];
-                        shouldRefetch.value++;
-                    } else {
-                        setToast('error', message || 'An error occurred');
+                            answerData.value = [];
+                            shouldRefetch.value++;
+                        } else {
+                            setToast('error', message || 'An error occurred');
+                        }
+                    } catch (error: any) {
+                        setToast('error', error.data.message || 'An error occurred');
                     }
-                } catch (error: any) {
-                    setToast('error', error.data.message || 'An error occurred');
                 }
             }
+        )
+    } else {
+        try {
+            const { status, message } = await repo.submitExam(db);
+            if (status === 201) {
+
+                answerData.value = [];
+                shouldRefetch.value++;
+            } else {
+                setToast('error', message || 'An error occurred');
+            }
+        } catch (error: any) {
+            setToast('error', error.data.message || 'An error occurred');
         }
-    )
+    }
+
 
 }
 const handleTimeUp = async () => {
@@ -191,11 +209,12 @@ watch(
     async ([timeLimit, errorValue]) => {
         if (timeLimit) {
             startTimerWithCallBack(timeLimit, handleTimeUp);
+            isHighlightActive.value = false;
         }
 
         if (errorValue) {
             store.setExam();
-            await navigateTo({ name: 'user' });
+            await navigateTo({ name: 'user-redirecting' });
         }
     },
     {
@@ -205,26 +224,8 @@ watch(
 );
 
 
-//highlighting the missing questions
-const isHighlightActive = ref(false);
-const missingQuestionIndex = computed(() => {
-    const answerQuestionId = answerData.value.map(item => item.question_id);
-    return questionData.value
-        .map((item, index) => answerQuestionId.includes(item.question_id) ? -1 : index + 1)
-        .filter(index => index !== -1);
-});
-const highlightMissing = computed(() => {
-    if (!isHighlightActive.value) return ''; // Return no styles if highlighting is not active
-
-    return missingQuestionIndex.value
-        .map(index => `[&:nth-child(${index})]:bg-red-400 dark:[&:nth-child(${index})]:bg-gray-600`)
-        .join(' ');
-});
-
 const findMissing = () => {
-    isHighlightActive.value = true;
-    const element = document.getElementById(String(missingQuestionIndex.value[0]));
-    element?.scrollIntoView({ behavior: 'smooth' });
+    scrollToFirstMissing();
 };
 
 
