@@ -6,14 +6,14 @@ export const useExamHighlight = (questionData: Ref<ExamQuestion[]>, answerData: 
         return questionData.value.map((item, index) => ({
             index: index + 1,
             question_id: item.question_id,
-            isAnswered: answeredIds.has(item.question_id)
+            isAnswered: answeredIds.has(item.question_id.value)
         })).filter(q => !q.isAnswered);
     });
 
     const highlightMissing = computed(() => {
         if (!isHighlightActive.value) return '';
         return missingQuestions.value
-            .map(item => `[&:nth-child(${item.index})]:bg-red-400 dark:[&:nth-child(${item.index})]:bg-gray-600`)
+            .map(item => `bg-red-400 dark:bg-gray-600`)
             .join(' ');
     });
 

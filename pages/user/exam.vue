@@ -1,66 +1,71 @@
-    <template>
-        <div>
-            <div class="absolute end-5 bottom-20">
-                <UButton type="button" @click="findMissing" variant="solid" color="neon-carrot" size="lg">
-                    <i-fluent-emoji-flat-magnifying-glass-tilted-left />
-                    Find my missing
-                </UButton>
-            </div>
-            <UICard :has-footer="true"
-                :body="{ padding: 'sm:p-0 p-0', base: 'h-[73vh] lg:h-[76vh] w-full overflow-y-auto' }"
-                :header="{ padding: 'sm:p-0 p-0' }" :footer="{
-                    base: 'flex justify-center items-center py-2 dark:bg-darken'
-                }">
-                <template #header>
-                    <UserDashboardHeader :title="examTitle">
-                        <h1 class="text-white font-bold">ITEMS ANSWERED: {{ answerCount }}/{{ totalQuestions }}</h1>
-                    </UserDashboardHeader>
-
-
-                </template>
-                <template #default>
-
-                    <UITables :data="questionData" :columns="columns" :has-border="true" :has-column-filter="false"
-                        :hasActionHeader="false" :has-pagination="false" :has-page-count="false" :td="{
-                            base: 'border dark:border-gray-700 align-top',
-                            padding: 'p-0'
-                        }">
-                        <template #increment-data="{ row, index }">
-                            <div class="font-bold p-5" :id="index + 1">
-                                {{ index + 1 }}
-                            </div>
-                        </template>
-                        <template #question-data="{ row, index: indexQuestion }">
-                            <div class="w-full h-full p-5 text-wrap">
-                                <p class="font-bold" v-html="row.question"></p>
-                                <div class="grid grid-cols-2 gap-5 mt-2">
-                                    <URadio v-for="(method, index) of row.choices" :ui="{ base: 'cursor-pointer' }"
-                                        v-model="row.selectedChoice" @click="pushData(indexQuestion, index)"
-                                        :key="method.value" v-bind="method">
-                                        <template #label="{ label }">
-                                            <div v-html="label"></div>
-                                        </template>
-                                    </URadio>
-                                </div>
-                            </div>
-                        </template>
-
-                    </UITables>
-
-                </template>
-
-                <template #footer>
-                    <UButton type="submit" color="gray" size="md" @click="submitExam" :ui="{
-                        color: {
-                            gray: {
-                                solid: 'bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500 text-white hover:dark:bg-emerald-600'
-                            }
-                        }
-                    }">Submit Exam</UButton>
-                </template>
-            </UICard>
+<template>
+    <div>
+        <div class="absolute end-5 bottom-20">
+            <UButton type="button" @click="findMissing" variant="solid" color="neon-carrot" size="lg">
+                <i-fluent-emoji-flat-magnifying-glass-tilted-left />
+                Find my missing
+            </UButton>
         </div>
-    </template>
+        <UICard :has-footer="true"
+            :body="{ padding: 'sm:p-0 p-0', base: 'h-[73vh] lg:h-[76vh] w-full overflow-y-auto' }"
+            :header="{ padding: 'sm:p-0 p-0' }" :footer="{
+                base: 'flex justify-center items-center py-2 dark:bg-darken'
+            }">
+            <template #header>
+                <UserDashboardHeader :title="examTitle">
+                    <h1 class="text-white font-bold">ITEMS ANSWERED: {{ answerCount }}/{{ totalQuestions }}</h1>
+                </UserDashboardHeader>
+
+
+            </template>
+            <template #default>
+                {{ questionData }}
+                <UITables :data="questionData" :columns="columns" :has-border="true" :has-column-filter="false"
+                    :hasActionHeader="false" :has-pagination="false" :has-page-count="false" :td="{
+                        base: 'border dark:border-gray-700 align-top',
+                        padding: 'p-0'
+                    }">
+                    <template #question_id-data="{ row, index }">
+                        <div class="font-bold p-5">
+                            {{ index + 1 }}
+                        </div>
+                    </template>
+
+                    <template #question-data="{ row, index: indexQuestion }">
+
+                        <div class="w-full h-full p-5 text-wrap">
+                            <p class="font-bold" v-html="row.question.value"></p>
+                            <div class="grid grid-cols-2 gap-5 mt-2">
+                                <URadio v-for="(method, index) of row.choices" :ui="{ base: 'cursor-pointer' }"
+                                    v-model="row.selectedChoice" @click="pushData(indexQuestion, index)"
+                                    :key="method.value" v-bind="method">
+                                    <template #label="{ label }">
+                                        <div v-html="label"></div>
+                                        {{ row.selectedChoice }}
+                                    </template>
+                                </URadio>
+                            </div>
+                        </div>
+                    </template>
+
+                </UITables>
+
+            </template>
+
+            <template #footer>
+                <UButton type="submit" color="gray" size="md" @click="submitExam" :ui="{
+                    color: {
+                        gray: {
+                            solid: 'bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500 text-white hover:dark:bg-emerald-600'
+                        }
+                    }
+                }">Submit Exam</UButton>
+            </template>
+        </UICard>
+        {{ highlightMissing }}
+    </div>
+    {{ questionData }}
+</template>
 
 
 <script lang="ts" setup>
@@ -78,18 +83,19 @@ useSeoMeta({
 });
 const columns = [
     {
-        key: 'increment',
+        key: 'question_id',
         label: '#',
         sortable: true,
-        rowClass: '[&:nth-child(1)]:bg-red-400 w-10'
+        rowClass: 'w-10'
     },
     {
         key: 'question',
         label: 'Question',
-        rowClass: '[&:nth-child(2)]:bg-red-400',
         sortable: true,
     }
 ];
+
+
 
 const nuxtApp = useNuxtApp();
 const { info } = useAuthentication();
@@ -105,12 +111,28 @@ const shouldRefetch = ref(0);
 const { data: question, status, error } = await useAPI<ExamDetails>(`/exam/available/${inf.id}`, {
     watch: [shouldRefetch],
 })
-const questionData = computed(() => question.value?.data ?? []);
 const totalQuestions = computed(() => question.value?.data.length ?? 0);
 const answerCount = computed(() => answerData.value.length);
 const examTitle = computed(() =>
     question.value?.exam_title ? `EXAM TITLE: ${question.value.exam_title}` : 'NO EXAM AVAILABLE'
 );
+const questionData = computed(() => {
+    const answeredIds = answerData.value.map(item => item.question_id);
+
+    return question.value?.data.map((item) => ({
+        question_id: {
+            value: Number(item.question_id),
+            class: answeredIds.some((x) => x === Number(item.question_id)) ? 'bg-red-500' : ''
+        },
+        question: {
+            value: String(item.question),
+            class: answeredIds.some((x) => x === Number(item.question_id)) ? 'bg-red-500' : ''
+        },
+        selectedChoice: null,
+        choices: item.choices
+    })) ?? [];
+});
+
 
 //selecting choices
 const answerData = ref<ExamAnswerDetails[]>([])
@@ -127,11 +149,11 @@ const pushData = (indexQuestion: number, indexChoice: number) => {
         return;
     }
     const checkValue = answerData.value.findIndex(
-        (item) => item.question_id === currentQuestion.question_id
+        (item) => item.question_id === currentQuestion.question_id.value
     );
     const newEntry: ExamAnswerDetails = {
         choices_id: currentChoice.value,
-        question_id: currentQuestion.question_id,
+        question_id: currentQuestion.question_id.value,
     };
 
     if (checkValue !== -1) {
@@ -152,9 +174,6 @@ const submitExam = async () => {
         setToast('error', 'Please answer all questions before proceeding');
         return;
     }
-
-
-
     const db = {
         examinee_id: inf.id,
         exam_id: question?.value?.exam_id,
@@ -231,6 +250,3 @@ const findMissing = () => {
 
 
 </script>
-
-
-

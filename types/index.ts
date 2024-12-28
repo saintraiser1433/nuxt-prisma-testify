@@ -229,8 +229,14 @@ export interface ExamChoice {
     label: string;
 }
 export interface ExamQuestion {
-    question_id: number;
-    question: string;
+    question_id: {
+        value: number,
+        class: string
+    };
+    question: {
+        value: string,
+        class: string
+    };
     selectedChoice?: number | null;
     choices: ExamChoice[];
 }
