@@ -11,7 +11,7 @@
             @click="isOpen = false" />
         </div>
       </template>
-      <CourseForm :form-data="data" :is-update="isUpdate" @data-course="submitCourse"></CourseForm>
+      <CourseForm :form-data="courseForm" :is-update="isUpdate" @data-course="submitCourse"></CourseForm>
     </UICard>
   </UModal>
 
@@ -26,7 +26,6 @@
       </UICard>
     </div>
   </div>
-
 
 
 
@@ -48,18 +47,13 @@ useSeoMeta({
 
 const { $api, payload, static: stat } = useNuxtApp()
 const { setToast } = useToasts();
-const isUpdate = ref(false);
 const { setAlert } = useAlert()
-const courseRepo = repository<ApiResponse<CourseModel>>($api)
-const courseData = ref<CourseModel[]>([])
+const isUpdate = ref(false);
 const isOpen = ref(false);
-const data = ref<CourseModel>({
-  description: "",
-  score: 0
-})
-const status = ref(false);
-/* course */
 
+/* fetch course */
+const courseData = ref<CourseModel[]>([])
+const status = ref(false);
 const fetchCourse = async () => {
   status.value = true;
   try {
@@ -78,7 +72,11 @@ const fetchCourse = async () => {
     }
     courseData.value = course.value || [];
   } catch (error) {
-    setToast('error', error instanceof Error ? error.message : 'An unexpected error occurred')
+    if (error instanceof Error) {
+      setToast('error', error.message);
+    } else {
+      setToast('error', 'An unexpected error occurred');
+    }
   } finally {
     status.value = false;
   }
@@ -87,6 +85,14 @@ const fetchCourse = async () => {
 await fetchCourse();
 
 
+//submit course
+const initialState = {
+  course_id: undefined,
+  description: "",
+  score: 0,
+};
+const courseForm = reactive<CourseModel>({ ...initialState })
+const courseRepo = repository<ApiResponse<CourseModel>>($api)
 
 const submitCourse = async (response: CourseModel) => {
   try {
@@ -110,11 +116,9 @@ const submitCourse = async (response: CourseModel) => {
 
 
 const editCourse = (response: CourseModel) => {
-  data.value = {
-    course_id: response.course_id,
-    description: response.description,
-    score: response.score,
-  };
+  courseForm.course_id = response.course_id;
+  courseForm.description = response.description;
+  courseForm.score = response.score;
   isOpen.value = true;
   isUpdate.value = true
 }
@@ -136,11 +140,14 @@ const removeCourse = (id: number) => {
   )
 }
 
+
+//utils
+const resetForm = () => {
+  Object.assign(courseForm, initialState);
+}
+
 const toggleModal = () => {
-  data.value = {
-    description: "",
-    score: 0
-  }
+  resetForm();
   isOpen.value = true;
   isUpdate.value = false
 }

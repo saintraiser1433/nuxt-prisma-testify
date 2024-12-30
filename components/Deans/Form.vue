@@ -76,14 +76,14 @@ const schema = $joi.object({
 })
 
 const state = ref<DeansModel>({
-  deans_id: undefined,
-  first_name: undefined,
-  last_name: undefined,
-  middle_name: undefined,
-  department_id: undefined,
-  username: undefined,
-  password: undefined,
-  status: undefined,
+  deans_id: 0,
+  first_name: '',
+  last_name: '',
+  middle_name: '',
+  department_id: 0,
+  username: '',
+  password: '',
+  status: false
 })
 
 

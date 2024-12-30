@@ -1,12 +1,18 @@
-export const useExam = (question: Ref<ExamDetails>) => {
+import type { IndexExamAnswers } from "~/types";
+
+export const useExam = (question: Ref<ExamDetails | null>) => {
   const isHighlightActive = ref(false);
   const answerData = ref<ExamAnswerDetails[]>([]);
-
+  const totalQuestions = computed(() => question.value?.data.length ?? 0);
+  const answerCount = computed(() => answerData.value.length);
+  const examTitle = computed(() =>
+    question.value?.exam_title ? `EXAM TITLE: ${question.value.exam_title}` : 'NO EXAM AVAILABLE'
+  );
 
   //list of questions
   const questionData = computed(() => {
     const answeredIds = answerData.value.map(item => item.question_id);
-    return question.value.data.map((item) => ({
+    return question?.value?.data.map((item) => ({
       question_id: {
         value: Number(item.question_id),
         class: !answeredIds.some((x) => x === Number(item.question_id)) && isHighlightActive.value ? 'bg-red-400 dark:bg-red-500' : '',
@@ -20,9 +26,10 @@ export const useExam = (question: Ref<ExamDetails>) => {
   });
 
   //pushing answer
-  const pushData = (indexQuestion: number, indexChoice: number) => {
-    const currentQuestion = questionData.value[indexQuestion];
-    const currentChoice = currentQuestion.choices[indexChoice];
+
+  const pushData = (res: IndexExamAnswers) => {
+    const currentQuestion = questionData.value[res.indexQuestion];
+    const currentChoice = currentQuestion.choices[res.indexChoice];
 
     const checkValue = answerData.value.findIndex(
       (item) => item.question_id === currentQuestion.question_id.value
@@ -39,12 +46,22 @@ export const useExam = (question: Ref<ExamDetails>) => {
     }
   }
 
+  //toggle find my missing
+  const findMissing = () => {
+    isHighlightActive.value = false;
+    isHighlightActive.value = true;
+  };
+
 
   return {
     isHighlightActive,
     questionData,
     pushData,
-    answerData
+    answerData,
+    totalQuestions,
+    answerCount,
+    examTitle,
+    findMissing
 
   }
 

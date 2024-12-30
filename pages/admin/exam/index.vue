@@ -25,7 +25,6 @@
                 </template>
                 <ExamList :is-loading="status" :exam-data="examData" @toggle-modal="toggleModal" @assign="routeToQuestion" @update="editExam"
                     @delete="removeExam" />
-
             </UICard>
         </div>
     </div>
@@ -59,7 +58,14 @@ const { setAlert } = useAlert()
 const examRepo = repository<ApiResponse<ExamModel>>($api)
 const examData = ref<ExamModel[]>([])
 const isOpen = ref(false);
-const data = ref<ExamModel>({})
+
+const initialState = {
+    department_id: undefined,
+    department_name: "",
+    status: false,
+};
+const departmentForm = reactive<DepartmentModel>({ ...initialState })
+const data = reactive<ExamModel>({})
 const status = ref(false);
 /* Exam */
 

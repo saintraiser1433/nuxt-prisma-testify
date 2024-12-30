@@ -13,7 +13,7 @@
         }
       }
     }">
-         Submit
+      Submit
     </UButton>
 
   </UForm>
@@ -37,10 +37,9 @@ const props = defineProps({
 
 const { formData } = toRefs(props);
 
-const formCourse = ref<CourseModel>({
-  course_id: undefined,
-  description: undefined,
-  score: undefined
+const formCourse = reactive<CourseModel>({
+  description: '',
+  score: 0
 });
 
 const schema = $joi.object({
@@ -62,7 +61,9 @@ watch(
   formData,
   (newData) => {
     if (newData) {
-      formCourse.value = { ...newData };
+      formCourse.course_id = newData.course_id
+      formCourse.description = newData.description
+      formCourse.score = newData.score
     }
   },
   { deep: true, immediate: true }

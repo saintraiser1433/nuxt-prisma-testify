@@ -12,7 +12,7 @@
                 </div>
 
             </template>
-            <DepartmentForm :form-data="data" :is-update="isUpdate" @data-department="submitDepartment">
+            <DepartmentForm :form-data="departmentForm" :is-update="isUpdate" @data-department="submitDepartment">
             </DepartmentForm>
         </UICard>
     </UModal>
@@ -37,7 +37,6 @@
 
 definePageMeta({
     requiredRole: 'admin',
-    // middleware: ['checkRole'],
 })
 
 useSeoMeta({
@@ -47,19 +46,14 @@ useSeoMeta({
     ogDescription: 'CRUD for Department'
 });
 
-
-
 const { $api, payload, static: stat } = useNuxtApp()
 const { setToast } = useToasts();
-const isUpdate = ref(false);
 const { setAlert } = useAlert()
-const departmentRepo = repository<ApiResponse<DepartmentModel>>($api)
-const departmentData = ref<DepartmentModel[]>([])
-const isOpen = ref(false);
-const data = ref<DepartmentModel>({})
+
+
+//fetch department
 const status = ref(false);
-
-
+const departmentData = ref<DepartmentModel[]>([])
 const fetchDepartment = async () => {
     status.value = true;
     try {
@@ -68,7 +62,6 @@ const fetchDepartment = async () => {
                 const data = payload.data[key] || stat.data[key]
                 return data;
             },
-            server: false
         })
 
         if (errordept.value) {
@@ -83,12 +76,17 @@ const fetchDepartment = async () => {
     }
 }
 
-fetchDepartment();
+await fetchDepartment()
 
 
-
-
-
+//submit department
+const initialState = {
+    department_id: undefined,
+    department_name: "",
+    status: false,
+};
+const departmentForm = reactive<DepartmentModel>({ ...initialState })
+const departmentRepo = repository<ApiResponse<DepartmentModel>>($api)
 const submitDepartment = async (response: DepartmentModel) => {
     try {
         if (!isUpdate.value) {
@@ -109,23 +107,11 @@ const submitDepartment = async (response: DepartmentModel) => {
     }
 }
 
-/* Examinee */
-
-const toggleModal = () => {
-    data.value = {}
-    isOpen.value = true;
-    isUpdate.value = false
-}
-
-
-
 const editDepartment = (response: DepartmentModel) => {
-    data.value = {
-        department_id: response.department_id,
-        department_name: response.department_name,
-        status: response.status
-    };
-    isOpen.value = true;
+    departmentForm.department_id = response.department_id
+    departmentForm.department_name = response.department_name
+    departmentForm.status = response.status
+    isOpen.value = true
     isUpdate.value = true
 }
 
@@ -147,6 +133,20 @@ const removeDepartment = (id: number) => {
 }
 
 
+
+
+/* utils */
+const isUpdate = ref(false);
+const isOpen = ref(false);
+const resetForm = () => {
+    Object.assign(departmentForm, initialState);
+}
+
+const toggleModal = () => {
+    resetForm();
+    isOpen.value = true;
+    isUpdate.value = false
+}
 
 
 </script>

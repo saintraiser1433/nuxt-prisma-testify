@@ -21,10 +21,10 @@ export interface CourseModel extends Timestamped {
 // Exam Model
 export interface ExamModel extends Timestamped {
     exam_id?: number;
-    exam_title?: string;
-    description?: string;
-    time_limit?: number;
-    status?: boolean;
+    exam_title: string;
+    description: string;
+    time_limit: number;
+    status: boolean;
     Question?: QuestionModel[]; // Optional relationship
     Answers?: AnswersModel[]; // Optional relationship
     ExamAttempt?: ExamAttemptModel[]; // Optional relationship
@@ -73,22 +73,22 @@ export interface ExamAttemptModel extends Timestamped {
 // Department Model
 export interface DepartmentModel extends Timestamped {
     department_id?: number;
-    department_name?: string;
-    status?: boolean;
+    department_name: string;
+    status: boolean;
     Deans?: DeansModel; // Optional relationship
 }
 
 // Deans Model
 export interface DeansModel extends Timestamped {
-    deans_id?: number;
-    first_name?: string;
-    last_name?: string;
-    middle_name?: string;
+    deans_id: number;
+    first_name: string;
+    last_name: string;
+    middle_name: string;
     fullname?: string;
-    username?: string;
-    password?: string;
-    status?: boolean
-    department_id?: number; // Unique
+    username: string;
+    password: string;
+    status: boolean
+    department_id: number; // Unique
     department?: DepartmentModel; // Optional relationship
     AssignDeans?: AssignDeansModel[]; // Optional relationship
 }
@@ -278,6 +278,11 @@ export interface LegendModel {
 
 export type ProgressColor = 'rose' | 'primary' | 'cyan' | 'emerald';
 
+
+export type IndexExamAnswers = {
+    indexQuestion: number,
+    indexChoice: number
+}
 
 
 

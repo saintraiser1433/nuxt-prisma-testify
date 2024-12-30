@@ -72,12 +72,11 @@ const props = defineProps({
 
 const { formData, isUpdate } = toRefs(props)
 const { $joi } = useNuxtApp()
-const formExam = ref<ExamModel>({
-    exam_id: undefined,
-    exam_title: undefined,
-    description: undefined,
-    time_limit: undefined,
-    status: undefined,
+const formExam = reactive<ExamModel>({
+    exam_title: '',
+    description: '',
+    time_limit: 0,
+    status: false
 });
 
 const schema = $joi.object({
@@ -105,7 +104,11 @@ watch(
     formData,
     (newData) => {
         if (newData) {
-            formExam.value = { ...newData };
+            formExam.exam_id = newData.exam_id;
+            formExam.exam_title = newData.exam_title;
+            formExam.description = newData.description;
+            formExam.time_limit = newData.time_limit;
+            formExam.status = newData.status;
         }
     },
     { deep: true, immediate: true }

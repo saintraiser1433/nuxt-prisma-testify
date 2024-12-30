@@ -1,12 +1,12 @@
 <template>
-    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+    <UForm :schema="schema" :state="formDepartment" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Department Name" name="department_name" required>
-            <UInput v-model="state.department_name" color="gray" :ui="{ base: 'capitalize' }" />
+            <UInput v-model="formDepartment.department_name" color="gray" :ui="{ base: 'capitalize' }" />
         </UFormGroup>
         <UFormGroup label="Status" name="status">
-            <UToggle v-model="state.status" :ui="{
-                container:{
-                    base:'dark:bg-white'
+            <UToggle v-model="formDepartment.status" :ui="{
+                container: {
+                    base: 'dark:bg-white'
                 },
                 active: 'bg-primary-500 dark:bg-primary-400',
                 inactive: 'bg-gray-400 dark:bg-primary-500',
@@ -48,10 +48,9 @@ const schema = $joi.object({
     department_id: $joi.number().optional()
 })
 
-const state = ref<DepartmentModel>({
-    department_id: undefined,
-    department_name: undefined,
-    status: undefined
+const formDepartment = reactive<DepartmentModel>({
+    department_name: '',
+    status: false
 
 })
 
@@ -64,7 +63,9 @@ watch(
     formData,
     (newData) => {
         if (newData) {
-            state.value = { ...newData }
+            formDepartment.department_id = newData.department_id
+            formDepartment.department_name = newData.department_name
+            formDepartment.status = newData.status
         }
     },
     { deep: true, immediate: true }

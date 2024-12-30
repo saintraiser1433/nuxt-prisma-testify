@@ -1,7 +1,14 @@
 <template>
     <div>
         <div class="absolute end-5 bottom-20">
-            <UButton type="button" @click="findMissing" variant="solid" color="neon-carrot" size="lg">
+            <UButton type="button" @click="findMissing" variant="solid" color="gray" size="lg" :ui="{
+                color: {
+                    gray: {
+                        solid: 'bg-neon-carrot-500 hover:bg-neon-carrot-600 dark:bg-neon-carrot-500 text-white hover:dark:bg-neon-carrot-600 disabled:bg-neon-carrot-500 aria-disabled:bg-white'
+
+                    }
+                }
+            }">
                 <i-fluent-emoji-flat-magnifying-glass-tilted-left />
                 Find my missing
             </UButton>
@@ -15,49 +22,17 @@
                 <UserDashboardHeader :title="examTitle">
                     <h1 class="text-white font-bold">ITEMS ANSWERED: {{ answerCount }}/{{ totalQuestions }}</h1>
                 </UserDashboardHeader>
-
-
             </template>
             <template #default>
-
-                <UITables :data="questionData" :columns="columns" :has-border="true" :has-column-filter="false"
-                    :hasActionHeader="false" :has-pagination="false" :has-page-count="false" :td="{
-                        base: 'border dark:border-gray-700 align-top',
-                        padding: 'p-0'
-                    }">
-                    <template #question_id-data="{ row, index }">
-                        <div class="font-bold text-gray-800 dark:text-gray-100 p-5">
-                            {{ index + 1 }}
-                        </div>
-                    </template>
-
-                    <template #question-data="{ row, index: indexQuestion }">
-
-                        <div class="w-full h-full p-5 text-wrap">
-                            <p class="font-bold text-gray-800 dark:text-gray-100" v-html="row.question.value"></p>
-                            <div class="grid grid-cols-2 gap-5 mt-2">
-                                <URadio v-for="(method, index) of row.choices"
-                                    :ui="{ base: 'cursor-pointer dark:bg-white ', background: 'dark:bg-white' }"
-                                    :name="`question-${row.question_id.value}`" @click="pushData(indexQuestion, index)"
-                                    :key="method.value" v-bind="method">
-                                    <template #label="{ label }">
-                                        <div class="text-gray-900 dark:text-gray-100" v-html="label"></div>
-                                        {{ }}
-                                    </template>
-                                </URadio>
-                            </div>
-                        </div>
-                    </template>
-
-                </UITables>
-
+                <UserExamQuestions :question-data="questionData" @push-data="pushData" />
             </template>
 
             <template #footer>
-                <UButton type="submit" color="gray" size="md" @click="submitExam" :ui="{
+                <UButton :loading="isLoading" type="submit" color="gray" size="md" @click="submitExam" :ui="{
                     color: {
                         gray: {
-                            solid: 'bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500 text-white hover:dark:bg-emerald-600'
+                            solid: 'bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500 text-white hover:dark:bg-emerald-600 disabled:bg-emerald-500 aria-disabled:bg-white'
+
                         }
                     }
                 }">Submit Exam</UButton>
@@ -69,6 +44,8 @@
 
 
 <script lang="ts" setup>
+
+
 definePageMeta({
     requiredRole: 'examinee',
     layout: 'user',
@@ -81,62 +58,39 @@ useSeoMeta({
     ogTitle: 'Testify User Exam',
     ogDescription: 'This is an examination page',
 });
-const columns = [
-    {
-        key: 'question_id',
-        label: '#',
-        sortable: true,
-        rowClass: 'w-10'
-    },
-    {
-        key: 'question',
-        label: 'Question',
-        sortable: true,
-    }
-];
-
 
 const nuxtApp = useNuxtApp();
 const { info } = useAuthentication();
 const { setAlert } = useAlert();
 const { setToast } = useToasts();
+const store = useExamStore();
 const inf = JSON.parse(info.value);
-
-
-
+const { remainingSeconds, startTimerWithCallBack } = useExamTimer()
+const isLoading = ref(false);
 //rendering list of questions
 const shouldRefetch = ref(0);
 const { data: question, status, error } = await useAPI<ExamDetails>(`/exam/available/${inf.id}`, {
     watch: [shouldRefetch],
 })
-const totalQuestions = computed(() => question.value?.data.length ?? 0);
-const answerCount = computed(() => answerData.value.length);
-const examTitle = computed(() =>
-    question.value?.exam_title ? `EXAM TITLE: ${question.value.exam_title}` : 'NO EXAM AVAILABLE'
-);
-const { isHighlightActive, questionData, pushData, answerData } = useExam(question);
-
-
-
-
-
-
-
-
-//selecting choices
-
-
+const {
+    isHighlightActive,
+    questionData,
+    pushData,
+    answerData,
+    totalQuestions,
+    answerCount,
+    examTitle,
+    findMissing
+} = useExam(question);
 
 //submission of exam 
 const repo = repository<ApiResponse<SubmitExamModel>>(nuxtApp.$api);
-const { remainingSeconds, startTimerWithCallBack } = useExamTimer()
-const store = useExamStore();
 const submitExam = async () => {
     if (answerData.value.length !== question.value?.data.length) {
         setToast('error', 'Please answer all questions before proceeding');
         return;
     }
-    const db = {
+    const res = {
         examinee_id: inf.id,
         exam_id: question?.value?.exam_id,
         details: answerData.value
@@ -145,38 +99,33 @@ const submitExam = async () => {
         setAlert('info', 'Once submitted your answer will be processed ', '', 'Submit').then(
             async (result) => {
                 if (result.isConfirmed) {
-                    try {
-                        const { status, message } = await repo.submitExam(db);
-                        if (status === 201) {
-
-                            answerData.value = [];
-                            shouldRefetch.value++;
-                        } else {
-                            setToast('error', message || 'An error occurred');
-                        }
-                    } catch (error: any) {
-                        setToast('error', error.data.message || 'An error occurred');
-                    }
+                    await performSubmit(res);
                 }
             }
         )
     } else {
-        try {
-            const { status, message } = await repo.submitExam(db);
-            if (status === 201) {
-
-                answerData.value = [];
-                shouldRefetch.value++;
-            } else {
-                setToast('error', message || 'An error occurred');
-            }
-        } catch (error: any) {
-            setToast('error', error.data.message || 'An error occurred');
-        }
+        await performSubmit(res);
     }
-
-
 }
+
+const performSubmit = async (res: SubmitExamModel) => {
+    isLoading.value = true
+    try {
+        const { status, message } = await repo.submitExam(res);
+        if (status === 201) {
+
+            answerData.value = [];
+            shouldRefetch.value++;
+        } else {
+            setToast('error', message || 'An error occurred');
+        }
+    } catch (error: any) {
+        setToast('error', error.data.message || 'An error occurred');
+    } finally {
+        isLoading.value = false;
+    }
+}
+
 const handleTimeUp = async () => {
     setToast('warning', 'Time\'s up');
     await submitExam();
@@ -192,10 +141,10 @@ watch(
             startTimerWithCallBack(timeLimit, handleTimeUp);
             isHighlightActive.value = false;
         }
-
         if (errorValue) {
             store.setExam();
             await navigateTo({ name: 'user-redirecting' });
+            return;
         }
     },
     {
@@ -203,13 +152,5 @@ watch(
         deep: true
     }
 );
-
-
-const findMissing = () => {
-    isHighlightActive.value = false;
-    isHighlightActive.value = true;
-};
-
-
 
 </script>
