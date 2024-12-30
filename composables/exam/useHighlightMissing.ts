@@ -21,13 +21,13 @@ export const useExamHighlight = (questionData: Ref<ExamQuestion[]>, answerData: 
         const firstMissing = missingQuestions.value[0];
         isHighlightActive.value = false;
         isHighlightActive.value = true;
-        
-      
+
+
         if (firstMissing) {
             const element = document.getElementById(String(firstMissing.index));
             element?.scrollIntoView({ behavior: 'smooth' });
         }
-    }; 0
+    };
 
     return {
         isHighlightActive,

@@ -19,14 +19,14 @@
 
             </template>
             <template #default>
-                {{ questionData }}
+
                 <UITables :data="questionData" :columns="columns" :has-border="true" :has-column-filter="false"
                     :hasActionHeader="false" :has-pagination="false" :has-page-count="false" :td="{
                         base: 'border dark:border-gray-700 align-top',
                         padding: 'p-0'
                     }">
                     <template #question_id-data="{ row, index }">
-                        <div class="font-bold p-5">
+                        <div class="font-bold text-gray-800 dark:text-gray-100 p-5">
                             {{ index + 1 }}
                         </div>
                     </template>
@@ -34,14 +34,15 @@
                     <template #question-data="{ row, index: indexQuestion }">
 
                         <div class="w-full h-full p-5 text-wrap">
-                            <p class="font-bold" v-html="row.question.value"></p>
+                            <p class="font-bold text-gray-800 dark:text-gray-100" v-html="row.question.value"></p>
                             <div class="grid grid-cols-2 gap-5 mt-2">
-                                <URadio v-for="(method, index) of row.choices" :ui="{ base: 'cursor-pointer' }"
-                                    v-model="row.selectedChoice" @click="pushData(indexQuestion, index)"
+                                <URadio v-for="(method, index) of row.choices"
+                                    :ui="{ base: 'cursor-pointer dark:bg-white ', background: 'dark:bg-white' }"
+                                    :name="`question-${row.question_id.value}`" @click="pushData(indexQuestion, index)"
                                     :key="method.value" v-bind="method">
                                     <template #label="{ label }">
-                                        <div v-html="label"></div>
-                                        {{ row.selectedChoice }}
+                                        <div class="text-gray-900 dark:text-gray-100" v-html="label"></div>
+                                        {{ }}
                                     </template>
                                 </URadio>
                             </div>
@@ -62,9 +63,8 @@
                 }">Submit Exam</UButton>
             </template>
         </UICard>
-        {{ highlightMissing }}
     </div>
-    {{ questionData }}
+
 </template>
 
 
@@ -96,12 +96,10 @@ const columns = [
 ];
 
 
-
 const nuxtApp = useNuxtApp();
 const { info } = useAuthentication();
 const { setAlert } = useAlert();
 const { setToast } = useToasts();
-
 const inf = JSON.parse(info.value);
 
 
@@ -116,54 +114,18 @@ const answerCount = computed(() => answerData.value.length);
 const examTitle = computed(() =>
     question.value?.exam_title ? `EXAM TITLE: ${question.value.exam_title}` : 'NO EXAM AVAILABLE'
 );
-const questionData = computed(() => {
-    const answeredIds = answerData.value.map(item => item.question_id);
+const { isHighlightActive, questionData, pushData, answerData } = useExam(question);
 
-    return question.value?.data.map((item) => ({
-        question_id: {
-            value: Number(item.question_id),
-            class: answeredIds.some((x) => x === Number(item.question_id)) ? 'bg-red-500' : ''
-        },
-        question: {
-            value: String(item.question),
-            class: answeredIds.some((x) => x === Number(item.question_id)) ? 'bg-red-500' : ''
-        },
-        selectedChoice: null,
-        choices: item.choices
-    })) ?? [];
-});
+
+
+
+
+
 
 
 //selecting choices
-const answerData = ref<ExamAnswerDetails[]>([])
-const { isHighlightActive, scrollToFirstMissing, highlightMissing } = useExamHighlight(questionData, answerData);
-const pushData = (indexQuestion: number, indexChoice: number) => {
-    if (!question?.value?.data || !question.value.data[indexQuestion]) {
-        setToast('error', 'Invalid question data')
-        return;
-    }
-    const currentQuestion = question.value.data[indexQuestion];
-    const currentChoice = currentQuestion.choices[indexChoice];
-    if (!currentChoice) {
-        setToast('error', 'Invalid choice')
-        return;
-    }
-    const checkValue = answerData.value.findIndex(
-        (item) => item.question_id === currentQuestion.question_id.value
-    );
-    const newEntry: ExamAnswerDetails = {
-        choices_id: currentChoice.value,
-        question_id: currentQuestion.question_id.value,
-    };
-
-    if (checkValue !== -1) {
-        answerData.value[checkValue] = newEntry;
-    } else {
-        answerData.value.push(newEntry);
-    }
 
 
-}
 
 //submission of exam 
 const repo = repository<ApiResponse<SubmitExamModel>>(nuxtApp.$api);
@@ -244,7 +206,8 @@ watch(
 
 
 const findMissing = () => {
-    scrollToFirstMissing();
+    isHighlightActive.value = false;
+    isHighlightActive.value = true;
 };
 
 
