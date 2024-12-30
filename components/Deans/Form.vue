@@ -33,7 +33,6 @@
 import type { FormSubmitEvent } from '#ui/types'
 const emits = defineEmits<{
   (e: 'dataDeans', payload: DeansModel): void;
-  (e: 'reset'): void;
 }>();
 
 const props = defineProps({

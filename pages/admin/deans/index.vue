@@ -112,7 +112,6 @@ const { data: department, error: errordept } = await useAPI<DepartmentModel[]>('
 if (department && department.value) {
     departmentData.value = department.value;
 } else {
-    console.error(errordept.value)
     setToast('error', errordept.value?.data.message || 'An error occurred');
 }
 const transformDepartment = computed(() => {

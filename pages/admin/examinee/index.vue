@@ -12,20 +12,20 @@
         </div>
 
       </template>
-      <ExamineeForm :form-data="data" :is-update="isUpdate" @data-examinee="submitExaminee"></ExamineeForm>
+      <ExamineeForm v-model="examineeForm" :is-update="isUpdate" @data-examinee="submitExaminee" />
     </UICard>
 
   </UModal>
 
   <div class="grid grid-cols-5 gap-5">
-    <div class="col-span-5" >
+    <div class="col-span-5">
       <UICard>
         <template #header>
           <h1 class="text-2xl lg:text-lg  font-semibold">List of Examinee's</h1>
         </template>
         <ExamineeList :is-loading="status" :examinee-data="transformData" @toggle-modal="toggleModal"
           @update="editExaminee" @delete="removeExaminee" />
-        </UICard>
+      </UICard>
 
     </div>
   </div>
@@ -46,19 +46,14 @@ useSeoMeta({
   ogDescription: 'CRUD for Examinee'
 });
 
-
-
 const { $api, payload, static: stat } = useNuxtApp()
 const { setToast } = useToasts();
-const isUpdate = ref(false);
-const { setAlert } = useAlert()
-const examineeRepo = repository<ApiResponse<User>>($api)
-const examineeData = ref<User[]>([])
-const isOpen = ref(false);
-const data = ref<User>({})
+const { setAlert } = useAlert();
+
+
+//fetch Examinee
 const status = ref(false);
-
-
+const examineeData = ref<User[]>([])
 const fetchExaminee = async () => {
   status.value = true;
   try {
@@ -82,9 +77,6 @@ const fetchExaminee = async () => {
   }
 }
 
-fetchExaminee();
-
-
 
 const transformData = computed(() => {
   return examineeData.value.map((item) => {
@@ -96,8 +88,19 @@ const transformData = computed(() => {
   })
 })
 
+await fetchExaminee();
+
+
+//submit examinee
+const initialState = {
+  id: undefined,
+  first_name: "",
+  last_name: "",
+  middle_name: ""
+};
+const examineeForm = reactive<User>({ ...initialState })
+const examineeRepo = repository<ApiResponse<User>>($api)
 const submitExaminee = async (response: User) => {
-  console.log(response);
   try {
     if (!isUpdate.value) {
       const res = await examineeRepo.addExaminee(response);
@@ -117,24 +120,12 @@ const submitExaminee = async (response: User) => {
   }
 }
 
-/* Examinee */
-
-const toggleModal = () => {
-  data.value = {}
-  isOpen.value = true;
-  isUpdate.value = false
-}
-
-
 
 const editExaminee = (response: User) => {
-  console.log(response)
-  data.value = {
-    id: response.id,
-    first_name: response.first_name,
-    last_name: response.last_name,
-    middle_name: response.middle_name,
-  };
+  examineeForm.id = response.id
+  examineeForm.first_name = response.first_name
+  examineeForm.last_name = response.last_name
+  examineeForm.middle_name = response.middle_name
   isOpen.value = true;
   isUpdate.value = true
 }
@@ -154,6 +145,19 @@ const removeExaminee = (id: string) => {
       }
     }
   )
+}
+
+//utils
+const isOpen = ref(false);
+const isUpdate = ref(false);
+
+const resetForm = () => {
+  Object.assign(examineeForm, initialState);
+}
+const toggleModal = () => {
+  resetForm()
+  isOpen.value = true;
+  isUpdate.value = false
 }
 
 

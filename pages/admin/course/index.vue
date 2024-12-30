@@ -11,7 +11,7 @@
             @click="isOpen = false" />
         </div>
       </template>
-      <CourseForm :form-data="courseForm" :is-update="isUpdate" @data-course="submitCourse"></CourseForm>
+      <CourseForm v-model="courseForm" @data-course="submitCourse" />
     </UICard>
   </UModal>
 

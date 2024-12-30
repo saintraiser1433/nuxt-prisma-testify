@@ -1,13 +1,13 @@
 <template>
-    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+    <UForm :schema="schema" :state="model" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="First Name" name="first_name" required>
-            <UInput v-model="state.first_name" color="gray" :ui="{ base: 'capitalize' }" />
+            <UInput v-model="model.first_name" color="gray" :ui="{ base: 'capitalize' }" />
         </UFormGroup>
         <UFormGroup label="Last Name" name="last_name" required>
-            <UInput v-model="state.last_name" color="gray" :ui="{ base: 'capitalize' }" />
+            <UInput v-model="model.last_name" color="gray" :ui="{ base: 'capitalize' }" />
         </UFormGroup>
         <UFormGroup label="Middle Name" name="middle_name" required>
-            <UInput v-model="state.middle_name" color="gray" :ui="{ base: 'capitalize' }" />
+            <UInput v-model="model.middle_name" color="gray" :ui="{ base: 'capitalize' }" />
         </UFormGroup>
         <UButton type="submit" block color="gray" size="md" :ui="{
             color: {
@@ -16,7 +16,7 @@
                 }
             }
         }">Submit</UButton>
-
+        {{ model }}
     </UForm>
 </template>
 
@@ -25,21 +25,17 @@ import type { FormSubmitEvent } from '#ui/types'
 
 const emits = defineEmits<{
     (e: 'dataExaminee', payload: User): void;
-    (e: 'reset'): void;
 }>()
 
+const model = defineModel<User>({ required: true })
 const props = defineProps({
-    formData: {
-        type: Object as PropType<User>,
-        required: true,
-    },
     isUpdate: {
         type: Boolean,
         required: true
     }
 })
 
-const { formData, isUpdate } = toRefs(props)
+const { isUpdate } = toRefs(props)
 const { $username, $password, $joi } = useNuxtApp();
 
 
@@ -58,13 +54,7 @@ const schema = $joi.object({
     id: $joi.string().optional()
 })
 
-const state = ref<User>({
-    id: undefined,
-    first_name: undefined,
-    last_name: undefined,
-    middle_name: undefined,
 
-})
 
 const onSubmit = async (event: FormSubmitEvent<User>) => {
     let data: User;
@@ -80,16 +70,9 @@ const onSubmit = async (event: FormSubmitEvent<User>) => {
         }
     }
     emits('dataExaminee', data)
+
 }
 
 
-watch(
-    formData,
-    (newData) => {
-        if (newData) {
-            state.value = { ...newData }
-        }
-    },
-    { deep: true, immediate: true }
-);
+
 </script>

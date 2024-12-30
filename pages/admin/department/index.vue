@@ -12,8 +12,7 @@
                 </div>
 
             </template>
-            <DepartmentForm :form-data="departmentForm" :is-update="isUpdate" @data-department="submitDepartment">
-            </DepartmentForm>
+            <DepartmentForm v-model="departmentForm" @data-department="submitDepartment" />
         </UICard>
     </UModal>
 

@@ -10,9 +10,8 @@
                     <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
                         @click="isOpen = false" />
                 </div>
-
             </template>
-            <ExamForm :form-data="data" :is-update="isUpdate" @data-exam="submitExam"></ExamForm>
+            <ExamForm :form-data="examForm" :is-update="isUpdate" @data-exam="submitExam"></ExamForm>
         </UICard>
     </UModal>
 
@@ -20,11 +19,10 @@
         <div class="col-span-5">
             <UICard>
                 <template #header>
-
                     <h1 class="text-2xl lg:text-lg font-semibold">List of Exam's</h1>
                 </template>
-                <ExamList :is-loading="status" :exam-data="examData" @toggle-modal="toggleModal" @assign="routeToQuestion" @update="editExam"
-                    @delete="removeExam" />
+                <ExamList :is-loading="status" :exam-data="examData" @toggle-modal="toggleModal"
+                    @assign="routeToQuestion" @update="editExam" @delete="removeExam" />
             </UICard>
         </div>
     </div>
@@ -36,10 +34,7 @@
 <script setup lang="ts">
 definePageMeta({
     requiredRole: 'admin',
-    // middleware: ['checkRole'],
 })
-
-
 useSeoMeta({
     title: 'Testify Exam Module',
     description: 'CRUD for Exam',
@@ -48,27 +43,14 @@ useSeoMeta({
 });
 
 
-
-
-
 const { $api, payload, static: stat } = useNuxtApp()
 const { setToast } = useToasts();
-const isUpdate = ref(false);
 const { setAlert } = useAlert()
-const examRepo = repository<ApiResponse<ExamModel>>($api)
-const examData = ref<ExamModel[]>([])
-const isOpen = ref(false);
 
-const initialState = {
-    department_id: undefined,
-    department_name: "",
-    status: false,
-};
-const departmentForm = reactive<DepartmentModel>({ ...initialState })
-const data = reactive<ExamModel>({})
+
+/* fetch exam */
 const status = ref(false);
-/* Exam */
-
+const examData = ref<ExamModel[]>([])
 const fetchExaminee = async () => {
     status.value = true;
     try {
@@ -92,12 +74,22 @@ const fetchExaminee = async () => {
     }
 }
 
-fetchExaminee();
+await fetchExaminee();
 
 
 
 
+//submit exam
 
+const initialState = {
+    exam_id: undefined,
+    exam_title: "",
+    description: "",
+    time_limit: 0,
+    status: false
+};
+const examRepo = repository<ApiResponse<ExamModel>>($api)
+const examForm = reactive<ExamModel>({ ...initialState })
 const submitExam = async (response: ExamModel) => {
     try {
         if (!isUpdate.value) {
@@ -118,30 +110,14 @@ const submitExam = async (response: ExamModel) => {
     }
 }
 
-const toggleModal = () => {
-    data.value = {}
-    isOpen.value = true;
-    isUpdate.value = false
-}
-
-
-const routeToQuestion = async (id: number) => {
-    await navigateTo(`/admin/exam/${id}`)
-}
-
-
-
-
 const editExam = (response: ExamModel) => {
-    data.value = {
-        exam_id: response.exam_id,
-        description: response.description,
-        exam_title: response.exam_title,
-        time_limit: response.time_limit,
-        status: response.status,
-    };
+    examForm.exam_id = response.exam_id;
+    examForm.description = response.description;
+    examForm.exam_title = response.exam_title;
+    examForm.time_limit = response.time_limit;
+    examForm.status = response.status;
     isOpen.value = true;
-    isUpdate.value = true
+    isUpdate.value = true;
 }
 
 const removeExam = (id: number) => {
@@ -161,6 +137,27 @@ const removeExam = (id: number) => {
         }
     )
 }
+
+
+//utils
+const isOpen = ref(false);
+const isUpdate = ref(false);
+const routeToQuestion = async (id: number) => {
+    await navigateTo(`/admin/exam/${id}`)
+}
+
+const resetForm = () => {
+    Object.assign(examForm, initialState);
+}
+
+const toggleModal = () => {
+    resetForm();
+    isOpen.value = true;
+    isUpdate.value = false
+}
+
+
+
 
 
 

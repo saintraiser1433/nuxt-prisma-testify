@@ -1,10 +1,10 @@
 <template>
-    <UForm :schema="schema" :state="formDepartment" class="space-y-4" @submit="onSubmit">
+    <UForm :schema="schema" :state="model" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Department Name" name="department_name" required>
-            <UInput v-model="formDepartment.department_name" color="gray" :ui="{ base: 'capitalize' }" />
+            <UInput v-model="model.department_name" color="gray" :ui="{ base: 'capitalize' }" />
         </UFormGroup>
         <UFormGroup label="Status" name="status">
-            <UToggle v-model="formDepartment.status" :ui="{
+            <UToggle v-model="model.status" :ui="{
                 container: {
                     base: 'dark:bg-white'
                 },
@@ -28,17 +28,9 @@ import type { FormSubmitEvent } from '#ui/types'
 
 const emits = defineEmits<{
     (e: 'dataDepartment', payload: DepartmentModel): void;
-    (e: 'reset'): void;
-}>()
+}>();
 
-const props = defineProps({
-    formData: {
-        type: Object as PropType<DepartmentModel>,
-        required: true,
-    },
-})
-
-const { formData } = toRefs(props)
+const model = defineModel<DepartmentModel>({ required: true })
 const { $joi } = useNuxtApp()
 const schema = $joi.object({
     department_name: $joi.string().required().messages({
@@ -48,26 +40,12 @@ const schema = $joi.object({
     department_id: $joi.number().optional()
 })
 
-const formDepartment = reactive<DepartmentModel>({
-    department_name: '',
-    status: false
 
-})
 
 const onSubmit = async (event: FormSubmitEvent<DepartmentModel>) => {
     emits('dataDepartment', event.data)
 }
 
 
-watch(
-    formData,
-    (newData) => {
-        if (newData) {
-            formDepartment.department_id = newData.department_id
-            formDepartment.department_name = newData.department_name
-            formDepartment.status = newData.status
-        }
-    },
-    { deep: true, immediate: true }
-);
+
 </script>
