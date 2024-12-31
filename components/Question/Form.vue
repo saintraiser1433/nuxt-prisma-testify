@@ -1,10 +1,10 @@
 <template>
-    <UForm :schema="schema" :state="formQuestion" class="space-y-4" @submit="onSubmit">
+    <UForm :schema="schema" :state="model" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Exam Title" name="exam_title">
             <UInput color="gray" :model-value="examTitle" readonly :ui="{ base: 'uppercase' }" />
         </UFormGroup>
         <UFormGroup label="Enter Question" name="question" required>
-            <UITiptapEditor v-model="formQuestion.question" color="gray"></UITiptapEditor>
+            <UITiptapEditor v-model="model.question" color="gray"></UITiptapEditor>
         </UFormGroup>
         <div class="flex mb-2 border-b dark:border-colorBorder pb-2 ">
             <UButton icon="i-heroicons-plus" color="gray" size="md" @click="addChoice" :ui="{
@@ -22,16 +22,16 @@
 
         <div class="overflow-y-auto max-h-[400px] custom-scrollbar px-1  ">
             <transition-expand group mode="out-in">
-                <div v-for="(choice, index) in formQuestion.Choices" :key="choice.choices_id"
+                <div v-for="(choice, index) in model.Choices" :key="choice.choices_id"
                     class="flex flex-col gap-2 mb-5 p-2 rounded-lg border dark:bg-darken dark:border-gray-700 hover:shadow-sm">
                     <div class="flex items-center justify-between border-b dark:border-gray-700 py-2">
                         <div class="flex flex-row items-center gap-x-2">
-                            <span>Choice {{ convertToLetter(index) }} :</span>
+                            <span>Choice {{ indexToLetter(index) }} :</span>
                             <UCheckbox v-model="choice.status"
-                                :aria-label="'Mark choice ' + convertToLetter(index) + ' as correct'" />
+                                :aria-label="'Mark choice ' + indexToLetter(index) + ' as correct'" />
                         </div>
                         <UButton icon="i-tabler-trash" color="gray" size="xs" @click="removeChoices(index)"
-                            :aria-label="'Remove choice ' + convertToLetter(index)" :ui="{
+                            :aria-label="'Remove choice ' + indexToLetter(index)" :ui="{
                                 color: {
                                     gray: {
                                         solid: 'bg-carnation-500 text-white hover:bg-carnation-600 dark:bg-carnation-500 dark:hover:bg-carnation-600'
@@ -54,7 +54,7 @@
                     Reset Form
                 </UButton>
 
-                <UButton v-if="formQuestion.Choices?.length ?? 0 > 0" type="submit" color="gray" block :ui="{
+                <UButton v-if="model.Choices?.length ?? 0 > 0" type="submit" color="gray" block :ui="{
                     color: {
                         gray: {
                             solid: 'bg-emerald-500 text-white hover:bg-emerald-600 dark:bg-emerald-500 dark:text-white dark:hover:bg-emerald-600'
@@ -79,22 +79,19 @@ const emits = defineEmits<{
     (e: 'dataQuestChoice', payload: QuestionModel): void;
     (e: 'reset'): void;
 }>()
-const props = defineProps({
+defineProps({
     isUpdate: {
         type: Boolean,
         default: false
-    },
-    formData: {
-        type: Object as PropType<QuestionModel>,
-        required: true
     }
 })
+
+const { indexToLetter } = useAlphabet();
 const { params, meta } = useRoute();
-const { isUpdate, formData } = toRefs(props)
 const { $joi } = useNuxtApp()
 
 
-
+const model = defineModel<QuestionModel>({ required: true });
 const schema = $joi.object({
     question_id: $joi.number().optional(),
     exam_id: $joi.number().optional(),
@@ -116,11 +113,7 @@ const schema = $joi.object({
     })
 })
 
-const formQuestion = ref<QuestionModel>({
-    question_id: undefined,
-    question: undefined,
-    Choices: []
-});
+
 
 
 
@@ -128,17 +121,17 @@ const formQuestion = ref<QuestionModel>({
 const examTitle = computed(() => String(meta.examTitle))
 
 const addChoice = () => {
-    if (!formQuestion.value.Choices) {
-        formQuestion.value.Choices = []
+    if (!model.value.Choices) {
+        model.value.Choices = []
     }
-    formQuestion.value.Choices.push({
+    model.value.Choices.push({
         description: '',
         status: false
     })
 }
 
 const removeChoices = (index: number) => {
-    formQuestion.value.Choices = formQuestion.value.Choices?.filter((_, i) => i !== index)
+    model.value.Choices = model.value.Choices?.filter((_, i) => i !== index)
 }
 
 
@@ -147,17 +140,27 @@ const onSubmit = (event: FormSubmitEvent<QuestionModel>) => {
 }
 //watchers
 
-watch(
-    formData,
-    (newData) => {
-        if (newData) {
-            formQuestion.value = JSON.parse(JSON.stringify(newData))
-        }
-    },
-    { deep: true, immediate: true }
-)
+// watch(
+//     formData,
+//     (newData) => {
+//         if (newData) {
+//             formQuestion.value = JSON.parse(JSON.stringify(newData))
+//         }
+//     },
+//     { deep: true, immediate: true }
+// )
 
 const reset = () => {
     emits('reset')
 }
 </script>
+
+
+
+<!-- ol {
+    list-style-type: upper-alpha;
+    columns: 2;
+    -webkit-columns: 2;
+    -moz-columns: 2;
+
+} -->

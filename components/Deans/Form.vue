@@ -1,21 +1,21 @@
 <template>
 
-  <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+  <UForm :schema="schema" :state="model" class="space-y-4" @submit="onSubmit">
     <UFormGroup label="First Name" name="first_name" required>
-      <UInput v-model="state.first_name" color="gray" :ui="{ base: 'capitalize' }" />
+      <UInput v-model="model.first_name" color="gray" :ui="{ base: 'capitalize' }" />
     </UFormGroup>
     <UFormGroup label="Last Name" name="last_name" required>
-      <UInput v-model="state.last_name" color="gray" :ui="{ base: 'capitalize' }" />
+      <UInput v-model="model.last_name" color="gray" :ui="{ base: 'capitalize' }" />
     </UFormGroup>
     <UFormGroup label="Middle Name" name="middle_name" required>
-      <UInput v-model="state.middle_name" color="gray" :ui="{ base: 'capitalize' }" />
+      <UInput v-model="model.middle_name" color="gray" :ui="{ base: 'capitalize' }" />
     </UFormGroup>
     <UFormGroup label="Department" name="department_id" required>
-      <USelect v-model="state.department_id" color="gray" :options="departmentData" :ui="{ base: 'capitalize' }"
+      <USelect v-model="model.department_id" color="gray" :options="departmentData" :ui="{ base: 'capitalize' }"
         option-attribute="name" />
     </UFormGroup>
     <UFormGroup v-if="isUpdate" label="Status" name="status">
-      <UToggle v-model="state.status" />
+      <UToggle v-model="model.status" />
     </UFormGroup>
     <UButton type="submit" block color="gray" size="md" :ui="{
       color: {
@@ -40,17 +40,13 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  formData: {
-    type: Object as PropType<DeansModel>,
-    required: true,
-  },
   departmentData: {
     type: Array as PropType<DepartmentSelection[]>,
     required: true,
   }
 })
 
-const { isUpdate, formData, departmentData } = toRefs(props)
+const { isUpdate, departmentData } = toRefs(props)
 const { $username, $password, $joi } = useNuxtApp();
 
 const schema = $joi.object({
@@ -74,16 +70,7 @@ const schema = $joi.object({
 
 })
 
-const state = ref<DeansModel>({
-  deans_id: 0,
-  first_name: '',
-  last_name: '',
-  middle_name: '',
-  department_id: 0,
-  username: '',
-  password: '',
-  status: false
-})
+const model = defineModel<DeansModel>({ required: true })
 
 
 const onSubmit = async (event: FormSubmitEvent<DeansModel>) => {
@@ -103,14 +90,4 @@ const onSubmit = async (event: FormSubmitEvent<DeansModel>) => {
 }
 
 
-
-watch(
-  formData,
-  (newData) => {
-    if (newData) {
-      state.value = { ...newData }
-    }
-  },
-  { deep: true, immediate: true }
-)
 </script>

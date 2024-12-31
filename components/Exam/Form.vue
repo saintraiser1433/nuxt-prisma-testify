@@ -1,18 +1,18 @@
 <template>
 
-    <UForm :schema="schema" :state="formExam" class="space-y-4" @submit="onSubmit">
+    <UForm :schema="schema" :state="model" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Exam Title" name="exam_title" required>
-            <UInput v-model="formExam.exam_title" color="gray" :ui="{ base: 'uppercase' }" />
+            <UInput v-model="model.exam_title" color="gray" :ui="{ base: 'uppercase' }" />
         </UFormGroup>
         <UFormGroup label="Exam Description" name="description" required>
-            <UInput v-model="formExam.description" color="gray" :ui="{ base: 'capitalize' }" />
+            <UInput v-model="model.description" color="gray" :ui="{ base: 'capitalize' }" />
         </UFormGroup>
         <UFormGroup label="Time Limit" name="time_limit" required>
-            <USelect v-model="formExam.time_limit" color="gray" :options="timeLimit" :ui="{ base: 'uppercase' }"
+            <USelect v-model="model.time_limit" color="gray" :options="timeLimit" :ui="{ base: 'uppercase' }"
                 option-attribute="name" />
         </UFormGroup>
-        <UFormGroup v-if="isUpdate" label="Status" name="status">
-            <UToggle v-model="formExam.status" :ui="{
+        <UFormGroup v-if="props.isUpdate" label="Status" name="status">
+            <UToggle v-model="model.status" :ui="{
                 container: {
                     base: 'dark:bg-white'
                 },
@@ -58,11 +58,8 @@ const emits = defineEmits<{
     (e: 'dataExam', payload: ExamModel): void;
     (e: 'reset'): void;
 }>();
+const model = defineModel<ExamModel>({ required: true });
 const props = defineProps({
-    formData: {
-        type: Object as PropType<ExamModel>,
-        required: true
-    },
     isUpdate: {
         type: Boolean,
         required: true
@@ -70,14 +67,7 @@ const props = defineProps({
 });
 
 
-const { formData, isUpdate } = toRefs(props)
 const { $joi } = useNuxtApp()
-const formExam = reactive<ExamModel>({
-    exam_title: '',
-    description: '',
-    time_limit: 0,
-    status: false
-});
 
 const schema = $joi.object({
     exam_id: $joi.number().optional(),
@@ -100,17 +90,17 @@ const onSubmit = async (event: FormSubmitEvent<ExamModel>) => {
     emits('dataExam', event.data)
 }
 
-watch(
-    formData,
-    (newData) => {
-        if (newData) {
-            formExam.exam_id = newData.exam_id;
-            formExam.exam_title = newData.exam_title;
-            formExam.description = newData.description;
-            formExam.time_limit = newData.time_limit;
-            formExam.status = newData.status;
-        }
-    },
-    { deep: true, immediate: true }
-);
+// watch(
+//     formData,
+//     (newData) => {
+//         if (newData) {
+//             formExam.exam_id = newData.exam_id;
+//             formExam.exam_title = newData.exam_title;
+//             formExam.description = newData.description;
+//             formExam.time_limit = newData.time_limit;
+//             formExam.status = newData.status;
+//         }
+//     },
+//     { deep: true, immediate: true }
+// );
 </script>

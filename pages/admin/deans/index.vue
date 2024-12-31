@@ -1,22 +1,5 @@
 <template>
     <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
-    <UModal v-model="isOpen" prevent-close>
-        <UICard :body="{
-            padding: 'px-4'
-        }">
-            <template #header>
-                <div class="flex items-center justify-between">
-                    <h1 class="text-2xl lg:text-lg font-semibold">Deans Information</h1>
-                    <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
-                        @click="isOpen = false" />
-                </div>
-
-            </template>
-            <DeansForm :form-data="data" :department-data="transformDepartment" :is-update="isUpdate"
-                @data-deans="submitDeans">
-            </DeansForm>
-        </UICard>
-    </UModal>
 
     <UModal :ui="{ width: 'w-full lg:max-w-[1400px]' }" v-model="isOpenAssign" prevent-close>
         <UICard :body="{ padding: 'p-4', base: 'dark:bg-dark-body-950' }">
@@ -53,6 +36,27 @@
         <!-- </UCard> -->
     </UModal>
 
+
+    <!-- deans index -->
+    <UModal v-model="isOpen" prevent-close>
+        <UICard :body="{
+            padding: 'px-4'
+        }">
+            <template #header>
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl lg:text-lg font-semibold">Deans Information</h1>
+                    <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+                        @click="isOpen = false" />
+                </div>
+
+            </template>
+            <DeansForm v-model="deansForm" :department-data="transformDepartment" :is-update="isUpdate"
+                @data-deans="submitDeans">
+            </DeansForm>
+        </UICard>
+    </UModal>
+
+
     <div class="grid grid-cols-5 gap-5">
         <div class="col-span-5">
             <UICard>
@@ -66,7 +70,7 @@
         </div>
     </div>
 
-
+    <!-- end -->
 
 </template>
 
@@ -89,10 +93,9 @@ useSeoMeta({
 
 const { $api, payload, static: stat } = useNuxtApp()
 const { setToast } = useToasts();
-const isUpdate = ref(false);
-const isOpen = ref(false);
 const { setAlert } = useAlert()
-const data = ref<DeansModel>({})
+
+
 
 
 
@@ -215,10 +218,6 @@ const fetchDeans = async () => {
 await fetchDeans();
 
 
-
-
-
-
 const transformDeans = computed(() => {
     return deansData.value.map((item) => {
         const fullname = item.first_name + ' ' + item.last_name + (item.middle_name ? ' ' + item.middle_name[0] + '.' : '');
@@ -237,8 +236,18 @@ const transformDeans = computed(() => {
     })
 })
 
-
-
+//submittion of deans and update
+const initialState = {
+    deans_id: undefined,
+    first_name: '',
+    last_name: '',
+    middle_name: '',
+    department_id: 0,
+    username: undefined,
+    password: undefined,
+    status: false
+}
+const deansForm = reactive<DeansModel>({ ...initialState })
 const submitDeans = async (response: DeansModel) => {
     try {
         if (!isUpdate.value) {
@@ -255,26 +264,33 @@ const submitDeans = async (response: DeansModel) => {
         isUpdate.value = false;
 
     } catch (error: any) {
-        console.error(error.data.error);
-        setToast('error', error.data.error || 'An error occurred');
+        console.error(error.data.message);
+        setToast('error', error.data.message || 'An error occurred');
     }
 }
 
 const editDeans = (response: DeansModel) => {
-    data.value = {
-        deans_id: response.deans_id,
-        first_name: response.first_name,
-        last_name: response.last_name,
-        middle_name: response.middle_name,
-        department_id: response.department_id,
-        status: response.status,
-    };
+    deansForm.deans_id = response.deans_id;
+    deansForm.first_name = response.first_name;
+    deansForm.last_name = response.last_name;
+    deansForm.middle_name = response.middle_name;
+    deansForm.department_id = response.department_id;
+    deansForm.status = response.status;
     isOpen.value = true;
     isUpdate.value = true
 }
 
+
+//utils
+const isUpdate = ref(false);
+const isOpen = ref(false);
+const resetForm = () => {
+    Object.assign(deansForm, initialState);
+}
+
+
 const toggleModal = () => {
-    data.value = {}
+    resetForm();
     isOpen.value = true;
     isUpdate.value = false
 }

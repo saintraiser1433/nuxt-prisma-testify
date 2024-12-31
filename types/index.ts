@@ -33,7 +33,7 @@ export interface ExamModel extends Timestamped {
 // Question Model
 export interface QuestionModel extends Timestamped {
     question_id?: number;
-    question?: string;
+    question: string;
     exam_id?: number;
     Exam?: ExamModel[]; // Optional relationship
     Choices?: ChoicesModel[]; // Optional relationship
@@ -80,13 +80,13 @@ export interface DepartmentModel extends Timestamped {
 
 // Deans Model
 export interface DeansModel extends Timestamped {
-    deans_id: number;
+    deans_id?: number;
     first_name: string;
     last_name: string;
     middle_name: string;
     fullname?: string;
-    username: string;
-    password: string;
+    username?: string;
+    password?: string;
     status: boolean
     department_id: number; // Unique
     department?: DepartmentModel; // Optional relationship

@@ -21,7 +21,6 @@
                         :key="method.value" v-bind="method">
                         <template #label="{ label }">
                             <div class="text-gray-900 dark:text-gray-100" v-html="label"></div>
-                            {{ }}
                         </template>
                     </URadio>
                 </div>

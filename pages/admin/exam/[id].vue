@@ -5,8 +5,8 @@
                 <template #header>
                     <h1 class="text-2xl lg:text-lg font-semibold">Manage Questions</h1>
                 </template>
-                <QuestionForm @data-quest-choice="submitQuestion" :form-data="data" :is-update="isUpdate"
-                    @reset="resetInstance" />
+                <QuestionForm @data-quest-choice="submitQuestion" v-model="formQuestion" :is-update="isUpdate"
+                    @reset="resetForm" />
             </UICard>
 
         </div>
@@ -35,7 +35,7 @@ definePageMeta({
 const { setToast } = useToasts()
 const { setAlert } = useAlert()
 const { params } = useRoute();
-const data = ref<QuestionModel>({})
+
 const isUpdate = ref(false)
 const nuxtApp = useNuxtApp()
 
@@ -61,6 +61,13 @@ if (error.value) {
 
 
 /* Question */
+
+
+const formQuestion = reactive<QuestionModel>({
+    question_id: undefined,
+    question: '',
+    Choices: []
+});
 const submitQuestion = async (data: QuestionModel): Promise<void> => {
     try {
         let response;
@@ -71,7 +78,7 @@ const submitQuestion = async (data: QuestionModel): Promise<void> => {
         }
         setToast('success', response.message)
         shouldRefetch.value++;
-        resetInstance();
+        resetForm();
     } catch (error: any) {
         setToast('error', error.data.message || 'An error occurred');
     }
@@ -79,7 +86,9 @@ const submitQuestion = async (data: QuestionModel): Promise<void> => {
 
 
 const editQuestion = (response: QuestionModel) => {
-    data.value = JSON.parse(JSON.stringify(response))
+    formQuestion.question_id = response.question_id;
+    formQuestion.question = response.question;
+    formQuestion.Choices = response.Choices;
     isUpdate.value = true
 }
 
@@ -100,10 +109,15 @@ const removeQuestion = (id: number) => {
 }
 
 
-const resetInstance = () => {
+const resetForm = () => {
+    formQuestion.question = ''
+    formQuestion.Choices = []
+    formQuestion.question_id = undefined
     isUpdate.value = false
-    data.value = {}
+
 }
+
+
 
 
 

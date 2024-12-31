@@ -11,7 +11,7 @@
                         @click="isOpen = false" />
                 </div>
             </template>
-            <ExamForm :form-data="examForm" :is-update="isUpdate" @data-exam="submitExam"></ExamForm>
+            <ExamForm v-model="examForm" :is-update="isUpdate" @data-exam="submitExam"></ExamForm>
         </UICard>
     </UModal>
 
@@ -59,7 +59,6 @@ const fetchExaminee = async () => {
                 const data = payload.data[key] || stat.data[key]
                 return data;
             },
-            server: false
         })
 
         if (error.value) {
@@ -86,7 +85,7 @@ const initialState = {
     exam_title: "",
     description: "",
     time_limit: 0,
-    status: false
+    status: true
 };
 const examRepo = repository<ApiResponse<ExamModel>>($api)
 const examForm = reactive<ExamModel>({ ...initialState })

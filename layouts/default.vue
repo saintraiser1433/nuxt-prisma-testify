@@ -33,7 +33,7 @@ const parse = JSON.parse(info.value);
 watch(idle, async (newValue: boolean) => {
   if (newValue) {
     await signOut(parse.id);
-    return navigateTo('auth')
+    return navigateTo({ name: 'auth' })
   }
 });
 

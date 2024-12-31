@@ -32,7 +32,7 @@ const props = defineProps({
     }
 })
 
-const { questionData, isLoading } = toRefs(props)
+const { isLoading } = toRefs(props)
 
 const handleUpdate = (val: QuestionModel) => {
     emits('update', val)
@@ -54,14 +54,12 @@ const handleDelete = (id: number) => {
             <td class="max-w-lg whitespace-normal text-wrap">
                 <p class="font-bold mb-2" v-html="row.question"></p>
                 <ol>
-                    <li class="capitalize mx-5" v-for="(choices, index) in row.Choices"
-                        :key="choices.choices_id">
-                        <p :class="{ 'text-success': choices.status }"
-                            v-html="choices.description"></p>
+                    <li class="capitalize mx-5" v-for="(choices, index) in row.Choices" :key="choices.choices_id">
+                        <p :class="{ 'text-success': choices.status }" v-html="choices.description"></p>
                     </li>
                 </ol>
-                
-                
+
+
             </td>
         </template>
         <template #actions-data="{ row, index }">
