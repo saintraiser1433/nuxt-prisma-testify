@@ -81,6 +81,7 @@ export default defineNuxtConfig({
     '@morev/vue-transitions/nuxt',
     "nuxt-tiptap-editor",
     "@nuxt/image",
+    '@nuxtjs/svg-sprite',
   ],
   tiptap: {
     prefix: 'Tiptap',
@@ -88,6 +89,12 @@ export default defineNuxtConfig({
       theme: 'github-dark',
     },
   },
+  svgSprite: {
+    debug: true
+  },
+
+
+
 
 
   runtimeConfig: {
