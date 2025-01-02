@@ -22,8 +22,8 @@
 
                     <div class="text-center text-gray-600 dark:text-gray-300 py-5 font-semibold text-2xl gap-1">
                         <span class="pr-1">Score: </span>
-                        <span class="text-danger">{{ score?.correct }}</span>
-                        <span>/{{ score?.questions ?? 0 }}</span>
+                        <span class="text-danger">{{ score?.total_correct_answers }}</span>
+                        <span>/{{ score?.total_questions ?? 0 }}</span>
                     </div>
 
                     <h2 v-if="!isFinished"
@@ -108,7 +108,7 @@ const shouldRefetch = computed(() => store.refetch)
 const coursesData = computed(() => {
     if (!course.value || !score.value) return []
     return course.value.filter((item) =>
-        item.score <= (score?.value?.correct ?? 0)
+        item.score <= (score?.value?.total_correct_answers ?? 0)
     )
 })
 const { data: course } = await useAPI<CourseModel[]>(`/course`, {
@@ -127,7 +127,7 @@ const { data: summary } = await useAPI<Summary[]>(`/results/summary/${inf.id}`, 
 const { data: score } = await useAPI<GetScore>(`/results/${inf.id}`, {
     watch: [shouldRefetch],
 })
-const { percentage, hexColor, detail } = usePercentage(score?.value?.correct, score?.value?.questions);
+const { percentage, hexColor, detail } = usePercentage(score?.value?.total_correct_answers, score?.value?.total_questions);
 
 
 </script>

@@ -254,10 +254,11 @@ export interface ExamAnswerDetails {
 }
 
 export interface GetScore {
-    correct: number,
-    questions: number,
+    total_correct_answers: number,
+    total_questions: number,
     examCnt: number,
-    examAttempt: number
+    examAttempt: number,
+    fullname?: string
 }
 
 export interface Summary {

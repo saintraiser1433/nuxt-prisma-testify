@@ -39,7 +39,7 @@
             :rows="hasPagination ? paginatedData : data" :columns="columnsTable" class="w-full text-xs" :ui="{
                 base: base || 'border-t dark:border-gray-700 ',
                 thead: 'static',
-                wrapper:'static',
+                wrapper: 'static',
                 td: {
                     padding: td.padding || 'px-4 py-2',
                     base: td.base || '',
@@ -55,7 +55,8 @@
                 ">
             <template #empty-state>
                 <div class="flex flex-col items-center justify-center py-6 gap-3">
-                    <span class="italic text-sm">NO DATA FOUND</span>
+                    <svg-icon name="seticons/emptybox" width="64" height="64" />
+                    <span class="italic text-sm">Oops, nothing here!</span>
                 </div>
             </template>
             <template v-for="(_, name) in $slots" #[name]="slotData">
