@@ -12,7 +12,7 @@
 
         <template #question-data="{ row, index: indexQuestion }">
 
-            <div class="w-full h-full p-5 text-wrap">
+            <div class="w-full h-full p-5 text-wrap" :id="`question-${row.question_id.value}`">
                 <p class="font-bold text-gray-800 dark:text-gray-100" v-html="row.question.value"></p>
                 <div class="grid grid-cols-2 gap-5 mt-2">
                     <URadio v-for="(method, index) of row.choices"

@@ -47,9 +47,28 @@ export const useExam = (question: Ref<ExamDetails | null>) => {
   }
 
   //toggle find my missing
-  const findMissing = () => {
+  const findMissing = async () => {
     isHighlightActive.value = false;
     isHighlightActive.value = true;
+    const answeredIds = answerData.value.map(item => item.question_id);
+    const firstUnanswered = question.value?.data.find(item =>
+      !answeredIds.some(x => x === Number(item.question_id))
+    );
+
+    if (firstUnanswered) {
+      await nextTick(() => {
+        const element = document.getElementById(`question-${firstUnanswered.question_id}`);
+        if (element) {
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+        }
+      });
+    }
+
+
+
   };
 
 

@@ -258,7 +258,7 @@ export interface GetScore {
     total_questions: number,
     examCnt: number,
     examAttempt: number,
-    fullname?: string
+    examineeName?: string
 }
 
 export interface Summary {

@@ -1,10 +1,11 @@
 <template>
     <div class="grid grid-cols-12 gap-3">
         <div class="col-span-12 lg:col-span-4">
-            <RankingTopList :data="topRankings" />
+            <RecordInformation :data="dataResults" />
+        
         </div>
         <div class="col-span-12 lg:col-span-8">
-            <RankingResultList :data="dataResults" />
+            <RecordCourseRecommend :data="topRankings" />
         </div>
     </div>
 

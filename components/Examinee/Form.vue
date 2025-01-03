@@ -16,7 +16,7 @@
                 }
             }
         }">Submit</UButton>
-        {{ model }}
+ 
     </UForm>
 </template>
 

@@ -18,7 +18,7 @@ export const usePercentage = (totalCorrect: number | undefined, totalQuestion: n
         hexColor = '#8482f7';
         detail = 'GOOD';
     } else if (percentage >= 70.00 && percentage <= 89.99) {
-        hexColor = '#063646';
+        hexColor = '#00bad1';
         detail = 'VERY GOOD';
     } else if (percentage >= 90.00 && percentage <= 100) {
         hexColor = '#062d19';

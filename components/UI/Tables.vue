@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex items-center justify-between gap-3 px-4 py-3" v-if="hasActionHeader">
+        <div class="flex items-center justify-between gap-3 px-4 pt-2" v-if="hasActionHeader">
             <div class="flex items-center gap-2">
                 <slot name="action-header"></slot>
             </div>
