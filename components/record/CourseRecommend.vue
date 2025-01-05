@@ -10,15 +10,15 @@
                 <template #increment-data="{ row, index }">
                     <span class="font-bold">{{ index + 1 }}</span>
                 </template>
-                <template #course-data="{ row, index }">
-                    <span class="uppercase">{{ row.course }}</span>
+                <template #description-data="{ row, index }">
+                    <span class="capitalize">{{ row.description }}</span>
                 </template>
                 <template #actions-data="{ row, index }">
                     <div class="flex gap-1">
                         <UButton color="emerald" class="dark:text-white" variant="solid" size="xs">
                             <i-ion-print width="16" height="16" />
                         </UButton>
-                        
+
                     </div>
                 </template>
             </UITables>
@@ -31,7 +31,7 @@ const columns = [{
     label: '#',
     sortable: true
 }, {
-    key: 'course',
+    key: 'description',
     label: 'Course Name',
     sortable: true
 }, {
@@ -42,7 +42,7 @@ const columns = [{
 }]
 defineProps({
     data: {
-        type: Object as PropType<GetScore[]>,
+        type: Object as PropType<CourseModel[]>,
         required: true,
         default: () => [],
     },

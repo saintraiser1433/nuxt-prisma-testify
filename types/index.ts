@@ -254,6 +254,7 @@ export interface ExamAnswerDetails {
 }
 
 export interface GetScore {
+    examineeId: string,
     total_correct_answers: number,
     total_questions: number,
     examCnt: number,

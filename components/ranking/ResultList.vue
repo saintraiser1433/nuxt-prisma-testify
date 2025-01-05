@@ -15,6 +15,7 @@
                 </template>
                 <template #score-data="{ row, index }">
                     {{ row.total_correct_answers }}/{{ row.total_questions }}
+
                 </template>
                 <template #ratings-data="{ row, index }">
                     <UProgress :value="row.successRate" size="xl" :color="row.color" indicator class="relative">
@@ -28,8 +29,9 @@
                 </template>
                 <template #actions-data="{ row, index }">
                     <div class="flex gap-1">
-                        <UButton :to="{ name: 'rankings', params: { examineeId: 1 } }" color="primary"
-                            class="dark:text-white" variant="solid" size="xs">
+
+                        <UButton :to="{ name: 'admin-rankings-examineeId', params: { examineeId: row.examineeId } }"
+                            color="primary" class="dark:text-white" variant="solid" size="xs">
                             <i-bx-show />
                         </UButton>
                     </div>
