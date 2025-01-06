@@ -262,14 +262,30 @@ export interface GetScore {
     examineeName?: string
 }
 
-export interface Summary {
+export interface SummaryData {
     exam_id: number,
     exam_title: string,
     percentage: number,
     total_correct_answer: number,
     total_questions: number,
     success_rate: number
+
 }
+
+
+export interface SummaryResult{
+    examinee_id: string
+    first_name: string,
+    last_name: string,
+    middle_name?: string,
+    gender: "Male" | "Female",
+    birth_date: string,
+    contact_number: string,
+    school: string,
+    address: string
+    data:SummaryData[]
+}
+
 
 //Legend
 type LegendColor = 'red' | 'orange' | 'amber' | 'yellow' | 'lime' | 'green' | 'emerald' | 'teal' | 'rose' | 'primary' | 'carnation' | 'cyan'

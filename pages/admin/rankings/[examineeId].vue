@@ -1,14 +1,13 @@
 <template>
     <div class="grid grid-cols-12 gap-3">
         <div class="col-span-12 lg:col-span-4">
-            <RecordInformation :data="dataResults" />
+            <RecordInformation :data="summaryData" />
 
         </div>
         <div class="col-span-12 lg:col-span-8">
-            <RecordCourseRecommend :data="courseData" />
+            <RecordCourseRecommend :data="courseRecommended" />
         </div>
     </div>
-
 </template>
 
 <script setup lang="ts">
@@ -27,21 +26,33 @@ useSeoMeta({
 
 
 
-const { payload, static: stat } = useNuxtApp()
 const { setToast } = useToasts();
+const { params } = useRoute();
 const courseData = ref<CourseModel[]>([]);
 const status = ref(false);
+const summaryData = ref<SummaryResult[]>([]);
+const courseRecommended = computed(() => {
+    const correctAnswer =  summaryData.value[0].data.reduce((a, b) => a + b.total_correct_answer, 0);
+    return courseData.value.filter((item) =>
+        item.score <= correctAnswer
+    )
+
+})
+const { data, error } = await useAPI<SummaryResult[]>(`/results/summary/${params.examineeId}`);
+
+if(data.value){
+    summaryData.value = data.value;
+}
+
+if (error.value) {
+    setToast('error',error.value.message || 'Failed to fetch items')
+}
+
 
 const fetchCourse = async () => {
     status.value = true;
     try {
-        const { data, error } = await useAPI<CourseModel[]>('/course', {
-            getCachedData(key) {
-                const data = payload.data[key] || stat.data[key]
-                return data;
-            },
-            server: false
-        })
+        const { data, error } = await useAPI<CourseModel[]>('/course')
 
         if (error.value) {
             throw new Error(error.value.message || 'Failed to fetch items')
@@ -56,6 +67,7 @@ const fetchCourse = async () => {
 }
 
 await fetchCourse();
+
 
 
 

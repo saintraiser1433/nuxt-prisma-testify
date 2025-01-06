@@ -55,7 +55,7 @@ const columns = [{
 
 const props = defineProps({
   summaryData: {
-    type: Object as PropType<Summary[]>,
+    type: Object as PropType<SummaryResult[]>,
     required: true
   },
   percentage: {
@@ -77,14 +77,14 @@ const { getProgressBarColor } = useProgressBarColor();
 
 
 const data = computed(() => {
-  return summaryData.value.map((item) => ({
-    exam_id: item.exam_id,
-    exam_title: item.exam_title,
-    success_rate: item.success_rate,
-    correctAnswer: item.total_correct_answer,
-    totalQuestion: item.total_questions,
-    color: getProgressBarColor(item.success_rate)
-  }))
+  return summaryData.value[0].data.map((items) => ({
+    exam_id: items.exam_id,
+    exam_title: items.exam_title,
+    success_rate: items.success_rate,
+    correctAnswer: items.total_correct_answer,
+    totalQuestion: items.total_questions,
+    color: getProgressBarColor(items.success_rate)
+  }));
 });
 
 

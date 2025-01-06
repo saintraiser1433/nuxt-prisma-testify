@@ -63,8 +63,9 @@
                         <UserDashboardHeader title="STATISTICAL DASHBOARD" icon="/images/data.png" />
                     </template>
                     <UserDashboardLegends />
-                    <UserDashboardStatiscal :summary-data="summary ?? []" :percentage="percentage" :hex-color="hexColor"
-                        :label="detail" />
+                    <UserDashboardStatiscal :summary-data="summaryData ?? []" :percentage="percentage"
+                        :hex-color="hexColor" :label="detail" />
+                    <!-- {{ summary }} -->
                 </UICard>
 
             </div>
@@ -98,18 +99,23 @@ useSeoMeta({
 
 
 const { info } = useAuthentication();
+const { payload, static: stat } = useNuxtApp();
+const { setToast } = useToasts();
 const inf = JSON.parse(info.value);
-
-
+const status = ref(false);
+const summaryData = ref<SummaryResult[]>([]);
 //fetch list of courses base on score
 const store = useExamStore();
 const shouldRefetch = computed(() => store.refetch)
+
 const coursesData = computed(() => {
     if (!course.value || !score.value) return []
     return course.value.filter((item) =>
         item.score <= (score?.value?.total_correct_answers ?? 0)
     )
 })
+
+
 const { data: course } = await useAPI<CourseModel[]>(`/course`, {
     watch: [shouldRefetch],
 })
@@ -117,12 +123,38 @@ const { data: course } = await useAPI<CourseModel[]>(`/course`, {
 
 
 //statistical details
+
 const examineeName = computed(() => `${inf.last_name}, ${inf.first_name} ${inf.middle_name[0]}.`)
 const isFinished = computed(() => score?.value?.examCnt === score?.value?.examAttempt);
 const examAttempts = computed(() => `Exam Finished ${score.value?.examAttempt ?? 0} out of ${score.value?.examCnt ?? 0}`)
-const { data: summary } = await useAPI<Summary[]>(`/results/summary/${inf.id}`, {
-    watch: [shouldRefetch],
-})
+
+const fetchSummary = async () => {
+    status.value = true;
+    try {
+        const { data, error } = await useAPI<SummaryResult[]>(`/results/summary/${inf.id}`, {
+            getCachedData(key) {
+                const data = payload.data[key] || stat.data[key]
+                return data;
+            },
+            watch: [shouldRefetch],
+        })
+
+        if (error.value) {
+            throw new Error(error.value.message || 'Failed to fetch items')
+        }
+
+        summaryData.value = data.value || [];
+
+    } catch (error) {
+        setToast('error', error instanceof Error ? error.message : 'An unexpected error occurred')
+    } finally {
+        status.value = false;
+    }
+}
+
+await fetchSummary();
+
+
 const { data: score } = await useAPI<GetScore>(`/results/${inf.id}`, {
     watch: [shouldRefetch],
 })

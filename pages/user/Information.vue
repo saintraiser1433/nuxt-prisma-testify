@@ -53,7 +53,7 @@ const onSubmit = async (onResponse: Followup) => {
         if (inf) {
             const data = {
                 ...onResponse,
-                ...{ examineeId: inf.id }
+                ...{ examinee_id: inf.id }
             }
             const response = await followUp.addFollowup(data);
             if (response.status === 201) {
