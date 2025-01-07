@@ -1,8 +1,8 @@
 <template>
   <div class="grid grid-cols-12 gap-2">
     <div class="col-span-12 lg:col-span-9 ">
-      <UITables :data="data" :columns="columns" :has-border="true" :has-action-header="true" :has-column-filter="true"
-        :td="{
+      <UITables :data="data" :columns="columns" :is-loading="isLoading" :has-border="true" :has-action-header="true"
+        :has-column-filter="true" :td="{
           base: 'border dark:border-gray-700 align-top'
         }">
         <template #exam_title-data="{ row, index }">
@@ -58,6 +58,11 @@ const props = defineProps({
     type: Object as PropType<SummaryResult[]>,
     required: true
   },
+  isLoading: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
   percentage: {
     type: Number,
     required: true
@@ -77,6 +82,8 @@ const { getProgressBarColor } = useProgressBarColor();
 
 
 const data = computed(() => {
+  if (!summaryData.value[0] || !summaryData.value[0].data) return [];
+
   return summaryData.value[0].data.map((items) => ({
     exam_id: items.exam_id,
     exam_title: items.exam_title,

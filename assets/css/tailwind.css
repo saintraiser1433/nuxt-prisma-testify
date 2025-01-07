@@ -133,20 +133,20 @@
 
   /* Switch */
   .switch input {
-    @apply opacity-0 h-0 w-0; /* Hide the checkbox */
+    @apply opacity-0 h-0 w-0;
   }
 
   .switch {
-    @apply relative inline-block w-12 h-6 cursor-pointer; /* Set dimensions and cursor */
+    @apply relative inline-block w-12 h-6 cursor-pointer; 
   }
 
   .switch__slider {
-    @apply relative inline-block w-full h-full bg-gray-600 rounded-full transition-colors duration-300; /* Background and transition */
+    @apply relative inline-block w-full h-full bg-gray-600 rounded-full transition-colors duration-300; 
   }
 
   .switch__slider::before {
     content: "";
-    @apply absolute h-[1.1rem] w-[1.2rem] left-[3px] bottom-[3px] bg-gray-300 rounded-full transition-transform duration-300; /* Knob styles */
+    @apply absolute h-[1.1rem] w-[1.2rem] left-[3px] bottom-[3px] bg-gray-300 rounded-full transition-transform duration-300; 
   }
 
   /* Custom Scrollbar */
