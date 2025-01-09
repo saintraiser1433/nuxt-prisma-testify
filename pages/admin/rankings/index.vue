@@ -4,15 +4,13 @@
             <RankingTopList :data="topRankings" />
         </div>
         <div class="col-span-12 lg:col-span-8">
-            <RankingResultList :data="dataResults" />
+            <RankingResultList :is-loading="statuses" :data="dataResults" />
         </div>
     </div>
 
 </template>
 
 <script setup lang="ts">
-
-
 definePageMeta({
     requiredRole: 'admin',
 
@@ -29,33 +27,20 @@ useSeoMeta({
 const { payload, static: stat } = useNuxtApp()
 const { setToast } = useToasts();
 const { getProgressBarColor } = useProgressBarColor();
-const resultData = ref<GetScore[]>([]);
-const status = ref(false);
+const resultData = computed(() => data.value || []);
+const statuses = computed(() => status.value === 'pending');
 
-const fetchResult = async () => {
-    status.value = true;
-    try {
-        const { data, error } = await useAPI<GetScore[]>('/results', {
-            getCachedData(key) {
-                const data = payload.data[key] || stat.data[key]
-                return data;
-            },
-            server: false
-        })
+const { data, status, error } = await useAPI<GetScore[]>('/results', {
+    getCachedData(key) {
+        const data = payload.data[key] || stat.data[key]
+        return data;
+    },
+    server: false
+})
 
-        if (error.value) {
-            throw new Error(error.value.message || 'Failed to fetch items')
-        }
-
-        resultData.value = data.value || [];
-    } catch (error) {
-        setToast('error', error instanceof Error ? error.message : 'An unexpected error occurred')
-    } finally {
-        status.value = false;
-    }
+if (error.value) {
+    setToast('error', error.value.message || 'Failed to fetch items')
 }
-
-await fetchResult();
 
 
 

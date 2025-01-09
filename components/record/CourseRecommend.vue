@@ -46,6 +46,10 @@ defineProps({
         required: true,
         default: () => [],
     },
-
+    isLoading: {
+        type: Boolean,
+        required: true,
+        default: true
+    }
 })
 </script>

@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   routeRules: {
     '/': { redirect: '/auth' },
-    // '/admin/**': { ssr: false },
+    // '/admin/home': { ssr: true },
   },
 
   app: {
@@ -82,6 +82,7 @@ export default defineNuxtConfig({
     "nuxt-tiptap-editor",
     "@nuxt/image",
     '@nuxtjs/svg-sprite',
+    "nuxt-echarts",
   ],
   tiptap: {
     prefix: 'Tiptap',
@@ -91,6 +92,11 @@ export default defineNuxtConfig({
   },
   svgSprite: {
     debug: true
+  },
+  echarts: {
+    renderer: ['svg', 'canvas'],
+    charts: ['BarChart', 'LineChart', 'PieChart'],
+    components: ['DatasetComponent', 'GridComponent', 'TooltipComponent']
   },
 
 

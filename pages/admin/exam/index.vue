@@ -21,7 +21,7 @@
                 <template #header>
                     <h1 class="text-2xl lg:text-lg font-semibold">List of Exam's</h1>
                 </template>
-                <ExamList :is-loading="status" :exam-data="examData" @toggle-modal="toggleModal"
+                <ExamList :is-loading="statuses" :exam-data="examData" @toggle-modal="toggleModal"
                     @assign="routeToQuestion" @update="editExam" @delete="removeExam" />
             </UICard>
         </div>
@@ -49,31 +49,19 @@ const { setAlert } = useAlert()
 
 
 /* fetch exam */
-const status = ref(false);
-const examData = ref<ExamModel[]>([])
-const fetchExaminee = async () => {
-    status.value = true;
-    try {
-        const { data, error } = await useAPI<ExamModel[]>('/exam', {
-            getCachedData(key) {
-                const data = payload.data[key] || stat.data[key]
-                return data;
-            },
-        })
+const statuses = computed(() => status.value === 'pending');
+const examData = computed(() => data.value || []);
 
-        if (error.value) {
-            throw new Error(error.value.message || 'Failed to fetch items')
-        }
+const { data,status, error } = await useAPI<ExamModel[]>('/exam', {
+    getCachedData(key) {
+        const data = payload.data[key] || stat.data[key]
+        return data;
+    },
+})
 
-        examData.value = data.value || [];
-    } catch (error) {
-        setToast('error', error instanceof Error ? error.message : 'An unexpected error occurred')
-    } finally {
-        status.value = false;
-    }
+if (error.value) {
+    throw new Error(error.value.message || 'Failed to fetch items')
 }
-
-await fetchExaminee();
 
 
 

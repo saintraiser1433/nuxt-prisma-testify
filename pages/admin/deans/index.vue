@@ -27,7 +27,7 @@
                         <template #header>
                             <h1 class="text-2xl lg:text-lg font-semibold">List of Courses Assign</h1>
                         </template>
-                        <DeansAssignList :assign-data="assign?.assignCourses ?? []" @delete="removeAssign" />
+                        <DeansAssignList :is-loading="statusAssign" :assign-data="assign?.assignCourses ?? []" @delete="removeAssign" />
                     </UICard>
 
                 </div>
@@ -95,12 +95,8 @@ const { $api, payload, static: stat } = useNuxtApp()
 const { setToast } = useToasts();
 const { setAlert } = useAlert()
 
-
-
-
-
 /* Department */
-const departmentData = ref<DepartmentModel[]>([])
+const departmentData = computed(() => department.value || []);
 const { data: department, error: errordept } = await useAPI<DepartmentModel[]>('/department', {
     getCachedData(key) {
         const data = payload.data[key] || stat.data[key]
@@ -112,11 +108,10 @@ const { data: department, error: errordept } = await useAPI<DepartmentModel[]>('
     server: false
 
 })
-if (department && department.value) {
-    departmentData.value = department.value;
-} else {
+if (errordept.value) {
     setToast('error', errordept.value?.data.message || 'An error occurred');
 }
+
 const transformDepartment = computed(() => {
     return departmentData.value.map((item) => ({
         name: item.department_name,
@@ -130,7 +125,9 @@ const shouldAssign = ref(0);
 const deansId = ref(0);
 const deansName = ref('');
 const assignDeansRepo = repository<ApiResponse<AssignDeansInfoData>>($api)
-const { data: assign, error: assignError } = await useAsyncData('assign', async () => {
+const statusAssign = computed(() => assignStatus.value === 'pending');
+const { data: assign,status:assignStatus, error: assignError } = await useAsyncData('assign', async () => {
+    
     const [assignCourses, filteredCourses] = await Promise.all([
         assignDeansRepo.getAssignDeans(deansId.value),
         assignDeansRepo.getCourseFiltered()
@@ -145,8 +142,13 @@ const { data: assign, error: assignError } = await useAsyncData('assign', async 
     }
 }, {
     immediate: false,
+    server:false,
     watch: [shouldAssign]
 })
+
+if (assignError.value) {
+    setToast('error', assignError.value.message || 'An error occurred');
+}
 
 
 
@@ -188,34 +190,22 @@ const removeAssign = async (deansId: number, courseId: number) => {
 
 /* Deans */
 const deansRepo = repository<ApiResponse<DeansModel>>($api)
-const deansData = ref<DeansModel[]>([])
-const statusDean = ref(false);
-
-const fetchDeans = async () => {
-    statusDean.value = true;
-    try {
-        const { data, error } = await useAPI<DeansModel[]>('/deans', {
-            getCachedData(key) {
-                const data = payload.data[key] || stat.data[key]
-                if (!data) {
-                    return
-                }
-                return data;
-            },
-
-        })
-        if (error.value) {
-            throw new Error(error.value.message || 'Failed to fetch items')
+const deansData = computed(() => data.value || []);
+const statusDean = computed(() => status.value === 'pending');
+const { data, status, error } = await useAPI<DeansModel[]>('/deans', {
+    getCachedData(key) {
+        const data = payload.data[key] || stat.data[key]
+        if (!data) {
+            return
         }
-        deansData.value = data.value || [];
-    } catch (error) {
-        setToast('error', error instanceof Error ? error.message : 'An unexpected error occurred')
-    } finally {
-        statusDean.value = false;
-    }
+        return data;
+    },
+
+})
+if (error.value) {
+    setToast('error', error.value.message || 'Failed to fetch items')
 }
 
-await fetchDeans();
 
 
 const transformDeans = computed(() => {

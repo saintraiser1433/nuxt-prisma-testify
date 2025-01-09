@@ -22,7 +22,7 @@
                 <template #header>
                     <h1 class="text-2xl lg:text-lg font-semibold">List of Department's</h1>
                 </template>
-                <DepartmentList :is-loading="status" :department-data="departmentData" @update="editDepartment"
+                <DepartmentList :is-loading="statuses" :department-data="departmentData" @update="editDepartment"
                     @delete="removeDepartment" @toggle-modal="toggleModal" />
             </UICard>
         </div>
@@ -51,31 +51,21 @@ const { setAlert } = useAlert()
 
 
 //fetch department
-const status = ref(false);
-const departmentData = ref<DepartmentModel[]>([])
-const fetchDepartment = async () => {
-    status.value = true;
-    try {
-        const { data: department, error: errordept } = await useAPI<DepartmentModel[]>('/department', {
-            getCachedData(key) {
-                const data = payload.data[key] || stat.data[key]
-                return data;
-            },
-        })
 
-        if (errordept.value) {
-            throw new Error(errordept.value.message || 'Failed to fetch items')
-        }
+const departmentData = computed(() => department.value || []);
+const statuses = computed(() => status.value === 'pending');
+const { data: department, status, error: errordept } = await useAPI<DepartmentModel[]>('/department', {
+    server:false,
+    getCachedData(key) {
+        const data = payload.data[key] || stat.data[key]
+        return data;
+    },
+})
 
-        departmentData.value = department.value || [];
-    } catch (error) {
-        setToast('error', error instanceof Error ? error.message : 'An unexpected error occurred')
-    } finally {
-        status.value = false;
-    }
+if (errordept.value) {
+    throw new Error(errordept.value.message || 'Failed to fetch items')
 }
 
-await fetchDepartment()
 
 
 //submit department

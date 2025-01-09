@@ -37,6 +37,7 @@
     "jwt-decode": "^4.0.0",
     "nanoid": "^5.0.7",
     "nuxt": "^3.13.2",
+    "nuxt-echarts": "^0.2.4",
     "nuxt-tiptap-editor": "^2.0.0",
     "pinia": "^2.2.4",
     "sass-embedded": "^1.81.0",

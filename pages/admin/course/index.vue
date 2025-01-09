@@ -21,7 +21,7 @@
         <template #header>
           <h1 class="text-2xl lg:text-lg font-semibold">List of Course's</h1>
         </template>
-        <CourseList :is-loading="status" :course-data="courseData" @update="editCourse" @delete="removeCourse"
+        <CourseList :is-loading="statuses" :course-data="courseData" @update="editCourse" @delete="removeCourse"
           @toggleModal="toggleModal" />
       </UICard>
     </div>
@@ -52,37 +52,22 @@ const isUpdate = ref(false);
 const isOpen = ref(false);
 
 /* fetch course */
-const courseData = ref<CourseModel[]>([])
-const status = ref(false);
-const fetchCourse = async () => {
-  status.value = true;
-  try {
-    const { data: course, error } = await useAPI<CourseModel[]>('/course', {
-      getCachedData(key) {
-        const data = payload.data[key] || stat.data[key]
-        if (!data) {
-          return
-        }
-        return data;
-      },
+const courseData = computed(() => data.value || []);
+const statuses = computed(() => status.value === 'pending');
+const { data, status, error } = await useAPI<CourseModel[]>('/course', {
+  server:false,
+  getCachedData(key) {
+    const data = payload.data[key] || stat.data[key]
+    if (!data) {
+      return
+    }
+    return data;
+  },
 
-    })
-    if (error.value) {
-      throw new Error(error.value.message || 'Failed to fetch items')
-    }
-    courseData.value = course.value || [];
-  } catch (error) {
-    if (error instanceof Error) {
-      setToast('error', error.message);
-    } else {
-      setToast('error', 'An unexpected error occurred');
-    }
-  } finally {
-    status.value = false;
-  }
+})
+if (error.value) {
+  throw new Error(error.value.message || 'Failed to fetch items')
 }
-
-await fetchCourse();
 
 
 //submit course

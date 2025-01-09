@@ -6,7 +6,7 @@
             </div>
         </template>
         <template #default>
-            <UITables :data="data" :columns="columns">
+            <UITables :is-loading="isLoading" :data="data" :columns="columns">
                 <template #increment-data="{ row, index }">
                     {{ index + 1 }}
                 </template>
@@ -69,6 +69,11 @@ defineProps({
         required: true,
         default: () => [],
     },
+    isLoading: {
+        type: Boolean,
+        required: true,
+        default: false
+    }
 
 })
 </script>

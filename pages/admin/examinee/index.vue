@@ -23,7 +23,7 @@
         <template #header>
           <h1 class="text-2xl lg:text-lg  font-semibold">List of Examinee's</h1>
         </template>
-        <ExamineeList :is-loading="status" :examinee-data="transformData" @toggle-modal="toggleModal"
+        <ExamineeList :is-loading="statuses" :examinee-data="transformData" @toggle-modal="toggleModal"
           @update="editExaminee" @delete="removeExaminee" />
       </UICard>
 
@@ -52,34 +52,23 @@ const { setAlert } = useAlert();
 
 
 //fetch Examinee
-const status = ref(false);
-const examineeData = ref<User[]>([])
 
+const examineeData = computed(() => data.value || []);
+const statuses = computed(() => status.value === 'pending');
+const { data, status, error } = await useAPI<User[]>('/examinee', {
+  lazy: true,
+  getCachedData(key) {
+    const data = payload.data[key] || stat.data[key]
+    return data;
+  },
 
+})
 
-
-const fetchExaminee = async () => {
-  status.value = true;
-  try {
-    const { data, error } = await useAPI<User[]>('/examinee', {
-      getCachedData(key) {
-        const data = payload.data[key] || stat.data[key]
-        return data;
-      },
-      server: false
-    })
-
-    if (error.value) {
-      throw new Error(error.value.message || 'Failed to fetch items')
-    }
-
-    examineeData.value = data.value || [];
-  } catch (error) {
-    setToast('error', error instanceof Error ? error.message : 'An unexpected error occurred')
-  } finally {
-    status.value = false;
-  }
+if (error.value) {
+  setToast('error', error.value.message || 'Failed to fetch items')
 }
+
+
 
 
 const transformData = computed(() => {
@@ -91,8 +80,6 @@ const transformData = computed(() => {
     }
   })
 })
-
-await fetchExaminee();
 
 
 //submit examinee

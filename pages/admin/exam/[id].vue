@@ -16,7 +16,7 @@
                 <template #header>
                     <h1 class="text-2xl lg:text-lg font-semibold">Question List</h1>
                 </template>
-                <QuestionList :question-data="question ?? []" @update="editQuestion" @delete="removeQuestion" />
+                <QuestionList :is-loading="statuses" :question-data="question ?? []" @update="editQuestion" @delete="removeQuestion" />
 
             </UICard>
 
@@ -41,9 +41,10 @@ const nuxtApp = useNuxtApp()
 
 const questionRepo = repository<ApiResponse<QuestionModel>>(nuxtApp.$api)
 const shouldRefetch = ref(0);
-
+const statuses = computed(() => status.value === 'pending');
 const { data: question, status, error } = await useAPI<QuestionModel[]>(`/question/${params.id}`, {
     watch: [shouldRefetch],
+    lazy: true,
     getCachedData(key) {
         const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
         if (!data) {

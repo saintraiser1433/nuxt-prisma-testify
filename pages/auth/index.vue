@@ -61,11 +61,11 @@ const state = ref<User>({
 });
 
 const schema = $joi.object({
-  username: $joi.string().min(3).required().messages({
-    "string.min": 'Minimumn of 3 letters to be input',
+  username: $joi.string().min(5).required().messages({
+    "string.min": 'Minimumn of 5 letters to be input',
     "any.required": `Username is Required`,
   }),
-  password: $joi.string().min(3).required().messages({
+  password: $joi.string().required().messages({
     "string.min": 'Minimumn of 5 letters to be input',
     "any.required": `Password is Required`,
   }),
