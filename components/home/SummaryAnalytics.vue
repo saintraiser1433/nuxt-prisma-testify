@@ -1,6 +1,6 @@
 <template>
     <div class="grid grid-cols-12 gap-3">
-        <div class="col-span-12 lg:col-span-3">
+        <div class="col-span-12 lg:col-span-3 ">
             <UICard :has-header="false">
                 <div class="flex justify-between items-center p-5 font-semibold">
                     <div class="flex flex-col">
