@@ -59,77 +59,31 @@ useSeoMeta({
     ogDescription: 'This is an examination page',
 });
 
-const nuxtApp = useNuxtApp();
 const { info } = useAuthentication();
-const { setAlert } = useAlert();
-const { setToast } = useToasts();
 const store = useExamStore();
 const inf = JSON.parse(info.value);
-const { remainingSeconds, startTimerWithCallBack } = useExamTimer()
-const isLoading = ref(false);
 //rendering list of questions
-const shouldRefetch = ref(0);
+
 const { data: question, status, error } = await useAPI<ExamDetails>(`/exam/available/${inf.id}`, {
     watch: [shouldRefetch],
 })
+const { remainingSeconds, startTimerWithCallBack } = useExamTimer()
 const {
     isHighlightActive,
     questionData,
     pushData,
-    answerData,
     totalQuestions,
     answerCount,
     examTitle,
-    findMissing
-} = useExam(question);
+    findMissing,
+    submitExam,
+    handleTimeUp,
+    isLoading,
+    shouldRefetch
+} = useExam(question,inf.id,remainingSeconds);
 
 //submission of exam 
-const repo = repository<ApiResponse<SubmitExamModel>>(nuxtApp.$api);
-const submitExam = async () => {
-    if (answerData.value.length !== question.value?.data.length) {
-        setToast('error', 'Please answer all questions before proceeding');
-        return;
-    }
-    const res = {
-        examinee_id: inf.id,
-        exam_id: question?.value?.exam_id,
-        details: answerData.value
-    }
-    if (remainingSeconds.value > 0) {
-        setAlert('info', 'Once submitted your answer will be processed ', '', 'Submit').then(
-            async (result) => {
-                if (result.isConfirmed) {
-                    await performSubmit(res);
-                }
-            }
-        )
-    } else {
-        await performSubmit(res);
-    }
-}
 
-const performSubmit = async (res: SubmitExamModel) => {
-    isLoading.value = true
-    try {
-        const { status, message } = await repo.submitExam(res);
-        if (status === 201) {
-
-            answerData.value = [];
-            shouldRefetch.value++;
-        } else {
-            setToast('error', message || 'An error occurred');
-        }
-    } catch (error: any) {
-        setToast('error', error.data.message || 'An error occurred');
-    } finally {
-        isLoading.value = false;
-    }
-}
-
-const handleTimeUp = async () => {
-    setToast('warning', 'Time\'s up');
-    await submitExam();
-};
 
 watch(
     [

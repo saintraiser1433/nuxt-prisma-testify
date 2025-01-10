@@ -1,8 +1,15 @@
 import type { IndexExamAnswers } from "~/types";
 
-export const useExam = (question: Ref<ExamDetails | null>) => {
-  const isHighlightActive = ref(false);
+export const useExam = (question: Ref<ExamDetails | null>, examineeId: string, remainingSeconds: Ref<number>) => {
+  const nuxtApp = useNuxtApp();
+  const { setAlert } = useAlert();
+  const { setToast } = useToasts();
   const answerData = ref<ExamAnswerDetails[]>([]);
+  const isHighlightActive = ref(false);
+  const isLoading = ref(false);
+  const shouldRefetch = ref(0);
+
+  //computed values
   const totalQuestions = computed(() => question.value?.data.length ?? 0);
   const answerCount = computed(() => answerData.value.length);
   const examTitle = computed(() =>
@@ -44,6 +51,8 @@ export const useExam = (question: Ref<ExamDetails | null>) => {
     } else {
       answerData.value.push(newEntry);
     }
+
+
   }
 
   //toggle find my missing
@@ -71,16 +80,68 @@ export const useExam = (question: Ref<ExamDetails | null>) => {
 
   };
 
+  const repo = repository<ApiResponse<SubmitExamModel>>(nuxtApp.$api);
+
+  const submitExam = async () => {
+    if (answerData.value.length !== question.value?.data.length) {
+      setToast('error', 'Please answer all questions before proceeding');
+      return;
+    }
+    const res = {
+      examinee_id: examineeId,
+      exam_id: question?.value?.exam_id,
+      details: answerData.value
+    };
+    if (remainingSeconds.value > 0) {
+      setAlert('info', 'Once submitted your answer will be processed ', '', 'Submit').then(
+        async (result) => {
+          if (result.isConfirmed) {
+            await performSubmit(res);
+          }
+        }
+      );
+    } else {
+      await performSubmit(res);
+    }
+  };
+
+  const performSubmit = async (res: SubmitExamModel) => {
+    isLoading.value = true;
+    try {
+      const { status, message } = await repo.submitExam(res);
+      if (status === 201) {
+        answerData.value = [];
+        shouldRefetch.value++;
+      } else {
+        setToast('error', message || 'An error occurred');
+      }
+    } catch (error: any) {
+      setToast('error', error.data.message || 'An error occurred');
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const handleTimeUp = async () => {
+    setToast('warning', 'Time\'s up');
+    await submitExam();
+  };
+
+
+
 
   return {
     isHighlightActive,
     questionData,
     pushData,
-    answerData,
     totalQuestions,
     answerCount,
     examTitle,
-    findMissing
+    findMissing,
+    submitExam,
+    handleTimeUp,
+    isLoading,
+    shouldRefetch
 
   }
 
