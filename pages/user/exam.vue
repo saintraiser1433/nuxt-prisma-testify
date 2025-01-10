@@ -28,14 +28,8 @@
             </template>
 
             <template #footer>
-                <UButton :loading="isLoading" type="submit" color="gray" size="md" @click="submitExam" :ui="{
-                    color: {
-                        gray: {
-                            solid: 'bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-500 text-white hover:dark:bg-emerald-600 disabled:bg-emerald-500 aria-disabled:bg-white'
-
-                        }
-                    }
-                }">Submit Exam</UButton>
+                <UButton :loading="isLoading" type="submit" color="gray" size="md" @click="submitExam"
+                    :ui="BUTTON_UI_CONFIG">Submit Exam</UButton>
             </template>
         </UICard>
     </div>
@@ -62,29 +56,32 @@ useSeoMeta({
 const { info } = useAuthentication();
 const store = useExamStore();
 const inf = JSON.parse(info.value);
+const { setToast } = useToasts()
 //rendering list of questions
-
-const { data: question, status, error } = await useAPI<ExamDetails>(`/exam/available/${inf.id}`, {
-    watch: [shouldRefetch],
-})
+const thequestion = computed(() => question.value);
 const { remainingSeconds, startTimerWithCallBack } = useExamTimer()
 const {
     isHighlightActive,
     questionData,
-    pushData,
     totalQuestions,
     answerCount,
     examTitle,
+    isLoading,
+    shouldRefetch,
+    pushData,
     findMissing,
     submitExam,
     handleTimeUp,
-    isLoading,
-    shouldRefetch
-} = useExam(question,inf.id,remainingSeconds);
+} = useExam(thequestion, inf.id, remainingSeconds);
+
+const { data: question, status, error } = await useAPI<ExamDetails>(`/exam/available/${inf.id}`, {
+    watch: [shouldRefetch],
+})
+if (error.value) {
+    setToast('error', error.value.message || 'An error occurred while fetching exam details');
+}
 
 //submission of exam 
-
-
 watch(
     [
         () => question.value?.time_limit,

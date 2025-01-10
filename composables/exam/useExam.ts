@@ -33,8 +33,8 @@ export const useExam = (question: Ref<ExamDetails | null>, examineeId: string, r
   });
 
   //pushing answer
-
-  const pushData = (res: IndexExamAnswers) => {
+  const sessionExamRepo = repository<ApiResponse<null>>(nuxtApp.$api);
+  const pushData = async (res: IndexExamAnswers) => {
     const currentQuestion = questionData.value[res.indexQuestion];
     const currentChoice = currentQuestion.choices[res.indexChoice];
 
@@ -51,6 +51,16 @@ export const useExam = (question: Ref<ExamDetails | null>, examineeId: string, r
     } else {
       answerData.value.push(newEntry);
     }
+
+    await sessionExamRepo.addSession({
+      examinee_id: examineeId,
+      time_limit: remainingSeconds.value,
+      exam_id: question.value?.exam_id,
+      ...newEntry
+    });
+
+
+
 
 
   }
@@ -80,8 +90,8 @@ export const useExam = (question: Ref<ExamDetails | null>, examineeId: string, r
 
   };
 
+  //submittion
   const repo = repository<ApiResponse<SubmitExamModel>>(nuxtApp.$api);
-
   const submitExam = async () => {
     if (answerData.value.length !== question.value?.data.length) {
       setToast('error', 'Please answer all questions before proceeding');
@@ -132,16 +142,16 @@ export const useExam = (question: Ref<ExamDetails | null>, examineeId: string, r
 
   return {
     isHighlightActive,
-    questionData,
-    pushData,
     totalQuestions,
     answerCount,
     examTitle,
+    isLoading,
+    shouldRefetch,
+    questionData,
+    pushData,
     findMissing,
     submitExam,
     handleTimeUp,
-    isLoading,
-    shouldRefetch
 
   }
 

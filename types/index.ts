@@ -273,7 +273,7 @@ export interface SummaryData {
 }
 
 
-export interface SummaryResult{
+export interface SummaryResult {
     examinee_id: string
     first_name: string,
     last_name: string,
@@ -283,7 +283,15 @@ export interface SummaryResult{
     contact_number: string,
     school: string,
     address: string
-    data:SummaryData[]
+    data: SummaryData[]
+}
+
+export interface SessionExamModel {
+    examinee_id: string,
+    exam_id: number | undefined,
+    time_limit: number,
+    question_id: number,
+    choices_id: number
 }
 
 

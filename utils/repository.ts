@@ -1,6 +1,7 @@
 import type { NitroFetchRequest, $Fetch } from 'nitropack'
 
 
+
 export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
     //course
 
@@ -121,6 +122,25 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
         })
     },
 
+    async getCheckExistingExam<T>(id: string): Promise<T> {
+        return fetch<T>(`/exam/existing/${id}`)
+    },
+
+    async submitExam(body: SubmitExamModel): Promise<T> {
+
+        return fetch<T>('/answer', {
+            method: 'POST',
+            body: body
+        })
+    },
+
+    async addSession(body: SessionExamModel): Promise<T> {
+        return fetch<T>('/answer/session', {
+            method: 'POST',
+            body: body
+        })
+    },
+
     //end
 
     //question
@@ -190,20 +210,11 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
         return fetch<T>(`/followup/${id}`)
     },
 
-    async getCheckExistingExam<T>(id: string): Promise<T> {
-        return fetch<T>(`/exam/existing/${id}`)
-    },
+
 
 
     //end
 
-    async submitExam(body: SubmitExamModel): Promise<T> {
-
-        return fetch<T>('/answer', {
-            method: 'POST',
-            body: body
-        })
-    },
 
 
 
