@@ -1,134 +1,163 @@
-import type { IndexExamAnswers } from "~/types";
-
-export const useExam = (question: Ref<ExamDetails | null>, examineeId: string, remainingSeconds: Ref<number>) => {
+export const useExam = (
+  question: Ref<ExamDetails | null>,
+  examineeId: string,
+  remainingSeconds: Ref<number>
+) => {
   const nuxtApp = useNuxtApp();
   const { setAlert } = useAlert();
   const { setToast } = useToasts();
+
+  // State
   const answerData = ref<ExamAnswerDetails[]>([]);
   const isHighlightActive = ref(false);
   const isLoading = ref(false);
   const shouldRefetch = ref(0);
 
-  //computed values
+  // Computed values
   const totalQuestions = computed(() => question.value?.data.length ?? 0);
   const answerCount = computed(() => answerData.value.length);
   const examTitle = computed(() =>
-    question.value?.exam_title ? `EXAM TITLE: ${question.value.exam_title}` : 'NO EXAM AVAILABLE'
+    question.value?.exam_title 
+      ? `EXAM TITLE: ${question.value.exam_title}` 
+      : 'NO EXAM AVAILABLE'
   );
 
-  //list of questions
+  // Process question data with highlight status
   const questionData = computed(() => {
-    const answeredIds = answerData.value.map(item => item.question_id);
-    return question?.value?.data.map((item) => ({
-      question_id: {
-        value: Number(item.question_id),
-        class: !answeredIds.some((x) => x === Number(item.question_id)) && isHighlightActive.value ? 'bg-red-400 dark:bg-red-500' : '',
-      },
-      question: {
-        value: String(item.question),
-        class: !answeredIds.some((x) => x === Number(item.question_id)) && isHighlightActive.value ? 'bg-red-400 dark:bg-red-500' : '',
-      },
-      choices: item.choices
-    })) ?? [];
+    if (!question.value) return [];
+
+    const answeredIds = new Set(answerData.value.map(item => item.question_id));
+    
+    return question.value.data.map((item) => {
+      const isAnswered = answeredIds.has(Number(item.question_id));
+      const highlightClass = !isAnswered && isHighlightActive.value 
+        ? 'bg-red-400 dark:bg-red-500' 
+        : '';
+
+      return {
+        question_id: {
+          value: Number(item.question_id),
+          class: highlightClass,
+        },
+        question: {
+          value: String(item.question),
+          class: highlightClass,
+        },
+        choices: item.choices
+      };
+    });
   });
 
-  //pushing answer
+  // API repositories
   const sessionExamRepo = repository<ApiResponse<null>>(nuxtApp.$api);
+  const examRepo = repository<ApiResponse<SubmitExamModel>>(nuxtApp.$api);
+
+  // Methods
   const pushData = async (res: IndexExamAnswers) => {
     const currentQuestion = questionData.value[res.indexQuestion];
-    const currentChoice = currentQuestion.choices[res.indexChoice];
+    if (!currentQuestion) return;
 
-    const checkValue = answerData.value.findIndex(
-      (item) => item.question_id === currentQuestion.question_id.value
-    );
+    const currentChoice = currentQuestion.choices[res.indexChoice];
+    if (!currentChoice) return;
+
     const newEntry: ExamAnswerDetails = {
       choices_id: currentChoice.value,
       question_id: currentQuestion.question_id.value,
     };
 
-    if (checkValue !== -1) {
-      answerData.value[checkValue] = newEntry;
+    // Update or add new answer
+    const existingIndex = answerData.value.findIndex(
+      item => item.question_id === currentQuestion.question_id.value
+    );
+
+    if (existingIndex !== -1) {
+      answerData.value[existingIndex] = newEntry;
     } else {
       answerData.value.push(newEntry);
     }
 
+    // Update session
     await sessionExamRepo.addSession({
       examinee_id: examineeId,
       time_limit: remainingSeconds.value,
       exam_id: question.value?.exam_id,
       ...newEntry
     });
+  };
 
-
-
-
-
-  }
-
-  //toggle find my missing
   const findMissing = async () => {
-    isHighlightActive.value = false;
     isHighlightActive.value = true;
-    const answeredIds = answerData.value.map(item => item.question_id);
+    
+    const answeredIds = new Set(answerData.value.map(item => item.question_id));
     const firstUnanswered = question.value?.data.find(item =>
-      !answeredIds.some(x => x === Number(item.question_id))
+      !answeredIds.has(Number(item.question_id))
     );
 
     if (firstUnanswered) {
       await nextTick(() => {
         const element = document.getElementById(`question-${firstUnanswered.question_id}`);
-        if (element) {
-          element.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center'
-          });
-        }
+        element?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
       });
     }
-
-
-
   };
 
-  //submittion
-  const repo = repository<ApiResponse<SubmitExamModel>>(nuxtApp.$api);
+  const performSubmit = async (submitData: SubmitExamModel) => {
+    isLoading.value = true;
+
+    try {
+      const { status, message } = await examRepo.submitExam(submitData);
+      
+      if (status === 201) {
+        const sessionResponse = await sessionExamRepo.deleteExamSession(submitData);
+        
+        if (sessionResponse.status === 200) {
+          answerData.value = [];
+          shouldRefetch.value++;
+          return true;
+        }
+        
+        setToast('error', sessionResponse.message || 'Failed to clear exam session');
+        return false;
+      }
+
+      setToast('error', message || 'Failed to submit exam');
+      return false;
+    } catch (error: any) {
+      setToast('error', error.data?.message || 'An error occurred');
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   const submitExam = async () => {
     if (answerData.value.length !== question.value?.data.length) {
       setToast('error', 'Please answer all questions before proceeding');
       return;
     }
-    const res = {
+
+    const submitData: SubmitExamModel = {
       examinee_id: examineeId,
-      exam_id: question?.value?.exam_id,
+      exam_id: question.value?.exam_id,
       details: answerData.value
     };
-    if (remainingSeconds.value > 0) {
-      setAlert('info', 'Once submitted your answer will be processed ', '', 'Submit').then(
-        async (result) => {
-          if (result.isConfirmed) {
-            await performSubmit(res);
-          }
-        }
-      );
-    } else {
-      await performSubmit(res);
-    }
-  };
 
-  const performSubmit = async (res: SubmitExamModel) => {
-    isLoading.value = true;
-    try {
-      const { status, message } = await repo.submitExam(res);
-      if (status === 201) {
-        answerData.value = [];
-        shouldRefetch.value++;
-      } else {
-        setToast('error', message || 'An error occurred');
+    if (remainingSeconds.value > 0) {
+      const result = await setAlert(
+        'info',
+        'Once submitted your answer will be processed',
+        '',
+        'Submit'
+      );
+
+      if (result.isConfirmed) {
+        await performSubmit(submitData);
       }
-    } catch (error: any) {
-      setToast('error', error.data.message || 'An error occurred');
-    } finally {
-      isLoading.value = false;
+    } else {
+      await performSubmit(submitData);
     }
   };
 
@@ -137,24 +166,22 @@ export const useExam = (question: Ref<ExamDetails | null>, examineeId: string, r
     await submitExam();
   };
 
-
-
-
   return {
+    // State
     isHighlightActive,
+    isLoading,
+    shouldRefetch,
+    
+    // Computed
     totalQuestions,
     answerCount,
     examTitle,
-    isLoading,
-    shouldRefetch,
     questionData,
+    
+    // Methods
     pushData,
     findMissing,
     submitExam,
     handleTimeUp,
-
-  }
-
-
-
-}
+  };
+};

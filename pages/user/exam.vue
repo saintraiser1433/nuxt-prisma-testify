@@ -77,6 +77,8 @@ const {
 const { data: question, status, error } = await useAPI<ExamDetails>(`/exam/available/${inf.id}`, {
     watch: [shouldRefetch],
 })
+
+
 if (error.value) {
     setToast('error', error.value.message || 'An error occurred while fetching exam details');
 }

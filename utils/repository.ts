@@ -141,6 +141,12 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
         })
     },
 
+    async deleteExamSession(params:SubmitExamModel): Promise<T> {
+        return fetch<T>(`/answer/session/${params.examinee_id}/${params.exam_id}`, {
+            method: 'DELETE',
+        })
+    },
+
     //end
 
     //question

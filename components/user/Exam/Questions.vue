@@ -11,7 +11,6 @@
         </template>
 
         <template #question-data="{ row, index: indexQuestion }">
-
             <div class="w-full h-full p-5 text-wrap" :id="`question-${row.question_id.value}`">
                 <p class="font-bold text-gray-800 dark:text-gray-100" v-html="row.question.value"></p>
                 <div class="grid grid-cols-2 gap-5 mt-2">
@@ -31,7 +30,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { IndexExamAnswers } from '~/types';
+
 
 const props = defineProps({
     questionData: {
@@ -40,6 +39,8 @@ const props = defineProps({
         default: () => [],
     },
 })
+
+
 
 const emits = defineEmits<{
     (e: 'pushData', payload: IndexExamAnswers): void;
