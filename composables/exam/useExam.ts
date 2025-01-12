@@ -17,8 +17,8 @@ export const useExam = (
   const totalQuestions = computed(() => question.value?.data.length ?? 0);
   const answerCount = computed(() => answerData.value.length);
   const examTitle = computed(() =>
-    question.value?.exam_title 
-      ? `EXAM TITLE: ${question.value.exam_title}` 
+    question.value?.exam_title
+      ? `EXAM TITLE: ${question.value.exam_title}`
       : 'NO EXAM AVAILABLE'
   );
 
@@ -27,11 +27,11 @@ export const useExam = (
     if (!question.value) return [];
 
     const answeredIds = new Set(answerData.value.map(item => item.question_id));
-    
+
     return question.value.data.map((item) => {
       const isAnswered = answeredIds.has(Number(item.question_id));
-      const highlightClass = !isAnswered && isHighlightActive.value 
-        ? 'bg-red-400 dark:bg-red-500' 
+      const highlightClass = !isAnswered && isHighlightActive.value
+        ? 'bg-red-400 dark:bg-red-500'
         : '';
 
       return {
@@ -85,9 +85,11 @@ export const useExam = (
     });
   };
 
+
+  //find Missing questions
   const findMissing = async () => {
     isHighlightActive.value = true;
-    
+
     const answeredIds = new Set(answerData.value.map(item => item.question_id));
     const firstUnanswered = question.value?.data.find(item =>
       !answeredIds.has(Number(item.question_id))
@@ -104,21 +106,22 @@ export const useExam = (
     }
   };
 
+
+  //submit exam
   const performSubmit = async (submitData: SubmitExamModel) => {
     isLoading.value = true;
 
     try {
       const { status, message } = await examRepo.submitExam(submitData);
-      
+
       if (status === 201) {
         const sessionResponse = await sessionExamRepo.deleteExamSession(submitData);
-        
+        answerData.value = [];
         if (sessionResponse.status === 200) {
-          answerData.value = [];
           shouldRefetch.value++;
           return true;
         }
-        
+
         setToast('error', sessionResponse.message || 'Failed to clear exam session');
         return false;
       }
@@ -171,13 +174,13 @@ export const useExam = (
     isHighlightActive,
     isLoading,
     shouldRefetch,
-    
+
     // Computed
     totalQuestions,
     answerCount,
     examTitle,
     questionData,
-    
+
     // Methods
     pushData,
     findMissing,

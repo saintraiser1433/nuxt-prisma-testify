@@ -32,6 +32,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { PropType } from 'vue';
+
 const columns = [
     {
         key: 'question_id',
@@ -56,25 +58,30 @@ const props = defineProps({
         default: () => [],
     },
     sessionData: {
-        type: Array,
-        required: true,
-        default: () => []
+        type: Object as PropType<SessionExamineeHeader | null>,
+        required: false,
+        default: null
     }
 })
 
+
+
 const { sessionData } = toRefs(props)
 const answers = computed(() => {
-    return props.sessionData.reduce((acc, item) => {
-        acc[item.question_id] = item.choices_id
-        return acc
-    }, {} as Record<number, number>)
-})
+    if (!sessionData.value || !sessionData.value.sessionDetails) return {};
+
+    return sessionData.value.sessionDetails.reduce<Record<number, number>>((acc, item: any) => {
+        acc[item.question_id] = item.choices_id;
+        return acc;
+    }, {});
+});
 
 
 const handleAnswerChange = (indexQuestion: number, indexChoice: number) => {
     emits('pushData', { indexQuestion, indexChoice })
 
 }
+
 
 
 

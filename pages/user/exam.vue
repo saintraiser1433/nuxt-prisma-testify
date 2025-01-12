@@ -24,7 +24,7 @@
                 </UserDashboardHeader>
             </template>
             <template #default>
-                <UserExamQuestions :session-data="sessionAnswer" :question-data="questionData" @push-data="pushData" />
+                <UserExamQuestions :session-data="thesession" :question-data="questionData" @push-data="pushData" />
             </template>
 
             <template #footer>
@@ -59,6 +59,13 @@ const inf = JSON.parse(info.value);
 const { setToast } = useToasts()
 //rendering list of questions
 const thequestion = computed(() => question.value);
+const thesession = computed(() => {
+    if (Array.isArray(sessionAnswer.value) && sessionAnswer.value.length > 0) {
+        return sessionAnswer.value[0];
+    }
+    return null;
+});
+
 const { remainingSeconds, startTimerWithCallBack } = useExamTimer()
 const {
     isHighlightActive,
@@ -78,7 +85,7 @@ const { data: question, status, error } = await useAPI<ExamDetails>(`/exam/avail
     watch: [shouldRefetch],
 })
 
-const { data: sessionAnswer, status: sessionStatus, error: sessionError } = await useAPI(`/answer/session/${inf.id}/${thequestion.value?.exam_id}`, {
+const { data: sessionAnswer, status: sessionStatus, error: sessionError } = await useAPI<SessionExamineeHeader>(`/answer/session/${inf.id}/${thequestion.value?.exam_id}`, {
     watch: [shouldRefetch]
 })
 
@@ -89,21 +96,50 @@ if (error.value) {
     setToast('error', error.value.message || 'An error occurred while fetching exam details');
 }
 
-//submission of exam 
+
+
 watch(
     [
         () => question.value?.time_limit,
+        () => thesession.value?.timelimit,
+        () => thesession.value?.sessionDetails,
         () => error.value
     ],
-    async ([timeLimit, errorValue]) => {
-        if (timeLimit) {
-            startTimerWithCallBack(timeLimit, handleTimeUp);
-            isHighlightActive.value = false;
-        }
+    async ([timeLimit, sessionTime, sessionDetails, errorValue]) => {
         if (errorValue) {
             store.setExam();
             await navigateTo({ name: 'user-redirecting' });
             return;
+        }
+        const finalTimeLimit = sessionTime ?? timeLimit ?? 0;
+
+        if (finalTimeLimit > 0) {
+            startTimerWithCallBack(finalTimeLimit, handleTimeUp);
+            isHighlightActive.value = false;
+        } else {
+            handleTimeUp();
+        }
+
+        if (sessionDetails && Array.isArray(sessionDetails) && sessionDetails.length > 0) {
+            for (const item of sessionDetails) {
+                // Find question index
+                const questionIndex = question.value?.data.findIndex(
+                    q => Number(q.question_id) === Number(item.question_id)
+                );
+
+                if (questionIndex === undefined || questionIndex === -1) continue;
+
+                // Find choice index
+                const choiceIndex = question.value?.data[questionIndex].choices.findIndex(
+                    c => Number(c.value) === Number(item.choices_id)
+                );
+
+                if (choiceIndex === undefined || choiceIndex === -1) continue;
+                await pushData({
+                    indexQuestion: questionIndex,
+                    indexChoice: choiceIndex
+                });
+            }
         }
     },
     {

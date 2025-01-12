@@ -288,10 +288,25 @@ export interface SummaryResult {
 
 export interface SessionExamModel {
     examinee_id: string,
-    exam_id: number | undefined,
+    exam_id?: number,
     time_limit: number,
     question_id: number,
     choices_id: number
+}
+
+
+export interface SessionExamineeDetail {
+    question_id: number,
+    choices_id: number,
+}
+
+export interface SessionExamineeHeader {
+    session_id: string,
+    timelimit: number,
+    examinee_id: string,
+    exam_id: number,
+    sessionDetails: SessionExamineeDetail[]
+
 }
 
 
