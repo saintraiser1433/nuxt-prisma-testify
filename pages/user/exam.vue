@@ -24,7 +24,7 @@
                 </UserDashboardHeader>
             </template>
             <template #default>
-                <UserExamQuestions :question-data="questionData" @push-data="pushData" />
+                <UserExamQuestions :session-data="sessionAnswer" :question-data="questionData" @push-data="pushData" />
             </template>
 
             <template #footer>
@@ -78,7 +78,13 @@ const { data: question, status, error } = await useAPI<ExamDetails>(`/exam/avail
     watch: [shouldRefetch],
 })
 
+const { data: sessionAnswer, status: sessionStatus, error: sessionError } = await useAPI(`/answer/session/${inf.id}/${thequestion.value?.exam_id}`, {
+    watch: [shouldRefetch]
+})
 
+if (sessionError.value) {
+    setToast('error', sessionError.value.message || 'An error occurred while fetching exam details');
+}
 if (error.value) {
     setToast('error', error.value.message || 'An error occurred while fetching exam details');
 }
