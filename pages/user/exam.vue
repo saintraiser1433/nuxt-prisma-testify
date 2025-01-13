@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!-- <div class="absolute end-5 bottom-20">
+        <div class="absolute end-5 bottom-20">
             <UButton type="button" @click="findMissing" variant="solid" color="gray" size="lg" :ui="{
                 color: {
                     gray: {
@@ -12,7 +12,7 @@
                 <i-fluent-emoji-flat-magnifying-glass-tilted-left />
                 Find my missing
             </UButton>
-        </div> -->
+        </div>
         <UICard :has-footer="true"
             :body="{ padding: 'sm:p-0 p-0', base: 'h-[73vh] lg:h-[76vh] w-full overflow-y-auto' }"
             :header="{ padding: 'sm:p-0 p-0' }" :footer="{
@@ -34,7 +34,7 @@
             </template>
         </UICard>
     </div>
-
+    {{ answerCount }}
 </template>
 
 
@@ -59,18 +59,42 @@ const store = useExamStore();
 const { $api } = useNuxtApp();
 const { setToast } = useToasts()
 const { formatTime } = useFormatTime();
+const { setAlert } = useAlert();
 const inf = JSON.parse(info.value);
 
 //rendering list of questions
 const shouldRefetch = ref(0);
 const answers = ref<Record<number, number>>({});
 const isLoading = ref(false);
-
+const showUnanswered = ref(false);
+const remainingTime = ref(0);
 const examTitle = computed(() => question.value?.exam_title ?? 'Exam');
 const answerCount = computed(() => Object.keys(answers.value).length);
 const totalQuestions = computed(() => question.value?.data.length ?? 0);
-const questionData = computed(() => question.value?.data ?? []);
-const remainingTime = ref(0);
+const questionData = computed(() => {
+    if (!question.value) return [];
+    const answeredIds = new Set(Object.keys(answers.value).map(item => Number(item)));
+    return question.value.data.map((item) => {
+        const isAnswered = answeredIds.has(Number(item.question_id));
+        const highlightClass = !isAnswered && showUnanswered.value
+            ? 'bg-red-400 dark:bg-red-500'
+            : '';
+
+        return {
+            question_id: {
+                value: Number(item.question_id),
+                class: highlightClass,
+            },
+            question: {
+                value: String(item.question),
+                class: highlightClass,
+            },
+            choices: item.choices
+        };
+    });
+});
+
+
 const sessionTime = computed(() => {
     let callBackTimer = 0;
 
@@ -83,14 +107,15 @@ const sessionTime = computed(() => {
         : undefined;
 
     const questionTime = question.value.time_limit;
-
     return sessionTime ?? questionTime ?? callBackTimer;
 });
 
 const sessionData = computed(() => {
-    if (!sessionAnswer.value || !sessionAnswer.value[0].sessionDetails) {
+
+    if (!sessionAnswer.value || !sessionAnswer.value[0]?.sessionDetails) {
         return {};
     }
+
     const reducedAnswers = sessionAnswer.value[0].sessionDetails.reduce<Record<number, number>>((acc, item) => {
         acc[item.question_id] = item.choices_id;
         return acc;
@@ -120,9 +145,8 @@ if (error.value) {
 
 
 const pushAnswer = (payload: ExamAnswer) => {
-    answers.value[payload.questionId] = payload.answerId;
+    answers.value = { ...answers.value, [payload.questionId]: payload.answerId };
     debounceSaveAnswer(payload.questionId, payload.answerId);
-
 }
 
 const sessionExamRepo = repository<ApiResponse<null>>($api);
@@ -143,19 +167,30 @@ const debounceSaveAnswer = useDebounceFn(async (questionId: number, answerId: nu
 
 
 //timer
-
 const startTimerWithCallBack = (time: number, callback: () => void) => {
-    const timer = setInterval(() => {
-        remainingTime.value = time;
+    remainingTime.value = time;
+    useIntervalFn(() => {
         if (remainingTime.value > 0) {
             remainingTime.value--;
             store.setTimeLimit(formatTime(remainingTime.value));
+
         } else {
-            clearInterval(timer);
             callback();
         }
-
     }, 1000);
+
+
+};
+
+const sessionTimer = repository<ApiResponse<null>>($api);
+const updateSessionTimer = async (time: number, examineeId: string, examId: number | undefined) => {
+    if (!examId) return setToast('error', 'Exam has not started yet');
+    try {
+        await sessionTimer.updateExamSessionTimer(time, examineeId, examId);
+    } catch (err: any) {
+        setToast('error', err.data.message || 'An error occurred while updating session timer');
+    }
+
 };
 
 
@@ -164,27 +199,15 @@ const startTimerWithCallBack = (time: number, callback: () => void) => {
 
 
 
-
 //submit exam
-
-
-//   //submit exam
 const examRepo = repository<ApiResponse<null>>($api);
 const performSubmit = async (submitData: SubmitExamModel) => {
     isLoading.value = true;
-
     try {
         const { status, message } = await examRepo.submitExam(submitData);
         if (status === 201) {
-            const sessionResponse = await sessionExamRepo.deleteExamSession(submitData);
-            if (sessionResponse.status === 200) {
-                answers.value = {};
-                shouldRefetch.value++;
-                return true;
-            }
-
-            setToast('error', sessionResponse.message || 'Failed to clear exam session');
-            return false;
+            await sessionExamRepo.deleteExamSession(submitData);
+            shouldRefetch.value++;
         }
 
         setToast('error', message || 'Failed to submit exam');
@@ -215,7 +238,44 @@ const submitExam = async () => {
         details: data
     };
 
-    await performSubmit(submitData);
+    if (remainingTime.value > 0) {
+        setAlert('info', 'Are you sure you want to submit your answer? Once submit your answer will be cast!', '', 'Confirm submit').then(
+            async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        await performSubmit(submitData);
+                    } catch (error: any) {
+                        setToast('error', error.data.message || 'An error occurred');
+                    }
+                }
+            }
+        )
+    } else {
+        await performSubmit(submitData);
+    }
+
+
+};
+
+//findmissing
+
+//find Missing questions
+const findMissing = async () => {
+    showUnanswered.value = true;
+    const answeredQuestionIds = new Set(Object.keys(answers.value).map(questionId => parseInt(questionId)))
+    const firstUnanswered = question.value?.data.find(item =>
+        !answeredQuestionIds.has(Number(item.question_id))
+    );
+
+    if (firstUnanswered) {
+        await nextTick(() => {
+            const element = document.getElementById(`question-${firstUnanswered.question_id}`);
+            element?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        });
+    }
 };
 
 
@@ -223,12 +283,10 @@ watch(
     [
         () => sessionTime.value,
     ],
-    async ([newTime],[oldTime]) => {
+    async ([newTime], [oldTime]) => {
         if (newTime !== oldTime) {
-            console.log('eqwe')
             startTimerWithCallBack(newTime, async () => await submitExam());
         }
-
     },
     {
         immediate: true,
@@ -242,68 +300,14 @@ watch(
 
 
 onMounted(() => {
-    // useIntervalFn(() => {
-
-    // }, 5000)
+    useIntervalFn(() => {
+        updateSessionTimer(remainingTime.value, inf.id, question.value?.exam_id);
+    }, 5000)
 
 })
 
 
 
 
-
-
-
-
-
-// watch(
-//     [
-//         () => question.value?.time_limit,
-//         () => thesession.value?.timelimit,
-//         () => thesession.value?.sessionDetails,
-//         () => error.value
-//     ],
-//     async ([timeLimit, sessionTime, sessionDetails, errorValue]) => {
-//         if (errorValue) {
-//             store.setExam();
-//             await navigateTo({ name: 'user-redirecting' });
-//             return;
-//         }
-//         const finalTimeLimit = sessionTime ?? timeLimit ?? 0;
-
-//         if (finalTimeLimit > 0) {
-//             startTimerWithCallBack(finalTimeLimit, handleTimeUp);
-//             isHighlightActive.value = false;
-//         } else {
-//             handleTimeUp();
-//         }
-
-//         if (sessionDetails && Array.isArray(sessionDetails) && sessionDetails.length > 0) {
-//             for (const item of sessionDetails) {
-//                 // Find question index
-//                 const questionIndex = question.value?.data.findIndex(
-//                     q => Number(q.question_id) === Number(item.question_id)
-//                 );
-
-//                 if (questionIndex === undefined || questionIndex === -1) continue;
-
-//                 // Find choice index
-//                 const choiceIndex = question.value?.data[questionIndex].choices.findIndex(
-//                     c => Number(c.value) === Number(item.choices_id)
-//                 );
-
-//                 if (choiceIndex === undefined || choiceIndex === -1) continue;
-//                 await pushData({
-//                     indexQuestion: questionIndex,
-//                     indexChoice: choiceIndex
-//                 });
-//             }
-//         }
-//     },
-//     {
-//         immediate: true,
-//         deep: true
-//     }
-// );
 
 </script>
