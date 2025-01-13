@@ -308,21 +308,22 @@ export interface SessionExamineeHeader {
     sessionDetails: SessionExamineeDetail[]
 
 }
-
-
-//Legend
-type LegendColor = 'red' | 'orange' | 'amber' | 'yellow' | 'lime' | 'green' | 'emerald' | 'teal' | 'rose' | 'primary' | 'carnation' | 'cyan'
 export interface LegendModel {
     label: string,
     color: LegendColor
 }
 
+
+//Legend
+type LegendColor = 'red' | 'orange' | 'amber' | 'yellow' | 'lime' | 'green' | 'emerald' | 'teal' | 'rose' | 'primary' | 'carnation' | 'cyan'
+
+
 export type ProgressColor = 'rose' | 'primary' | 'cyan' | 'emerald';
 
 
-export type IndexExamAnswers = {
-    indexQuestion: number,
-    indexChoice: number
+export type ExamAnswer = {
+    questionId: number,
+    answerId: number
 }
 
 

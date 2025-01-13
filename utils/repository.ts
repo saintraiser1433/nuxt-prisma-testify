@@ -134,7 +134,7 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
         })
     },
 
-    async addSession(body: SessionExamModel): Promise<T> {
+    async insertExamSession(body: SessionExamModel): Promise<T> {
         return fetch<T>('/answer/session', {
             method: 'POST',
             body: body

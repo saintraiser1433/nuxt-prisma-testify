@@ -13,6 +13,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         },
         async onResponseError({ response }) {
             if (response.status === 401) {
+                // console.log(response.statusText)
                 const parseInfo = JSON.parse(info.value);
                 await signOut(parseInfo.id)
                 await nuxtApp.runWithContext(() => navigateTo('/auth'))

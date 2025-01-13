@@ -12,13 +12,18 @@
 
         <template #question-data="{ row, index: indexQuestion }">
 
-            <div class="w-full h-full p-5 text-wrap" :id="`question-${row.question_id.value}`">
-                <p class="font-bold text-gray-800 dark:text-gray-100" v-html="row.question.value"></p>
+            <div class="w-full h-full p-5 text-wrap" :id="`question-${row.question_id}`">
+                <p class="font-bold text-gray-800 dark:text-gray-100" v-html="row.question"></p>
                 <div class="grid grid-cols-2 gap-5 mt-2">
                     <URadio v-for="(method, index) in row.choices"
                         :ui="{ base: 'cursor-pointer dark:bg-white ', background: 'dark:bg-white' }"
-                        :name="`question-${row.question_id.value}`" @change="handleAnswerChange(indexQuestion, index)"
-                        :key="method.value" v-bind="method" v-model="answers[row.question_id.value]">
+                        :name="`question-${row.question_id}`"
+                        @change="handleAnswerChange(row.question_id, method.value)" 
+                        :key="method.value" 
+                        v-model="sessionData[row.question_id]"
+                        v-bind="method"
+                        
+                        >
                         <template #label="{ label }">
                             <div class="text-gray-900 dark:text-gray-100" v-html="label"></div>
                         </template>
@@ -26,7 +31,7 @@
                 </div>
             </div>
         </template>
-
+        
     </UITables>
 
 </template>
@@ -48,7 +53,7 @@ const columns = [
     }
 ];
 const emits = defineEmits<{
-    (e: 'pushData', payload: IndexExamAnswers): void;
+    (e: 'pushAnswer', payload: ExamAnswer): void;
 }>();
 
 const props = defineProps({
@@ -58,28 +63,38 @@ const props = defineProps({
         default: () => [],
     },
     sessionData: {
-        type: Object as PropType<SessionExamineeHeader | null>,
-        required: false,
-        default: null
+        type: Object as PropType<Record<number, number>>,
+        required: true,
+        default: {}
     }
 })
 
 
-
-const { sessionData } = toRefs(props)
-const answers = computed(() => {
-    if (!sessionData.value || !sessionData.value.sessionDetails) return {};
-
-    return sessionData.value.sessionDetails.reduce<Record<number, number>>((acc, item: any) => {
-        acc[item.question_id] = item.choices_id;
-        return acc;
-    }, {});
-});
+// const sessionData = ref<SessionExamineeHeader | null>(props.sessionData);
 
 
-const handleAnswerChange = (indexQuestion: number, indexChoice: number) => {
-    emits('pushData', { indexQuestion, indexChoice })
 
+
+// const answers = computed(() => {
+//     if (!sessionData.value || !sessionData.value.sessionDetails) return {};
+
+//     return sessionData.value.sessionDetails.reduce<Record<number, number>>((acc, item: any) => {
+//         acc[item.question_id] = item.choices_id;
+//         return acc;
+//     }, {});
+// });
+
+
+// const handleAnswerChange = (indexQuestion: number, indexChoice: number) => {
+//     emits('pushAnswer', { indexQuestion, indexChoice })
+
+// }
+
+const handleAnswerChange = (questionId: number, answerId: number) => {
+    emits('pushAnswer', {
+        questionId: questionId,
+        answerId: answerId,
+    });
 }
 
 

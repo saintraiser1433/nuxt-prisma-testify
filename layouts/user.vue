@@ -21,14 +21,14 @@
 <script setup lang="ts">
 
 const { refreshToken, signOut, info } = useAuthentication();
-const { idle } = useIdle(50 * 10 * 1000);
-const user = JSON.parse(info.value)
-watch(idle, async (newValue: boolean) => {
-  if (newValue) {
-    await signOut(user.id);
-    return navigateTo({ name: 'auth' })
-  }
-});
+// const { idle } = useIdle(50 * 10 * 100);
+// const user = JSON.parse(info.value)
+// watch(idle, async (newValue: boolean) => {
+//   if (newValue) {
+//     await signOut(user.id);
+//     return navigateTo({ name: 'auth' })
+//   }
+// });
 
 useIntervalFn(() => {
   refreshToken();
