@@ -1,5 +1,6 @@
 <template>
     <div>
+        {{ question?.time_limit }}
         <div class="absolute end-5 bottom-20">
             <UButton type="button" @click="findMissing" variant="solid" color="gray" size="lg" :ui="BTN_FINDMISSING">
                 <i-fluent-emoji-flat-magnifying-glass-tilted-left />
@@ -32,8 +33,6 @@
 
 
 <script lang="ts" setup>
-
-
 definePageMeta({
     requiredRole: 'examinee',
     layout: 'user',
@@ -46,11 +45,6 @@ useSeoMeta({
     ogTitle: 'Testify User Exam',
     ogDescription: 'This is an examination page',
 });
-
-
-
-
-
 const { info } = useAuthentication();
 const { setToast } = useToasts()
 const inf = JSON.parse(info.value);
@@ -60,10 +54,12 @@ const initialSessionAnswer = ref<SessionExamineeHeader[] | null>(null);
 const initialRemainingTime = ref(0);
 const examQuestion = computed(() => question.value);
 const examSessionAnswer = computed(() => sessionAnswer.value);
+const timeLimit = computed(() => sessionDetails.value?.timelimit ?? question.value?.time_limit ?? 0);
 
 //base exam
 const {
     findMissing,
+    submitExam,
     shouldRefetch,
     answers,
     examTitle,
@@ -71,7 +67,6 @@ const {
     totalQuestions,
     questionDetails,
     isLoading,
-    submitExam
 } = useExam(initialQuestion, initialSessionAnswer, inf.id, initialRemainingTime)
 
 
@@ -100,7 +95,8 @@ const {
     clearExistingTimer,
     clearExistingTimeSession,
     startTimerWithCallBack,
-    updateSessionTimer } = useExamTimer(inf.id, examQuestion.value?.exam_id)
+    updateSessionTimer
+} = useExamTimer(inf.id, examQuestion.value?.exam_id)
 
 
 
@@ -130,19 +126,14 @@ watch(() => error.value?.data.status, async (newError) => {
     }
 })
 
-watch(
-    [
-        () => question.value?.time_limit,
-        () => sessionDetails.value?.timelimit,
-    ],
-    async ([questionTime, sessionTime]) => {
-        const finalTimeLimit = sessionTime ?? questionTime ?? 0;
-        if (finalTimeLimit) {
-            startTimerWithCallBack(finalTimeLimit, async () => await submitExam());
-        }
-    },
-    { immediate: true, deep: true }
-);
+
+watch(() => timeLimit.value, async (newTime, oldTime) => {
+    if (newTime === oldTime || newTime !== oldTime) {
+        startTimerWithCallBack(newTime, async () => await submitExam());
+    }
+}, {
+    immediate: true
+})
 
 
 
@@ -155,7 +146,4 @@ onUnmounted(() => {
     clearExistingTimer();
     clearExistingTimeSession();
 })
-
-
-
 </script>

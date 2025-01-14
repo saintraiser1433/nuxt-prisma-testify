@@ -15,3 +15,12 @@ export const BTN_FINDMISSING = {
         }
     }
 };
+
+export const BTN_TAKE_EXAM = {
+    color: {
+        gray: {
+            solid: 'bg-emerald-500 text-white rounded-none hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-600'
+        }
+    },
+    base: 'ml-auto'
+}
