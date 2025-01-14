@@ -5,3 +5,13 @@ export const BUTTON_UI_CONFIG = {
         }
     }
 };
+
+
+export const BTN_FINDMISSING = {
+    color: {
+        gray: {
+            solid: 'bg-neon-carrot-500 hover:bg-neon-carrot-600 dark:bg-neon-carrot-500 text-white hover:dark:bg-neon-carrot-600 disabled:bg-neon-carrot-500 aria-disabled:bg-white'
+
+        }
+    }
+};

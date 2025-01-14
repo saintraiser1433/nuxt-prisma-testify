@@ -1,71 +1,84 @@
-export const useExamTimer = () => {
+export const useExamTimer = (examineeId?: string, examId?: number) => {
     const store = useExamStore();
-    const remainingSeconds = ref(0);
-    let countDownInterval: ReturnType<typeof setInterval> | null = null;
+    const { formatTime } = useFormatTime();
+    const { $api } = useNuxtApp();
+    const { setToast } = useToasts();
+    const remainingTime = ref(0);
+    let timerInterval: NodeJS.Timeout | null = null;
+    let timerIntervalForSession: NodeJS.Timeout | null = null;
 
-    const stopTimer = () => {
-        if (countDownInterval) {
-            clearInterval(countDownInterval);
-            countDownInterval = null;
+    const clearExistingTimer = () => {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
         }
     };
 
-    const startTimerWithCallBack = (newTime: number, onTimeUp: () => void) => {
-        stopTimer();
-
-        if (typeof newTime === 'number') {
-            remainingSeconds.value = newTime;
+    const clearExistingTimeSession = () => {
+        if (timerIntervalForSession) {
+            clearInterval(timerIntervalForSession);
+            timerIntervalForSession = null;
         }
+    }
 
-        countDownInterval = setInterval(() => {
-            if (remainingSeconds.value > 0) {
-                remainingSeconds.value--;
-                store.setTimeLimit(formatTime(remainingSeconds.value));
+    //examRunningTimer
+    const startTimerWithCallBack = (time: number, callback: () => void) => {
+        clearExistingTimer();
+        remainingTime.value = time;
+        timerInterval = setInterval(() => {
+            if (remainingTime.value > 0) {
+                remainingTime.value--;
+                store.setTimeLimit(formatTime(remainingTime.value));
+
             } else {
-                stopTimer();
-                onTimeUp();
+                clearExistingTimer();
+                callback();
             }
         }, 1000);
+
     };
 
-    const startTimerNavigation = (newTime: number, path: string) => {
-        stopTimer();
+    //sessionTimer
+    const sessionTimer = repository<ApiResponse<null>>($api);
+    const updateSessionTimer = () => {
+        timerIntervalForSession = setInterval(async () => {
+            try {
+                await sessionTimer.updateExamSessionTimer(remainingTime.value, examineeId, examId);
+            } catch (err: any) {
+                setToast('error', err.data.message || 'An error occurred while updating session timer');
+            }
+        }, 5000);
+    };
 
-        if (typeof newTime === 'number') {
-            remainingSeconds.value = newTime;
-        }
+    //
+    const startTimerNavigation = (time: number, path: string) => {
+        clearExistingTimer();
+        remainingTime.value = time;
+        timerInterval = setInterval(async () => {
+            if (remainingTime.value > 0) {
+                remainingTime.value--;
 
-        countDownInterval = setInterval(async () => {
-            if (remainingSeconds.value > 0) {
-                remainingSeconds.value--;
-                store.setTimeLimit(formatTime(remainingSeconds.value));
             } else {
-                stopTimer();
-                await navigateTo({ name: path })
+                clearExistingTimer();
+                await navigateTo({ name: path });
             }
         }, 1000);
+
     };
 
 
-    // Clean up on component unmount
-    onUnmounted(stopTimer);
+
+
+
+
 
     return {
-        remainingSeconds,
+        remainingTime,
+        clearExistingTimer,
+        clearExistingTimeSession,
         startTimerWithCallBack,
-        startTimerNavigation,
-        stopTimer,
-    };
-};
+        updateSessionTimer,
+        startTimerNavigation
+    }
 
-const formatTime = (totalSeconds: number) => {
-    const hours = Math.floor(totalSeconds / 3600);
-    const mins = Math.floor((totalSeconds % 3600) / 60);
-    const secs = totalSeconds % 60;
-
-    const formattedHours = hours < 10 ? '0' + hours : hours;
-    const formattedMins = mins < 10 ? '0' + mins : mins;
-    const formattedSecs = secs < 10 ? '0' + secs : secs;
-
-    return `${formattedHours}:${formattedMins}:${formattedSecs}`;
 }
