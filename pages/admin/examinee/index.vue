@@ -1,38 +1,3 @@
-<template>
-  <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
-  <UModal v-model="isOpen" prevent-close>
-    <UICard :body="{
-      padding: 'px-4'
-    }">
-      <template #header>
-        <div class="flex items-center justify-between ">
-          <h1 class="text-2xl lg:text-lg font-semibold">Examinee Information</h1>
-          <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
-            @click="isOpen = false" />
-        </div>
-
-      </template>
-      <ExamineeForm v-model="examineeForm" :is-update="isUpdate" @data-examinee="submitExaminee" />
-    </UICard>
-
-  </UModal>
-
-  <div class="grid grid-cols-5 gap-5">
-    <div class="col-span-5">
-      <UICard>
-        <template #header>
-          <h1 class="text-2xl lg:text-lg  font-semibold">List of Examinee's</h1>
-        </template>
-        <ExamineeList :is-loading="statuses" :examinee-data="transformData" @toggle-modal="toggleModal"
-          @update="editExaminee" @delete="removeExaminee" />
-      </UICard>
-
-    </div>
-  </div>
-
-
-</template>
-
 <script setup lang="ts">
 
 definePageMeta({
@@ -155,3 +120,40 @@ const toggleModal = () => {
 
 
 </script>
+
+
+<template>
+  <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
+  <UModal v-model="isOpen" prevent-close>
+    <UICard :body="{
+      padding: 'px-4'
+    }">
+      <template #header>
+        <div class="flex items-center justify-between ">
+          <h1 class="text-2xl lg:text-lg font-semibold">Examinee Information</h1>
+          <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+            @click="isOpen = false" />
+        </div>
+
+      </template>
+      <ExamineeForm v-model="examineeForm" :is-update="isUpdate" @data-examinee="submitExaminee" />
+    </UICard>
+
+  </UModal>
+
+  <div class="grid grid-cols-5 gap-5">
+    <div class="col-span-5">
+      <UICard>
+        <template #header>
+          <h1 class="text-2xl lg:text-lg  font-semibold">List of Examinee's</h1>
+        </template>
+        <ExamineeList :is-loading="statuses" :examinee-data="transformData" @toggle-modal="toggleModal"
+          @update="editExaminee" @delete="removeExaminee" />
+      </UICard>
+
+    </div>
+  </div>
+
+
+</template>
+

@@ -1,3 +1,14 @@
+<script setup lang="ts">
+
+const store = useStore();
+defineProps({
+    menuItems: Object
+})
+
+</script>
+
+<style scoped></style>
+
 <template>
     <li v-for="(menu, ) in menuItems" :key="menu.routerName">
 
@@ -9,14 +20,3 @@
     </li>
 
 </template>
-
-<script setup>
-
-const store = useStore();
-defineProps({
-    menuItems: Object
-})
-
-</script>
-
-<style scoped></style>

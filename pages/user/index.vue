@@ -104,7 +104,7 @@ const {
     examineeName,
     isFinished,
     examAttempts
-} = useExamineeSummary(data.value.summaryData, data.value?.course)
+} = useExamineeSummary(data.value?.summaryData, data.value?.course)
 
 
 

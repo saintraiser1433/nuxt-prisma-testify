@@ -1,99 +1,3 @@
-<template>
-  <div class="grid grid-cols-12 my-5 gap-3">
-    <div class="col-span-12 lg:col-span-8">
-      <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }" :has-action-header="false">
-        <template #header>
-          <div class="flex justify-between items-center p-0">
-            <div class="flex flex-col">
-              <h1 class="text-2xl lg:text-lg font-semibold">DAILY REGISTERED EXAMINEES'</h1>
-            </div>
-
-            <svg-icon name="dashboard-icons/exam" title="examineeicon" width="32" height="32"></svg-icon>
-          </div>
-
-        </template>
-        <div class="w-full h-[400px]">
-          <VChart ref="chart" :option="options" class="w-full h-full" :auto-resize="true" />
-        </div>
-
-      </UICard>
-    </div>
-    <div class="col-span-12 lg:col-span-4">
-      <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
-        <template #header>
-          <div class="flex justify-between items-center p-0">
-            <div class="flex flex-col">
-              <h1 class="text-2xl lg:text-lg font-semibold">SUCCESS RATE PER EXAM</h1>
-            </div>
-            <svg-icon name="dashboard-icons/percentage" title="examineeicon" width="32" height="32"></svg-icon>
-
-          </div>
-        </template>
-
-        <div class="w-full h-[400px]">
-          <VChart ref="chart" :option="optionsa" class="w-full h-full" :auto-resize="true" />
-        </div>
-      </UICard>
-    </div>
-  </div>
-  <div class="grid grid-cols-12 my-5 gap-3">
-    <div class="col-span-12 lg:col-span-8">
-      <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
-        <template #header>
-          <div class="flex justify-between items-center p-0">
-            <div class="flex flex-col">
-              <h1 class="text-2xl lg:text-lg font-semibold">DAILY COMPLETED EXAMINEES'</h1>
-            </div>
-            <svg-icon name="dashboard-icons/check" title="examineeicon" width="32" height="32"></svg-icon>
-          </div>
-
-
-        </template>
-        <div class="w-full h-[400px]">
-          <VChart ref="chart" :option="options" class="w-full h-full" :auto-resize="true" />
-        </div>
-
-      </UICard>
-    </div>
-    <div class="col-span-12 lg:col-span-4">
-      <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
-        <template #header>
-          <div class="flex justify-between items-center p-0">
-            <div class="flex flex-col">
-              <h1 class="text-2xl lg:text-lg font-semibold">PASSING RATE PER COURSE</h1>
-            </div>
-            <svg-icon name="dashboard-icons/percentage" title="examineeicon" width="32" height="32"></svg-icon>
-          </div>
-
-        </template>
-        <div class="w-full h-[400px]">
-          <VChart ref="chart" :option="optionsa" class="w-full h-full" :auto-resize="true" />
-        </div>
-      </UICard>
-    </div>
-  </div>
-
-  <div class="grid grid-cols-12 my-5 gap-3">
-    <div class="col-span-12">
-      <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
-        <template #header>
-          <div class="flex justify-between items-center p-0">
-            <div class="flex flex-col">
-              <h1 class="text-2xl lg:text-lg font-semibold">ENROLLED EXAMINEES' PER COURSES</h1>
-            </div>
-            <svg-icon name="dashboard-icons/student" title="examineeicon" width="32" height="32"></svg-icon>
-          </div>
-
-        </template>
-        <div class="w-full h-[400px]">
-          <VChart ref="chart" :option="options" class="w-full h-full" :auto-resize="true" />
-        </div>
-      </UICard>
-    </div>
-
-  </div>
-</template>
-
 <script lang="ts" setup>
 import * as echarts from 'echarts';
 const options = ref<ECOption>({
@@ -216,3 +120,101 @@ const optionsa = ref<ECOption>({
 </script>
 
 <style></style>
+
+
+<template>
+  <div class="grid grid-cols-12 my-5 gap-3">
+    <div class="col-span-12 lg:col-span-8">
+      <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }" :has-action-header="false">
+        <template #header>
+          <div class="flex justify-between items-center p-0">
+            <div class="flex flex-col">
+              <h1 class="text-2xl lg:text-lg font-semibold">DAILY REGISTERED EXAMINEES'</h1>
+            </div>
+
+            <svg-icon name="dashboard-icons/exam" title="examineeicon" width="32" height="32"></svg-icon>
+          </div>
+
+        </template>
+        <div class="w-full h-[400px]">
+          <VChart ref="chart" :option="options" class="w-full h-full" :auto-resize="true" />
+        </div>
+
+      </UICard>
+    </div>
+    <div class="col-span-12 lg:col-span-4">
+      <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
+        <template #header>
+          <div class="flex justify-between items-center p-0">
+            <div class="flex flex-col">
+              <h1 class="text-2xl lg:text-lg font-semibold">SUCCESS RATE PER EXAM</h1>
+            </div>
+            <svg-icon name="dashboard-icons/percentage" title="examineeicon" width="32" height="32"></svg-icon>
+
+          </div>
+        </template>
+
+        <div class="w-full h-[400px]">
+          <VChart ref="chart" :option="optionsa" class="w-full h-full" :auto-resize="true" />
+        </div>
+      </UICard>
+    </div>
+  </div>
+  <div class="grid grid-cols-12 my-5 gap-3">
+    <div class="col-span-12 lg:col-span-8">
+      <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
+        <template #header>
+          <div class="flex justify-between items-center p-0">
+            <div class="flex flex-col">
+              <h1 class="text-2xl lg:text-lg font-semibold">DAILY COMPLETED EXAMINEES'</h1>
+            </div>
+            <svg-icon name="dashboard-icons/check" title="examineeicon" width="32" height="32"></svg-icon>
+          </div>
+
+
+        </template>
+        <div class="w-full h-[400px]">
+          <VChart ref="chart" :option="options" class="w-full h-full" :auto-resize="true" />
+        </div>
+
+      </UICard>
+    </div>
+    <div class="col-span-12 lg:col-span-4">
+      <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
+        <template #header>
+          <div class="flex justify-between items-center p-0">
+            <div class="flex flex-col">
+              <h1 class="text-2xl lg:text-lg font-semibold">PASSING RATE PER COURSE</h1>
+            </div>
+            <svg-icon name="dashboard-icons/percentage" title="examineeicon" width="32" height="32"></svg-icon>
+          </div>
+
+        </template>
+        <div class="w-full h-[400px]">
+          <VChart ref="chart" :option="optionsa" class="w-full h-full" :auto-resize="true" />
+        </div>
+      </UICard>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-12 my-5 gap-3">
+    <div class="col-span-12">
+      <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
+        <template #header>
+          <div class="flex justify-between items-center p-0">
+            <div class="flex flex-col">
+              <h1 class="text-2xl lg:text-lg font-semibold">ENROLLED EXAMINEES' PER COURSES</h1>
+            </div>
+            <svg-icon name="dashboard-icons/student" title="examineeicon" width="32" height="32"></svg-icon>
+          </div>
+
+        </template>
+        <div class="w-full h-[400px]">
+          <VChart ref="chart" :option="options" class="w-full h-full" :auto-resize="true" />
+        </div>
+      </UICard>
+    </div>
+
+  </div>
+</template>
+

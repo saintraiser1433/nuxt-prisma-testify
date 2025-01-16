@@ -1,3 +1,19 @@
+<script setup lang="ts">
+const store = useStore();
+const colorMode = useColorMode();
+const setColorTheme = (theme: any) => {
+  colorMode.preference = theme;
+};
+
+const { signOut, info } = useAuthentication();
+const parse = JSON.parse(info.value);
+const handleSignOut = async () => {
+  await signOut(parse.id)
+  return navigateTo({ name: 'auth' })
+};
+</script>
+
+<style scoped></style>
 <template>
   <div :class="store.getToggleState
     ? ' lg:w-[calc(100%-15rem)] lg:left-60'
@@ -56,20 +72,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-const store = useStore();
-const colorMode = useColorMode();
-const setColorTheme = (theme) => {
-  colorMode.preference = theme;
-};
-
-const { signOut, info } = useAuthentication();
-const parse = JSON.parse(info.value);
-const handleSignOut = async () => {
-  await signOut(parse.id)
-  return navigateTo({ name: 'auth' })
-};
-</script>
-
-<style scoped></style>

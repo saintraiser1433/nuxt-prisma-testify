@@ -1,36 +1,3 @@
-<template>
-
-  <UModal v-model="isOpen" prevent-close>
-    <UICard :body="{
-      padding: 'p-10'
-    }">
-      <template #header>
-        <div class="flex items-center justify-between">
-          <h1 class="text-2xl lg:text-lg font-semibold">Course Information</h1>
-          <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
-            @click="isOpen = false" />
-        </div>
-      </template>
-      <CourseForm v-model="courseForm" @data-course="submitCourse" />
-    </UICard>
-  </UModal>
-
-  <div class="grid grid-cols-5 gap-5">
-    <div class="col-span-5">
-      <UICard>
-        <template #header>
-          <h1 class="text-2xl lg:text-lg font-semibold">List of Course's</h1>
-        </template>
-        <CourseList :is-loading="statuses" :course-data="courseData" @update="editCourse" @delete="removeCourse"
-          @toggleModal="toggleModal" />
-      </UICard>
-    </div>
-  </div>
-
-
-
-</template>
-
 <script setup lang="ts">
 definePageMeta({
   requiredRole: 'admin',
@@ -45,7 +12,7 @@ useSeoMeta({
 
 
 
-const { $api, payload, static: stat,$datefns } = useNuxtApp()
+const { $api, payload, static: stat } = useNuxtApp()
 const { setToast } = useToasts();
 const { setAlert } = useAlert()
 const isUpdate = ref(false);
@@ -55,7 +22,7 @@ const isOpen = ref(false);
 const courseData = computed(() => data.value || []);
 const statuses = computed(() => status.value === 'pending');
 const { data, status, error } = await useAPI<CourseModel[]>('/course', {
-  server:false,
+  server: false,
   getCachedData(key) {
     const data = payload.data[key] || stat.data[key]
     if (!data) {
@@ -136,8 +103,39 @@ const toggleModal = () => {
   isOpen.value = true;
   isUpdate.value = false
 }
-
-
-
-
 </script>
+
+
+<template>
+
+  <UModal v-model="isOpen" prevent-close>
+    <UICard :body="{
+      padding: 'p-10'
+    }">
+      <template #header>
+        <div class="flex items-center justify-between">
+          <h1 class="text-2xl lg:text-lg font-semibold">Course Information</h1>
+          <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+            @click="isOpen = false" />
+        </div>
+      </template>
+      <CourseForm v-model="courseForm" @data-course="submitCourse" />
+    </UICard>
+  </UModal>
+
+  <div class="grid grid-cols-5 gap-5">
+    <div class="col-span-5">
+      <UICard>
+        <template #header>
+          <h1 class="text-2xl lg:text-lg font-semibold">List of Course's</h1>
+        </template>
+        <CourseList :is-loading="statuses" :course-data="courseData" @update="editCourse" @delete="removeCourse"
+          @toggleModal="toggleModal" />
+      </UICard>
+    </div>
+  </div>
+
+
+
+</template>
+

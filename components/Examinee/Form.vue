@@ -1,25 +1,3 @@
-<template>
-    <UForm :schema="schema" :state="model" class="space-y-4" @submit="onSubmit">
-        <UFormGroup label="First Name" name="first_name" required>
-            <UInput v-model="model.first_name" color="gray" :ui="{ base: 'capitalize' }" />
-        </UFormGroup>
-        <UFormGroup label="Last Name" name="last_name" required>
-            <UInput v-model="model.last_name" color="gray" :ui="{ base: 'capitalize' }" />
-        </UFormGroup>
-        <UFormGroup label="Middle Name" name="middle_name" required>
-            <UInput v-model="model.middle_name" color="gray" :ui="{ base: 'capitalize' }" />
-        </UFormGroup>
-        <UButton type="submit" block color="gray" size="md" :ui="{
-            color: {
-                gray: {
-                    solid: 'bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 text-white hover:dark:bg-primary-600'
-                }
-            }
-        }">Submit</UButton>
- 
-    </UForm>
-</template>
-
 <script setup lang="ts">
 import type { FormSubmitEvent } from '#ui/types'
 
@@ -54,8 +32,6 @@ const schema = $joi.object({
     id: $joi.string().optional()
 })
 
-
-
 const onSubmit = async (event: FormSubmitEvent<User>) => {
     let data: User;
     if (!isUpdate.value) {
@@ -73,6 +49,27 @@ const onSubmit = async (event: FormSubmitEvent<User>) => {
 
 }
 
-
-
 </script>
+
+<template>
+    <UForm :schema="schema" :state="model" class="space-y-4" @submit="onSubmit">
+        <UFormGroup label="First Name" name="first_name" required>
+            <UInput v-model="model.first_name" color="gray" :ui="{ base: 'capitalize' }" />
+        </UFormGroup>
+        <UFormGroup label="Last Name" name="last_name" required>
+            <UInput v-model="model.last_name" color="gray" :ui="{ base: 'capitalize' }" />
+        </UFormGroup>
+        <UFormGroup label="Middle Name" name="middle_name" required>
+            <UInput v-model="model.middle_name" color="gray" :ui="{ base: 'capitalize' }" />
+        </UFormGroup>
+        <UButton type="submit" block color="gray" size="md" :ui="{
+            color: {
+                gray: {
+                    solid: 'bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 text-white hover:dark:bg-primary-600'
+                }
+            }
+        }">Submit</UButton>
+ 
+    </UForm>
+</template>
+

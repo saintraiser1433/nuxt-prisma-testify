@@ -1,31 +1,3 @@
-<template>
-    <div class="grid grid-cols-12 gap-2">
-        <div class="col-span-12 lg:col-span-4">
-            <UICard :base="{ padding: 'sm:py-3' }" :body="{ padding: 'sm:px-3 ' }">
-                <template #header>
-                    <h1 class="text-2xl lg:text-lg font-semibold">Manage Questions</h1>
-                </template>
-                <QuestionForm @data-quest-choice="submitQuestion" v-model="formQuestion" :is-update="isUpdate"
-                    @reset="resetForm" />
-            </UICard>
-
-        </div>
-        <div class="col-span-12 lg:col-span-8">
-
-            <UICard>
-                <template #header>
-                    <h1 class="text-2xl lg:text-lg font-semibold">Question List</h1>
-                </template>
-                <QuestionList :is-loading="statuses" :question-data="question ?? []" @update="editQuestion" @delete="removeQuestion" />
-
-            </UICard>
-
-        </div>
-
-    </div>
-
-</template>
-
 <script setup lang="ts">
 definePageMeta({
     requiredRole: 'admin',
@@ -118,10 +90,34 @@ const resetForm = () => {
 
 }
 
-
-
-
-
-
-
 </script>
+
+
+<template>
+    <div class="grid grid-cols-12 gap-2">
+        <div class="col-span-12 lg:col-span-4">
+            <UICard :base="{ padding: 'sm:py-3' }" :body="{ padding: 'sm:px-3 ' }">
+                <template #header>
+                    <h1 class="text-2xl lg:text-lg font-semibold">Manage Questions</h1>
+                </template>
+                <QuestionForm @data-quest-choice="submitQuestion" v-model="formQuestion" :is-update="isUpdate"
+                    @reset="resetForm" />
+            </UICard>
+
+        </div>
+        <div class="col-span-12 lg:col-span-8">
+
+            <UICard>
+                <template #header>
+                    <h1 class="text-2xl lg:text-lg font-semibold">Question List</h1>
+                </template>
+                <QuestionList :is-loading="statuses" :question-data="question ?? []" @update="editQuestion" @delete="removeQuestion" />
+
+            </UICard>
+
+        </div>
+
+    </div>
+
+</template>
+

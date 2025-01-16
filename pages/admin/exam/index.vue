@@ -1,36 +1,3 @@
-<template>
-    <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
-    <UModal v-model="isOpen" prevent-close>
-        <UICard :body="{
-            padding: 'px-4'
-        }">
-            <template #header>
-                <div class="flex items-center justify-between">
-                    <h1 class="text-2xl lg:text-lg font-semibold">Exam Information</h1>
-                    <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
-                        @click="isOpen = false" />
-                </div>
-            </template>
-            <ExamForm v-model="examForm" :is-update="isUpdate" @data-exam="submitExam"></ExamForm>
-        </UICard>
-    </UModal>
-
-    <div class="grid grid-cols-5 gap-5">
-        <div class="col-span-5">
-            <UICard>
-                <template #header>
-                    <h1 class="text-2xl lg:text-lg font-semibold">List of Exam's</h1>
-                </template>
-                <ExamList :is-loading="statuses" :exam-data="examData" @toggle-modal="toggleModal"
-                    @assign="routeToQuestion" @update="editExam" @delete="removeExam" />
-            </UICard>
-        </div>
-    </div>
-
-
-
-</template>
-
 <script setup lang="ts">
 definePageMeta({
     requiredRole: 'admin',
@@ -52,7 +19,7 @@ const { setAlert } = useAlert()
 const statuses = computed(() => status.value === 'pending');
 const examData = computed(() => data.value || []);
 
-const { data,status, error } = await useAPI<ExamModel[]>('/exam', {
+const { data, status, error } = await useAPI<ExamModel[]>('/exam', {
     getCachedData(key) {
         const data = payload.data[key] || stat.data[key]
         return data;
@@ -60,7 +27,7 @@ const { data,status, error } = await useAPI<ExamModel[]>('/exam', {
 })
 
 if (error.value) {
-    throw new Error(error.value.message || 'Failed to fetch items')
+    setToast('error', error.value.data.message || 'Failed to fetch items')
 }
 
 
@@ -129,9 +96,7 @@ const removeExam = (id: number) => {
 //utils
 const isOpen = ref(false);
 const isUpdate = ref(false);
-const routeToQuestion = async (id: number) => {
-    await navigateTo(`/admin/exam/${id}`)
-}
+
 
 const resetForm = () => {
     Object.assign(examForm, initialState);
@@ -142,11 +107,40 @@ const toggleModal = () => {
     isOpen.value = true;
     isUpdate.value = false
 }
-
-
-
-
-
-
-
 </script>
+
+
+
+<template>
+    <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
+    <UModal v-model="isOpen" prevent-close>
+        <UICard :body="{
+            padding: 'px-4'
+        }">
+            <template #header>
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl lg:text-lg font-semibold">Exam Information</h1>
+                    <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+                        @click="isOpen = false" />
+                </div>
+            </template>
+            <ExamForm v-model="examForm" :is-update="isUpdate" @data-exam="submitExam"></ExamForm>
+        </UICard>
+    </UModal>
+
+    <div class="grid grid-cols-5 gap-5">
+        <div class="col-span-5">
+            <UICard>
+                <template #header>
+                    <h1 class="text-2xl lg:text-lg font-semibold">List of Exam's</h1>
+                </template>
+                <ExamList :is-loading="statuses" :exam-data="examData" @toggle-modal="toggleModal" @update="editExam"
+                    @delete="removeExam" />
+            </UICard>
+        </div>
+    </div>
+
+
+
+</template>
+

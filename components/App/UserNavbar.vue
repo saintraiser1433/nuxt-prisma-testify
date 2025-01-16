@@ -1,3 +1,28 @@
+<script setup lang="ts">
+const colorMode = useColorMode();
+const route = useRoute();
+const store = useExamStore();
+
+const setColorTheme = (theme:any) => {
+  colorMode.preference = theme;
+};
+
+
+
+const timelimit = computed(() => store.timelimit);
+const checkRoute = computed(() => route.path === '/user/exam');
+
+
+const { signOut, info } = useAuthentication();
+const parse = JSON.parse(info.value);
+const handleSignOut = async () => {
+  await signOut(parse.id)
+  return navigateTo({ name: 'auth' })
+};
+</script>
+
+<style scoped></style>
+
 <template>
   <div
     class="fixed top-0 bg-white dark:border-colorBorder dark:bg-darken py-2 border-b border-opacity-10 w-full col-span-2 transition-all ease-in-out">
@@ -59,27 +84,3 @@
   </div>
 </template>
 
-<script setup>
-const colorMode = useColorMode();
-const route = useRoute();
-const store = useExamStore();
-
-const setColorTheme = (theme) => {
-  colorMode.preference = theme;
-};
-
-
-
-const timelimit = computed(() => store.timelimit);
-const checkRoute = computed(() => route.path === '/user/exam');
-
-
-const { signOut, info } = useAuthentication();
-const parse = JSON.parse(info.value);
-const handleSignOut = async () => {
-  await signOut(parse.id)
-  return navigateTo({ name: 'auth' })
-};
-</script>
-
-<style scoped></style>

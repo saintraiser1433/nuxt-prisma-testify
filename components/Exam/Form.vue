@@ -1,36 +1,3 @@
-<template>
-
-    <UForm :schema="schema" :state="model" class="space-y-4" @submit="onSubmit">
-        <UFormGroup label="Exam Title" name="exam_title" required>
-            <UInput v-model="model.exam_title" color="gray" :ui="{ base: 'uppercase' }" />
-        </UFormGroup>
-        <UFormGroup label="Exam Description" name="description" required>
-            <UInput v-model="model.description" color="gray" :ui="{ base: 'capitalize' }" />
-        </UFormGroup>
-        <UFormGroup label="Time Limit" name="time_limit" required>
-            <USelect v-model="model.time_limit" color="gray" :options="timeLimit" :ui="{ base: 'uppercase' }"
-                option-attribute="name" />
-        </UFormGroup>
-        <UFormGroup v-if="props.isUpdate" label="Status" name="status">
-            <UToggle v-model="model.status" :ui="{
-                container: {
-                    base: 'dark:bg-white'
-                },
-                active: 'bg-primary-500 dark:bg-primary-400',
-                inactive: 'bg-gray-400 dark:bg-primary-500',
-            }" />
-        </UFormGroup>
-
-        <UButton type="submit" block color="gray" size="md" :ui="{
-            color: {
-                gray: {
-                    solid: 'bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 text-white hover:dark:bg-primary-600'
-                }
-            }
-        }">Submit</UButton>
-    </UForm>
-</template>
-
 <script setup lang="ts">
 import type { FormSubmitEvent } from '#ui/types'
 
@@ -89,18 +56,39 @@ const schema = $joi.object({
 const onSubmit = async (event: FormSubmitEvent<ExamModel>) => {
     emits('dataExam', event.data)
 }
-
-// watch(
-//     formData,
-//     (newData) => {
-//         if (newData) {
-//             formExam.exam_id = newData.exam_id;
-//             formExam.exam_title = newData.exam_title;
-//             formExam.description = newData.description;
-//             formExam.time_limit = newData.time_limit;
-//             formExam.status = newData.status;
-//         }
-//     },
-//     { deep: true, immediate: true }
-// );
 </script>
+
+
+<template>
+
+    <UForm :schema="schema" :state="model" class="space-y-4" @submit="onSubmit">
+        <UFormGroup label="Exam Title" name="exam_title" required>
+            <UInput v-model="model.exam_title" color="gray" :ui="{ base: 'uppercase' }" />
+        </UFormGroup>
+        <UFormGroup label="Exam Description" name="description" required>
+            <UInput v-model="model.description" color="gray" :ui="{ base: 'capitalize' }" />
+        </UFormGroup>
+        <UFormGroup label="Time Limit" name="time_limit" required>
+            <USelect v-model="model.time_limit" color="gray" :options="timeLimit" :ui="{ base: 'uppercase' }"
+                option-attribute="name" />
+        </UFormGroup>
+        <UFormGroup v-if="props.isUpdate" label="Status" name="status">
+            <UToggle v-model="model.status" :ui="{
+                container: {
+                    base: 'dark:bg-white'
+                },
+                active: 'bg-primary-500 dark:bg-primary-400',
+                inactive: 'bg-gray-400 dark:bg-primary-500',
+            }" />
+        </UFormGroup>
+
+        <UButton type="submit" block color="gray" size="md" :ui="{
+            color: {
+                gray: {
+                    solid: 'bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 text-white hover:dark:bg-primary-600'
+                }
+            }
+        }">Submit</UButton>
+    </UForm>
+</template>
+

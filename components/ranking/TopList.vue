@@ -1,3 +1,20 @@
+<script lang="ts" setup>
+defineProps({
+    data: {
+        type: Object as PropType<FinalResult[]>,
+        required: true,
+        default: () => [],
+    },
+
+})
+
+const concatName = (fname: string, lname: string, mname: string) => {
+    const mnames = mname ? mname[0] : '';
+    return `${lname}, ${fname} ${mnames}.`
+}
+</script>
+
+
 <template>
     <UICard :defaults="{ base: ' border-b-2 border-emerald-400 overflow-hidden' }">
         <template #header>
@@ -44,18 +61,3 @@
 
     </UICard>
 </template>
-<script lang="ts" setup>
-defineProps({
-    data: {
-        type: Object as PropType<FinalResult[]>,
-        required: true,
-        default: () => [],
-    },
-
-})
-
-const concatName = (fname: string, lname: string, mname: string) => {
-    const mnames = mname ? mname[0] : '';
-    return `${lname}, ${fname} ${mnames}.`
-}
-</script>

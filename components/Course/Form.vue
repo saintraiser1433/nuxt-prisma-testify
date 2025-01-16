@@ -1,24 +1,3 @@
-<template>
-  <UForm :schema="schema" :state="model" class="space-y-4" @submit="onSubmit">
-    <UFormGroup label="Course Name" name="description" required>
-      <UInput v-model="model.description" color="gray" :ui="{ base: 'capitalize' }" />
-    </UFormGroup>
-    <UFormGroup label="Score" name="score" required>
-      <UInput type="number" color="gray" v-model.number="model.score" />
-    </UFormGroup>
-    <UButton type="submit" block color="gray" size="md" :ui="{
-      color: {
-        gray: {
-          solid: 'bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 text-white hover:dark:bg-primary-600'
-        }
-      }
-    }">
-      Submit
-    </UButton>
-
-  </UForm>
-</template>
-
 <script setup lang="ts">
 import type { FormSubmitEvent } from '#ui/types'
 const emits = defineEmits<{
@@ -44,3 +23,25 @@ const onSubmit = async (event: FormSubmitEvent<CourseModel>) => {
 
 
 </script>
+
+<template>
+  <UForm :schema="schema" :state="model" class="space-y-4" @submit="onSubmit">
+    <UFormGroup label="Course Name" name="description" required>
+      <UInput v-model="model.description" color="gray" :ui="{ base: 'capitalize' }" />
+    </UFormGroup>
+    <UFormGroup label="Score" name="score" required>
+      <UInput type="number" color="gray" v-model.number="model.score" />
+    </UFormGroup>
+    <UButton type="submit" block color="gray" size="md" :ui="{
+      color: {
+        gray: {
+          solid: 'bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 text-white hover:dark:bg-primary-600'
+        }
+      }
+    }">
+      Submit
+    </UButton>
+
+  </UForm>
+</template>
+

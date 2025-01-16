@@ -53,7 +53,5 @@ const props = defineProps({
     <template #description-data="{ row, index }">
       <span class="capitalize">{{ row.description }}</span>
     </template>
-
-
   </UITables>
 </template>

@@ -1,3 +1,13 @@
+<script lang="ts" setup>
+const { generateOption } = useWidgetOption();
+
+const primaryOption = generateOption('#7367f0');
+const successOption = generateOption('#4eda8c');
+const warningOption = generateOption('#ff9f43');
+const dangerOption = generateOption('#ff6468'); 
+</script>
+
+
 <template>
     <div class="grid grid-cols-12 gap-3">
         <div class="col-span-12 lg:col-span-3 ">
@@ -66,11 +76,3 @@
         </div>
     </div>
 </template>
-<script lang="ts" setup>
-const { generateOption } = useWidgetOption();
-
-const primaryOption = generateOption('#7367f0');
-const successOption = generateOption('#4eda8c');
-const warningOption = generateOption('#ff9f43');
-const dangerOption = generateOption('#ff6468'); 
-</script>

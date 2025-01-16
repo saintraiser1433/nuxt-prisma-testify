@@ -63,9 +63,7 @@ const handleDelete = (id: number) => {
 const handleUpdate = (item: ExamModel) => {
     emits('update', item)
 }
-const handleAssign = (id: number) => {
-    emits('assign', id)
-}
+
 </script>
 
 <template>
@@ -95,8 +93,8 @@ const handleAssign = (id: number) => {
         </template>
         <template #actions-data="{ row, index }">
             <div class="flex gap-1">
-                <UButton color="primary" class="dark:text-white" variant="solid" size="xs"
-                    @click="handleAssign(row.exam_id)">
+                <UButton :to="{ name: 'admin-exam-id', params: { id: row.exam_id } }" color="primary"
+                    class="dark:text-white" variant="solid" size="xs">
                     <i-bx-show />
                 </UButton>
                 <UButton color="emerald" class="dark:text-white" variant="solid" size="xs" @click="handleUpdate(row)">

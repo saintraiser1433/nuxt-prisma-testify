@@ -1,21 +1,3 @@
-<template>
-    <div class="w-8/12 mx-auto translate-y-0 lg:translate-y-1/4">
-        <UICard :body="{ padding: 'sm:px-4' }" :header="{ padding: 'sm:p-0 p-0', }">
-            <template #header>
-                <UserDashboardHeader title="FOLLOW UP INFORMATION" icon="/images/data.png" />
-
-            </template>
-            <h2 class="text-sm border-b border-gray-300 dark:border-gray-700 pb-2 mb-4 font-semibold">Date Examination:
-                {{ dateNow }} </h2>
-            <UserFormInformation @data-information="onSubmit" />
-
-        </UICard>
-
-
-    </div>
-</template>
-
-
 <script setup lang="ts">
 
 definePageMeta({
@@ -70,7 +52,21 @@ const onSubmit = async (onResponse: Followup) => {
 
 
 </script>
+<template>
+    <div class="w-8/12 mx-auto translate-y-0 lg:translate-y-1/4">
+        <UICard :body="{ padding: 'sm:px-4' }" :header="{ padding: 'sm:p-0 p-0', }">
+            <template #header>
+                <UserDashboardHeader title="FOLLOW UP INFORMATION" icon="/images/data.png" />
+
+            </template>
+            <h2 class="text-sm border-b border-gray-300 dark:border-gray-700 pb-2 mb-4 font-semibold">Date Examination:
+                {{ dateNow }} </h2>
+            <UserFormInformation @data-information="onSubmit" />
+
+        </UICard>
 
 
+    </div>
+</template>
 
-<style scoped></style>
+

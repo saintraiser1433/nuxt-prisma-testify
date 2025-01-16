@@ -1,3 +1,11 @@
+<script setup lang="ts">
+const store = useStore();
+
+defineProps({
+    footerName: String
+})
+</script>
+
 <template>
     <footer :class="[
         store.getToggleState ? 'lg:ml-60 lg:w-[calc(100%-15rem)]' : 'lg:ml-20 lg:w-[calc(100%-5rem)]',
@@ -8,13 +16,3 @@
         </div>
     </footer>
 </template>
-
-<script setup>
-const store = useStore();
-
-defineProps({
-    footerName: String
-})
-</script>
-
-<style scoped></style>

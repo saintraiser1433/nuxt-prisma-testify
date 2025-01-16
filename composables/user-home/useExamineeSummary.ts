@@ -1,4 +1,4 @@
-export const useExamineeSummary = (data: SummaryResult, dataCourse?: CourseModel[]) => {
+export const useExamineeSummary = (data?: SummaryResult, dataCourse?: CourseModel[]) => {
     const summaryData = computed(() => data);
 
     const summaryScores = computed(() => {
@@ -13,8 +13,8 @@ export const useExamineeSummary = (data: SummaryResult, dataCourse?: CourseModel
     })
 
     const examineeName = computed(() => {
-        const middleNameInitial = summaryData.value.middle_name ? summaryData.value.middle_name[0] : '';
-        return `${summaryData.value.last_name}, ${summaryData.value.first_name} ${middleNameInitial}.`;
+        const middleNameInitial = summaryData.value?.middle_name ? summaryData.value.middle_name[0] : '';
+        return `${summaryData.value?.last_name}, ${summaryData.value?.first_name} ${middleNameInitial}.`;
     });
 
 
@@ -24,15 +24,15 @@ export const useExamineeSummary = (data: SummaryResult, dataCourse?: CourseModel
     });
 
     const isFinished = computed(() => {
-        const examCnt = summaryData.value.examCnt ?? 0;
-        const examAttempt = summaryData.value.examAttempt ?? 0;
+        const examCnt = summaryData.value?.examCnt ?? 0;
+        const examAttempt = summaryData.value?.examAttempt ?? 0;
         return examCnt === examAttempt;
     });
 
 
     const examAttempts = computed(() => {
-        const examAttempt = summaryData.value.examAttempt ?? 0;
-        const examCnt = summaryData.value.examCnt ?? 0;
+        const examAttempt = summaryData.value?.examAttempt ?? 0;
+        const examCnt = summaryData.value?.examCnt ?? 0;
         return `Exam Finished ${examAttempt} out of ${examCnt}`;
     });
 

@@ -1,3 +1,75 @@
+<script setup lang="ts">
+import type { FormSubmitEvent } from '#ui/types'
+
+
+
+const emits = defineEmits<{
+    (e: 'dataQuestChoice', payload: QuestionModel): void;
+    (e: 'reset'): void;
+}>()
+defineProps({
+    isUpdate: {
+        type: Boolean,
+        default: false
+    }
+})
+
+const { indexToLetter } = useAlphabet();
+const { params, meta } = useRoute();
+const { $joi } = useNuxtApp()
+
+
+const model = defineModel<QuestionModel>({ required: true });
+const schema = $joi.object({
+    question_id: $joi.number().optional(),
+    exam_id: $joi.number().optional(),
+    question: $joi.string().required().messages({
+        "any.required": `Question is Required`,
+    }),
+    Choices: $joi.array().min(2).items(
+        $joi.object({
+            description: $joi.string().required().trim().min(1).messages({
+                'string.empty': 'Choice description cannot be empty',
+                'any.required': 'Choice description is required',
+                'string.min': 'Choice description cannot be empty'
+            }),
+            choices_id: $joi.number().optional(),
+            status: $joi.boolean().optional()
+        })
+    ).messages({
+        'array.min': 'At least 2 choices are required'
+    })
+})
+
+const examTitle = computed(() => String(meta.examTitle))
+
+const addChoice = () => {
+    if (!model.value.Choices) {
+        model.value.Choices = []
+    }
+    model.value.Choices.push({
+        description: '',
+        status: false
+    })
+}
+
+const removeChoices = (index: number) => {
+    model.value.Choices = model.value.Choices?.filter((_, i) => i !== index)
+}
+
+
+const onSubmit = (event: FormSubmitEvent<QuestionModel>) => {
+    emits('dataQuestChoice', { ...event.data, exam_id: Number(params.id) })
+}
+
+const reset = () => {
+    emits('reset')
+}
+</script>
+
+
+
+
 <template>
     <UForm :schema="schema" :state="model" class="space-y-4" @submit="onSubmit">
         <UFormGroup label="Exam Title" name="exam_title">
@@ -70,97 +142,3 @@
     </UForm>
 </template>
 
-<script setup lang="ts">
-import type { FormSubmitEvent } from '#ui/types'
-
-
-
-const emits = defineEmits<{
-    (e: 'dataQuestChoice', payload: QuestionModel): void;
-    (e: 'reset'): void;
-}>()
-defineProps({
-    isUpdate: {
-        type: Boolean,
-        default: false
-    }
-})
-
-const { indexToLetter } = useAlphabet();
-const { params, meta } = useRoute();
-const { $joi } = useNuxtApp()
-
-
-const model = defineModel<QuestionModel>({ required: true });
-const schema = $joi.object({
-    question_id: $joi.number().optional(),
-    exam_id: $joi.number().optional(),
-    question: $joi.string().required().messages({
-        "any.required": `Question is Required`,
-    }),
-    Choices: $joi.array().min(2).items(
-        $joi.object({
-            description: $joi.string().required().trim().min(1).messages({
-                'string.empty': 'Choice description cannot be empty',
-                'any.required': 'Choice description is required',
-                'string.min': 'Choice description cannot be empty'
-            }),
-            choices_id: $joi.number().optional(),
-            status: $joi.boolean().optional()
-        })
-    ).messages({
-        'array.min': 'At least 2 choices are required'
-    })
-})
-
-
-
-
-
-
-const examTitle = computed(() => String(meta.examTitle))
-
-const addChoice = () => {
-    if (!model.value.Choices) {
-        model.value.Choices = []
-    }
-    model.value.Choices.push({
-        description: '',
-        status: false
-    })
-}
-
-const removeChoices = (index: number) => {
-    model.value.Choices = model.value.Choices?.filter((_, i) => i !== index)
-}
-
-
-const onSubmit = (event: FormSubmitEvent<QuestionModel>) => {
-    emits('dataQuestChoice', { ...event.data, exam_id: Number(params.id) })
-}
-//watchers
-
-// watch(
-//     formData,
-//     (newData) => {
-//         if (newData) {
-//             formQuestion.value = JSON.parse(JSON.stringify(newData))
-//         }
-//     },
-//     { deep: true, immediate: true }
-// )
-
-const reset = () => {
-    emits('reset')
-}
-</script>
-
-
-
-<!-- ol {
-    list-style-type: upper-alpha;
-    columns: 2;
-    -webkit-columns: 2;
-    -moz-columns: 2;
-
-} -->

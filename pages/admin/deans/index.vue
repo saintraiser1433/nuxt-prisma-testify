@@ -1,79 +1,3 @@
-<template>
-    <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
-
-    <UModal :ui="{ width: 'w-full lg:max-w-[1400px]' }" v-model="isOpenAssign" prevent-close>
-        <UICard :body="{ padding: 'p-4', base: 'dark:bg-dark-body-950' }">
-
-            <template #header>
-                <div class="flex items-center justify-between">
-                    <h1 class="text-2xl lg:text-lg font-semibold">Assign Deans</h1>
-                    <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
-                        @click="isOpenAssign = false" />
-                </div>
-            </template>
-            <div class="grid grid-cols-12 gap-3">
-                <div class="col-span-12 lg:col-span-3">
-                    <UICard :body="{ padding: 'px-4' }">
-                        <template #header>
-                            <h1 class="text-2xl lg:text-lg font-semibold">Courses Assign</h1>
-                        </template>
-                        <DeansAssignForm :deans-name="deansName" :course-data="assign?.filteredCourses ?? []"
-                            :deans-id="deansId" @data-assign="submitAssign" />
-                    </UICard>
-
-                </div>
-                <div class="col-span-12 lg:col-span-9">
-                    <UICard>
-                        <template #header>
-                            <h1 class="text-2xl lg:text-lg font-semibold">List of Courses Assign</h1>
-                        </template>
-                        <DeansAssignList :is-loading="statusAssign" :assign-data="assign?.assignCourses ?? []" @delete="removeAssign" />
-                    </UICard>
-
-                </div>
-            </div>
-        </UICard>
-        <!-- </UCard> -->
-    </UModal>
-
-
-    <!-- deans index -->
-    <UModal v-model="isOpen" prevent-close>
-        <UICard :body="{
-            padding: 'px-4'
-        }">
-            <template #header>
-                <div class="flex items-center justify-between">
-                    <h1 class="text-2xl lg:text-lg font-semibold">Deans Information</h1>
-                    <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
-                        @click="isOpen = false" />
-                </div>
-
-            </template>
-            <DeansForm v-model="deansForm" :department-data="transformDepartment" :is-update="isUpdate"
-                @data-deans="submitDeans">
-            </DeansForm>
-        </UICard>
-    </UModal>
-
-
-    <div class="grid grid-cols-5 gap-5">
-        <div class="col-span-5">
-            <UICard>
-                <template #header>
-                    <h1 class="text-2xl lg:text-lg font-semibold">List of Deans's</h1>
-                </template>
-                <DeansList :is-loading="statusDean" :deans-data="transformDeans" @toggle-modal="toggleModal"
-                    @assign="toggleAssignDeans" @update="editDeans" />
-            </UICard>
-
-        </div>
-    </div>
-
-    <!-- end -->
-
-</template>
-
 <script setup lang="ts">
 
 
@@ -284,10 +208,80 @@ const toggleModal = () => {
     isOpen.value = true;
     isUpdate.value = false
 }
-
-
-
-
-
-
 </script>
+
+<template>
+
+    <UModal :ui="{ width: 'w-full lg:max-w-[1400px]' }" v-model="isOpenAssign" prevent-close>
+        <UICard :body="{ padding: 'p-4', base: 'dark:bg-dark-body-950' }">
+
+            <template #header>
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl lg:text-lg font-semibold">Assign Deans</h1>
+                    <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+                        @click="isOpenAssign = false" />
+                </div>
+            </template>
+            <div class="grid grid-cols-12 gap-3">
+                <div class="col-span-12 lg:col-span-3">
+                    <UICard :body="{ padding: 'px-4' }">
+                        <template #header>
+                            <h1 class="text-2xl lg:text-lg font-semibold">Courses Assign</h1>
+                        </template>
+                        <DeansAssignForm :deans-name="deansName" :course-data="assign?.filteredCourses ?? []"
+                            :deans-id="deansId" @data-assign="submitAssign" />
+                    </UICard>
+
+                </div>
+                <div class="col-span-12 lg:col-span-9">
+                    <UICard>
+                        <template #header>
+                            <h1 class="text-2xl lg:text-lg font-semibold">List of Courses Assign</h1>
+                        </template>
+                        <DeansAssignList :is-loading="statusAssign" :assign-data="assign?.assignCourses ?? []" @delete="removeAssign" />
+                    </UICard>
+
+                </div>
+            </div>
+        </UICard>
+        <!-- </UCard> -->
+    </UModal>
+
+
+    <!-- deans index -->
+    <UModal v-model="isOpen" prevent-close>
+        <UICard :body="{
+            padding: 'px-4'
+        }">
+            <template #header>
+                <div class="flex items-center justify-between">
+                    <h1 class="text-2xl lg:text-lg font-semibold">Deans Information</h1>
+                    <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+                        @click="isOpen = false" />
+                </div>
+
+            </template>
+            <DeansForm v-model="deansForm" :department-data="transformDepartment" :is-update="isUpdate"
+                @data-deans="submitDeans">
+            </DeansForm>
+        </UICard>
+    </UModal>
+
+
+    <div class="grid grid-cols-5 gap-5">
+        <div class="col-span-5">
+            <UICard>
+                <template #header>
+                    <h1 class="text-2xl lg:text-lg font-semibold">List of Deans's</h1>
+                </template>
+                <DeansList :is-loading="statusDean" :deans-data="transformDeans" @toggle-modal="toggleModal"
+                    @assign="toggleAssignDeans" @update="editDeans" />
+            </UICard>
+
+        </div>
+    </div>
+
+    <!-- end -->
+
+</template>
+

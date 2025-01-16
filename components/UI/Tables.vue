@@ -1,3 +1,74 @@
+<script setup lang="ts">
+
+const props = defineProps({
+    base: String,
+    td: {
+        type: Object as PropType<TableProps>,
+        default: () => ({})
+    },
+    th: {
+        type: Object as PropType<TableProps>,
+        default: () => ({})
+    },
+    tr: {
+        type: Object as PropType<TableProps>,
+        default: () => ({})
+    },
+    columns: {
+        type: Array,
+        required: true,
+        default: () => [],
+    },
+    data: {
+        type: Array,
+        required: true,
+        default: () => [],
+    },
+    hasBorder: {
+        type: Boolean,
+        default: false
+    },
+    hasPagination: {
+        type: Boolean,
+        default: true
+    },
+    hasPageCount: {
+        type: Boolean,
+        default: true
+    },
+    hasColumnFilter: {
+        type: Boolean,
+        default: true
+    },
+    hasActionHeader: {
+        type: Boolean,
+        default: true
+    },
+
+    isLoading: {
+        type: Boolean,
+        default: false,
+    }
+
+
+
+})
+
+const { data } = toRefs(props)
+const { search,
+    pageCount,
+    paginatedData,
+    pageFrom,
+    pageTo,
+    filteredTableData,
+    page,
+    selectedColumns,
+    columnsTable,
+    excludeSelectColumn,
+    totalPages } = usePagination(data, props.columns);
+</script>
+
+
 <template>
     <div>
         <div class="flex items-center justify-between gap-3 px-4 pt-2" v-if="hasActionHeader">
@@ -93,72 +164,3 @@
 
 </template>
 
-<script setup lang="ts">
-
-const props = defineProps({
-    base: String,
-    td: {
-        type: Object as PropType<TableProps>,
-        default: () => ({})
-    },
-    th: {
-        type: Object as PropType<TableProps>,
-        default: () => ({})
-    },
-    tr: {
-        type: Object as PropType<TableProps>,
-        default: () => ({})
-    },
-    columns: {
-        type: Array,
-        required: true,
-        default: () => [],
-    },
-    data: {
-        type: Array,
-        required: true,
-        default: () => [],
-    },
-    hasBorder: {
-        type: Boolean,
-        default: false
-    },
-    hasPagination: {
-        type: Boolean,
-        default: true
-    },
-    hasPageCount: {
-        type: Boolean,
-        default: true
-    },
-    hasColumnFilter: {
-        type: Boolean,
-        default: true
-    },
-    hasActionHeader: {
-        type: Boolean,
-        default: true
-    },
-
-    isLoading: {
-        type: Boolean,
-        default: false,
-    }
-
-
-
-})
-
-const { data } = toRefs(props)
-const { search,
-    pageCount,
-    paginatedData,
-    pageFrom,
-    pageTo,
-    filteredTableData,
-    page,
-    selectedColumns,
-    columnsTable,
-    excludeSelectColumn,
-    totalPages } = usePagination(data, props.columns);
-</script>

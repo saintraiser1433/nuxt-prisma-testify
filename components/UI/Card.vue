@@ -1,24 +1,3 @@
-<template>
-
-  <UCard class="w-full" :ui="{
-    base: defaults?.base || 'overflow-hidden',
-    shadow: 'shadow-sm dark:shadow-sm',
-    divide: 'divide-0 divide-gray-200 dark:divide-gray-700',
-    header: { padding: header?.padding || 'px-4 py-5', base: header?.padding || 'dark:bg-darken' },
-    body: { padding: body?.padding || '', base: body?.base || 'dark:bg-darken' },
-    footer: { padding: footer?.padding || '', base: footer?.base || 'dark:bg-darken' }
-  }">
-    <template v-if="hasHeader" #header>
-      <slot name="header"> </slot>
-    </template>
-    <slot></slot>
-    <template v-if="hasFooter" #footer>
-      <slot name="footer"> </slot>
-    </template>
-  </UCard>
-
-</template>
-
 <script lang="ts" setup>
 import type { CardProps, CardDefaultProps } from '~/types';
 
@@ -52,3 +31,26 @@ defineProps({
 
 })
 </script>
+
+
+<template>
+
+  <UCard class="w-full" :ui="{
+    base: defaults?.base || 'overflow-hidden',
+    shadow: 'shadow-sm dark:shadow-sm',
+    divide: 'divide-0 divide-gray-200 dark:divide-gray-700',
+    header: { padding: header?.padding || 'px-4 py-5', base: header?.padding || 'dark:bg-darken' },
+    body: { padding: body?.padding || '', base: body?.base || 'dark:bg-darken' },
+    footer: { padding: footer?.padding || '', base: footer?.base || 'dark:bg-darken' }
+  }">
+    <template v-if="hasHeader" #header>
+      <slot name="header"> </slot>
+    </template>
+    <slot></slot>
+    <template v-if="hasFooter" #footer>
+      <slot name="footer"> </slot>
+    </template>
+  </UCard>
+
+</template>
+

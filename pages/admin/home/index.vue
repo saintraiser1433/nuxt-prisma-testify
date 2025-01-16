@@ -1,3 +1,21 @@
+<script setup lang="ts">
+
+definePageMeta({
+    requiredRole: 'admin',
+});
+
+useSeoMeta({
+    title: 'Testify Home Page',
+    description: 'Testify Analytics',
+    ogTitle: 'Testify Home Page',
+    ogDescription: 'Testify Analytics'
+});
+</script>
+
+<style scoped>
+/* Ensure the parent container is responsive */
+</style>
+
 <template>
     <HomeSummaryAnalytics></HomeSummaryAnalytics>
     <HomeAnalytics></HomeAnalytics>
@@ -16,27 +34,3 @@
 
 </template>
 
-<script setup lang="ts">
-
-definePageMeta({
-    requiredRole: 'admin',
-});
-
-useSeoMeta({
-    title: 'Testify Home Page',
-    description: 'Testify Analytics',
-    ogTitle: 'Testify Home Page',
-    ogDescription: 'Testify Analytics'
-});
-
-
-
-
-
-
-
-</script>
-
-<style scoped>
-/* Ensure the parent container is responsive */
-</style>
