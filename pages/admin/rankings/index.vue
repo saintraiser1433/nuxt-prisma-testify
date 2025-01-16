@@ -27,10 +27,10 @@ useSeoMeta({
 const { payload, static: stat } = useNuxtApp()
 const { setToast } = useToasts();
 const { getProgressBarColor } = useProgressBarColor();
-const resultData = computed(() => data.value || []);
+
 const statuses = computed(() => status.value === 'pending');
 
-const { data, status, error } = await useAPI<GetScore[]>('/results', {
+const { data, status, error } = await useAPI<FinalResult[]>('/results', {
     getCachedData(key) {
         const data = payload.data[key] || stat.data[key]
         return data;
@@ -45,7 +45,7 @@ if (error.value) {
 
 
 const dataResults = computed(() => {
-    return resultData.value.map((item) => {
+    return data.value?.map((item) => {
         const totalQuestions = Number(item.total_questions) || 0;
         const totalCorrectAnswers = Number(item.total_correct_answers) || 0;
 
@@ -62,6 +62,8 @@ const dataResults = computed(() => {
 });
 
 const topRankings = computed(() => {
+    if (!dataResults.value) return [];
+
     return dataResults.value
         .slice()
         .sort((a, b) => b.total_correct_answers - a.total_correct_answers)

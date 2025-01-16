@@ -1,4 +1,16 @@
 <template>
+  <div class="flex items-center gap-2 px-3 mt-5 border-b pb-3">
+    <div class="self-start">
+      <p>Legends:</p>
+    </div>
+    <ul class="flex text-sm items-center gap-5 flex-row flex-wrap">
+      <li v-for="map in legends" :key="map.label">
+        <UBadge variant="subtle" :color="map.color" size="lg">
+          {{ map.label }}
+        </UBadge>
+      </li>
+    </ul>
+  </div>
   <div class="grid grid-cols-12 gap-2">
     <div class="col-span-12 lg:col-span-9 ">
       <UITables :data="data" :columns="columns" :is-loading="isLoading" :has-border="true" :has-action-header="true"
@@ -8,6 +20,7 @@
         <template #exam_title-data="{ row, index }">
           <span class="uppercase font-bold">{{ row.exam_title }}</span>
         </template>
+
         <template #success_rate-data="{ row, index }">
 
           <UProgress :value="row.success_rate" size="xl" :color="row.color" indicator class="relative">
@@ -44,7 +57,6 @@ const columns = [{
 }, {
   key: 'success_rate',
   label: 'Percentage',
-
   sortable: false
 }, {
   key: 'score',
@@ -52,11 +64,31 @@ const columns = [{
   sortable: false
 }]
 
+const legends: LegendModel[] = [
+    {
+        label: 'POOR 50 Below %',
+        color: 'carnation'
+    },
+    {
+        label: 'GOOD 51-69 %',
+        color: 'primary'
+    },
+    {
+        label: 'VERY GOOD 70 - 89%',
+        color: 'cyan'
+    },
+    {
+        label: 'EXCELLENT 90-100 %',
+        color: 'emerald'
+    },
+]
+
 
 const props = defineProps({
   summaryData: {
-    type: Object as PropType<SummaryResult[]>,
-    required: true
+    type: Object as PropType<SummaryData[]>,
+    required: true,
+    default: () => []
   },
   isLoading: {
     type: Boolean,
@@ -81,18 +113,23 @@ const { summaryData } = toRefs(props)
 const { getProgressBarColor } = useProgressBarColor();
 
 
-const data = computed(() => {
-  if (!summaryData.value[0] || !summaryData.value[0].data) return [];
 
-  return summaryData.value[0].data.map((items) => ({
-    exam_id: items.exam_id,
-    exam_title: items.exam_title,
-    success_rate: items.success_rate,
-    correctAnswer: items.total_correct_answer,
-    totalQuestion: items.total_questions,
-    color: getProgressBarColor(items.success_rate)
-  }));
+const data = computed(() => {
+  if (!summaryData.value) return [];
+  return summaryData.value.map((items) => {
+    const successRate = parseFloat(((items.total_correct_answers / items.total_questions) * 100).toFixed(2));
+    return {
+      exam_id: items.exam_id,
+      exam_title: items.exam_title,
+      success_rate: successRate,
+      correctAnswer: items.total_correct_answers,
+      totalQuestion: items.total_questions,
+      color: getProgressBarColor(successRate)
+    }
+
+  });
 });
+
 
 
 

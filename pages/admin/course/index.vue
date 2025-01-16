@@ -1,5 +1,5 @@
 <template>
-  <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
+
   <UModal v-model="isOpen" prevent-close>
     <UICard :body="{
       padding: 'p-10'
@@ -45,7 +45,7 @@ useSeoMeta({
 
 
 
-const { $api, payload, static: stat } = useNuxtApp()
+const { $api, payload, static: stat,$datefns } = useNuxtApp()
 const { setToast } = useToasts();
 const { setAlert } = useAlert()
 const isUpdate = ref(false);

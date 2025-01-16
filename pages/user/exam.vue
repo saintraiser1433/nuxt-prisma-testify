@@ -1,6 +1,5 @@
 <template>
     <div>
-        {{ question?.time_limit }}
         <div class="absolute end-5 bottom-20">
             <UButton type="button" @click="findMissing" variant="solid" color="gray" size="lg" :ui="BTN_FINDMISSING">
                 <i-fluent-emoji-flat-magnifying-glass-tilted-left />
@@ -54,7 +53,6 @@ const initialSessionAnswer = ref<SessionExamineeHeader[] | null>(null);
 const initialRemainingTime = ref(0);
 const examQuestion = computed(() => question.value);
 const examSessionAnswer = computed(() => sessionAnswer.value);
-const timeLimit = computed(() => sessionDetails.value?.timelimit ?? question.value?.time_limit ?? 0);
 
 //base exam
 const {
@@ -127,13 +125,23 @@ watch(() => error.value?.data.status, async (newError) => {
 })
 
 
-watch(() => timeLimit.value, async (newTime, oldTime) => {
-    if (newTime === oldTime || newTime !== oldTime) {
-        startTimerWithCallBack(newTime, async () => await submitExam());
+
+watch(
+    [
+        () => sessionDetails.value?.timelimit,
+        () => question.value?.time_limit
+    ],
+    ([newSessionTime, newQuestionTime]) => {
+        const newTime = newSessionTime ?? newQuestionTime ?? 0;
+        if (newTime) {
+            startTimerWithCallBack(newTime, async () => await submitExam());
+        }
+    },
+    {
+        immediate: true,
+        deep: true
     }
-}, {
-    immediate: true
-})
+);
 
 
 

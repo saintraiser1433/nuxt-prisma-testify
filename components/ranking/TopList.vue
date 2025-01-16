@@ -21,7 +21,7 @@
 
                 <div class="divide-y divide-gray-200 dark:divide-gray-700">
 
-                    <div v-for="(data, index) in data" :key="data.examineeName"
+                    <div v-for="(data, index) in data" :key="data.examinee_id"
                         class="grid grid-cols-12 gap-3 p-2 text-sm text-center">
                         <div class="col-span-1 flex justify-center items-center gap-2">
                             <svg-icon v-if="index + 1 === 1" name="seticons/firstmedal" width="24" height="24" />
@@ -29,7 +29,8 @@
                             <svg-icon v-else-if="index + 1 === 3" name="seticons/thirdmedal" width="24" height="24" />
                         </div>
                         <div class="col-span-2">{{ index + 1 }}</div>
-                        <div class="col-span-6 capitalize">{{ data.examineeName }}.</div>
+                        <div class="col-span-6 capitalize">{{
+                            concatName(data.first_name, data.last_name, data.middle_name) }}</div>
                         <div class="col-span-2 ">{{ data.total_correct_answers }}/{{ data.total_questions }}
                         </div>
 
@@ -46,10 +47,15 @@
 <script lang="ts" setup>
 defineProps({
     data: {
-        type: Object as PropType<GetScore[]>,
+        type: Object as PropType<FinalResult[]>,
         required: true,
         default: () => [],
     },
 
 })
+
+const concatName = (fname: string, lname: string, mname: string) => {
+    const mnames = mname ? mname[0] : '';
+    return `${lname}, ${fname} ${mnames}.`
+}
 </script>

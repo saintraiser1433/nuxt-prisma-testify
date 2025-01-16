@@ -31,6 +31,10 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
         return fetch<CourseModel[]>(`/course/filtered`)
     },
 
+    async getAllCourses(): Promise<CourseModel[]> {
+        return fetch<CourseModel[]>(`/course`)
+    },
+
 
 
     //end
@@ -225,11 +229,13 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
     async getFollowup(id: string): Promise<T> {
         return fetch<T>(`/followup/${id}`)
     },
-
-
-
-
     //end
+
+
+    //result & summary
+    async getSummaryResultById(id: string): Promise<SummaryResult> {
+        return fetch<SummaryResult>(`/results/${id}`)
+    },
 
 
 

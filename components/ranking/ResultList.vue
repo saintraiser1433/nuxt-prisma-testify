@@ -11,11 +11,10 @@
                     {{ index + 1 }}
                 </template>
                 <template #examineeName-data="{ row, index }">
-                    <span class="capitalize">{{ row.examineeName }}</span>
+                    <span class="capitalize">{{ concatName(row.first_name, row.last_name, row.middle_name) }}</span>
                 </template>
                 <template #score-data="{ row, index }">
                     {{ row.total_correct_answers }}/{{ row.total_questions }}
-
                 </template>
                 <template #ratings-data="{ row, index }">
                     <UProgress :value="row.successRate" size="xl" :color="row.color" indicator class="relative">
@@ -30,7 +29,7 @@
                 <template #actions-data="{ row, index }">
                     <div class="flex gap-1">
 
-                        <UButton :to="{ name: 'admin-rankings-examineeId', params: { examineeId: row.examineeId } }"
+                        <UButton :to="{ name: 'admin-rankings-examineeId', params: { examineeId: row.examinee_id } }"
                             color="primary" class="dark:text-white" variant="solid" size="xs">
                             <i-bx-show />
                         </UButton>
@@ -65,7 +64,7 @@ const columns = [{
 }]
 defineProps({
     data: {
-        type: Object as PropType<GetScore[]>,
+        type: Object as PropType<FinalResult[]>,
         required: true,
         default: () => [],
     },
@@ -76,4 +75,10 @@ defineProps({
     }
 
 })
+
+
+const concatName = (fname: string, lname: string, mname: string) => {
+    const mnames = mname ? mname[0] : '';
+    return `${lname}, ${fname} ${mnames}.`
+}
 </script>

@@ -253,38 +253,44 @@ export interface ExamAnswerDetails {
     choices_id: number
 }
 
-export interface GetScore {
-    examineeId: string,
-    total_correct_answers: number,
-    total_questions: number,
-    examCnt: number,
-    examAttempt: number,
-    examineeName?: string
-}
 
 export interface SummaryData {
     exam_id: number,
     exam_title: string,
-    percentage: number,
-    total_correct_answer: number,
+    total_correct_answers: number,
     total_questions: number,
-    success_rate: number
-
 }
 
 
 export interface SummaryResult {
-    examinee_id: string
+    examinee_id: string,
     first_name: string,
     last_name: string,
-    middle_name?: string,
-    gender: "Male" | "Female",
+    middle_name: string,
     birth_date: string,
-    contact_number: string,
+    gender: 'Male' | 'Female',
     school: string,
-    address: string
-    data: SummaryData[]
+    email: string,
+    address: string,
+    contact_number: string,
+    examCnt: number,
+    examAttempt: number,
+    examDetails: SummaryData[]
+
 }
+
+export interface FinalResult {
+    examinee_id: string,
+    first_name: string,
+    last_name: string,
+    middle_name: string,
+    total_questions: number,
+    total_correct_answers: number,
+    color: string,
+    successRate: number
+}
+
+
 
 export interface SessionExamModel {
     examinee_id: string,
