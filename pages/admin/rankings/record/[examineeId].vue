@@ -46,12 +46,12 @@ const {
 <template>
     <div class="grid grid-cols-12 gap-3">
         <div class="col-span-12 lg:col-span-4">
-            <RecordInformation :data="summaryData" :correct-answer="summaryScores.totalCorrect"
+            <RankingRecordInformation :data="summaryData" :correct-answer="summaryScores.totalCorrect"
                 :total-question="summaryScores.totalQuestions" />
 
         </div>
         <div class="col-span-12 lg:col-span-8">
-            <RecordCourseRecommend :is-loading="statuses" :data="courseData" />
+            <RankingRecordCourse :is-loading="statuses" :data="courseData" />
         </div>
     </div>
 </template>

@@ -48,19 +48,19 @@ defineProps({
                 </div>
 
                 <div class="flex flex-col p-3 gap-2">
-
                     <h3 class="font-semibold">SCORE PER CATEGORY</h3>
                     <div class="grid grid-cols-12 text-sm items-center" v-for="item in data.examDetails"
                         :key="item.exam_id">
                         <div class="col-span-0 font-semibold">
-                            <UButton type="submit" variant="solid" color="emerald" square size="xs">
+                            <UButton
+                                :to="{ name: 'admin-rankings-consolidate-examineeId-examId', params: { examineeId: data.examinee_id, examId: item.exam_id } }"
+                                variant="solid" color="emerald" square size="xs">
                                 <i-icon-park-outline-search />
                             </UButton>
                         </div>
                         <div class="col-span-8 font-semibold capitalize">{{ item.exam_title }}</div>
                         <div class="col-span-2"><span class="text-red-500">{{ item.total_correct_answers }}</span>/{{
                             item.total_questions }}</div>
-
                     </div>
 
                 </div>

@@ -19,7 +19,7 @@ const handleSignOut = async () => {
     ? ' lg:w-[calc(100%-15rem)] lg:left-60'
     : 'lg:w-[calc(100%-5rem)] lg:left-20'
     "
-    class="fixed top-0 bg-white dark:border-colorBorder z-50 dark:bg-darken py-2 border-b border-opacity-10 w-full col-span-2 transition-all ease-in-out">
+    class="fixed top-0 bg-white dark:border-colorBorder z-30 dark:bg-darken py-2 border-b border-opacity-10 w-full col-span-2 transition-all ease-in-out">
     <div class="mx-auto flex justify-between px-5">
       <button @click="store.toggleState">
         <i-solar-list-linear />

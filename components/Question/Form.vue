@@ -26,7 +26,7 @@ const schema = $joi.object({
     question: $joi.string().required().messages({
         "any.required": `Question is Required`,
     }),
-    Choices: $joi.array().min(2).items(
+    choicesList: $joi.array().min(2).items(
         $joi.object({
             description: $joi.string().required().trim().min(1).messages({
                 'string.empty': 'Choice description cannot be empty',
@@ -44,17 +44,17 @@ const schema = $joi.object({
 const examTitle = computed(() => String(meta.examTitle))
 
 const addChoice = () => {
-    if (!model.value.Choices) {
-        model.value.Choices = []
+    if (!model.value.choicesList) {
+        model.value.choicesList = []
     }
-    model.value.Choices.push({
+    model.value.choicesList.push({
         description: '',
         status: false
     })
 }
 
 const removeChoices = (index: number) => {
-    model.value.Choices = model.value.Choices?.filter((_, i) => i !== index)
+    model.value.choicesList = model.value.choicesList?.filter((_, i) => i !== index)
 }
 
 
@@ -94,7 +94,7 @@ const reset = () => {
 
         <div class="overflow-y-auto max-h-[400px] custom-scrollbar px-1  ">
             <transition-expand group mode="out-in">
-                <div v-for="(choice, index) in model.Choices" :key="choice.choices_id"
+                <div v-for="(choice, index) in model.choicesList" :key="choice.choices_id"
                     class="flex flex-col gap-2 mb-5 p-2 rounded-lg border dark:bg-darken dark:border-gray-700 hover:shadow-sm">
                     <div class="flex items-center justify-between border-b dark:border-gray-700 py-2">
                         <div class="flex flex-row items-center gap-x-2">
@@ -126,7 +126,7 @@ const reset = () => {
                     Reset Form
                 </UButton>
 
-                <UButton v-if="model.Choices?.length ?? 0 > 0" type="submit" color="gray" block :ui="{
+                <UButton v-if="model.choicesList?.length ?? 0 > 0" type="submit" color="gray" block :ui="{
                     color: {
                         gray: {
                             solid: 'bg-emerald-500 text-white hover:bg-emerald-600 dark:bg-emerald-500 dark:text-white dark:hover:bg-emerald-600'

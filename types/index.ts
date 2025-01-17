@@ -15,7 +15,7 @@ export interface CourseModel extends Timestamped {
     course_id?: number;
     description: string;
     score: number;
-    AssignDeans?: AssignDeansModel[]; // Optional relationship
+    assignDeansList?: AssignDeansModel[]; // Optional relationship
 }
 
 // Exam Model
@@ -25,9 +25,9 @@ export interface ExamModel extends Timestamped {
     description: string;
     time_limit: number;
     status: boolean;
-    Question?: QuestionModel[]; // Optional relationship
-    Answers?: AnswersModel[]; // Optional relationship
-    ExamAttempt?: ExamAttemptModel[]; // Optional relationship
+    questionList?: QuestionModel[]; // Optional relationship
+    answersList?: AnswersModel[]; // Optional relationship
+    examAttemptList?: ExamAttemptModel[]; // Optional relationship
 }
 
 // Question Model
@@ -35,9 +35,9 @@ export interface QuestionModel extends Timestamped {
     question_id?: number;
     question: string;
     exam_id?: number;
-    Exam?: ExamModel[]; // Optional relationship
-    Choices?: ChoicesModel[]; // Optional relationship
-    Answers?: AnswersModel[]; // Optional relationship
+    examList?: ExamModel[]; // Optional relationship
+    choicesList?: ChoicesModel[]; // Optional relationship
+    answersList?: AnswersModel[]; // Optional relationship
 }
 
 // Choices Model
@@ -47,7 +47,7 @@ export interface ChoicesModel extends Timestamped {
     questionList?: QuestionModel; // Optional relationship
     description?: string;
     status?: boolean;
-    Answers?: AnswersModel[]; // Optional relationship
+    answersList?: AnswersModel[]; // Optional relationship
 }
 
 // Answers Model
@@ -75,7 +75,7 @@ export interface DepartmentModel extends Timestamped {
     department_id?: number;
     department_name: string;
     status: boolean;
-    Deans?: DeansModel; // Optional relationship
+    deansList?: DeansModel; // Optional relationship
 }
 
 // Deans Model
@@ -90,7 +90,7 @@ export interface DeansModel extends Timestamped {
     status: boolean
     department_id: number; // Unique
     department?: DepartmentModel; // Optional relationship
-    AssignDeans?: AssignDeansModel[]; // Optional relationship
+    assignDeansList?: AssignDeansModel[]; // Optional relationship
 }
 
 // AssignDeans Model
@@ -279,6 +279,7 @@ export interface SummaryResult {
 
 }
 
+
 export interface FinalResult {
     examinee_id: string,
     first_name: string,
@@ -291,7 +292,7 @@ export interface FinalResult {
 }
 
 
-
+//sessions
 export interface SessionExamModel {
     examinee_id: string,
     exam_id?: number,
@@ -314,6 +315,31 @@ export interface SessionExamineeHeader {
     sessionDetails: SessionExamineeDetail[]
 
 }
+
+//consolidateanswer
+
+interface Exam {
+    description: string;
+}
+
+interface Answer {
+    choices_id: number;
+}
+
+export interface Choice {
+    choices_id: number;
+    description: string;
+    status: boolean;
+    answerList: Answer[];
+}
+
+export interface ConsoQuestionAnswer {
+    question_id: number;
+    question: string;
+    examList: Exam; 
+    choicesList: Choice[];
+}
+
 export interface LegendModel {
     label: string,
     color: LegendColor

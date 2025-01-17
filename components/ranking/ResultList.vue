@@ -75,7 +75,7 @@ const concatName = (fname: string, lname: string, mname: string) => {
                 <template #actions-data="{ row, index }">
                     <div class="flex gap-1">
 
-                        <UButton :to="{ name: 'admin-rankings-examineeId', params: { examineeId: row.examinee_id } }"
+                        <UButton :to="{ name: 'admin-rankings-record-examineeId', params: { examineeId: row.examinee_id } }"
                             color="primary" class="dark:text-white" variant="solid" size="xs">
                             <i-bx-show />
                         </UButton>

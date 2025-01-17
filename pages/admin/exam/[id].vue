@@ -39,7 +39,7 @@ if (error.value) {
 const formQuestion = reactive<QuestionModel>({
     question_id: undefined,
     question: '',
-    Choices: []
+    choicesList: []
 });
 const submitQuestion = async (data: QuestionModel): Promise<void> => {
     try {
@@ -53,7 +53,7 @@ const submitQuestion = async (data: QuestionModel): Promise<void> => {
         shouldRefetch.value++;
         resetForm();
     } catch (error: any) {
-        setToast('error', error.data.message || 'An error occurred');
+        setToast('error', error.data.value?.message || 'An error occurred');
     }
 }
 
@@ -61,7 +61,7 @@ const submitQuestion = async (data: QuestionModel): Promise<void> => {
 const editQuestion = (response: QuestionModel) => {
     formQuestion.question_id = response.question_id;
     formQuestion.question = response.question;
-    formQuestion.Choices = response.Choices;
+    formQuestion.choicesList = response.choicesList;
     isUpdate.value = true
 }
 
@@ -84,7 +84,7 @@ const removeQuestion = (id: number) => {
 
 const resetForm = () => {
     formQuestion.question = ''
-    formQuestion.Choices = []
+    formQuestion.choicesList = []
     formQuestion.question_id = undefined
     isUpdate.value = false
 
