@@ -256,9 +256,9 @@ export interface ExamAnswerDetails {
 
 export interface SummaryData {
     exam_id: number,
-    exam_title: string,
-    total_correct_answers: number,
-    total_questions: number,
+    description: string,
+    correctAnswers: number,
+    totalQuestions: number,
 }
 
 
