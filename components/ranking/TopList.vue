@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 defineProps({
     data: {
-        type: Object as PropType<FinalResult[]>,
+        type: Object as PropType<AllResults[]>,
         required: true,
         default: () => [],
     },
@@ -48,7 +48,7 @@ const concatName = (fname: string, lname: string, mname: string) => {
                         <div class="col-span-2">{{ index + 1 }}</div>
                         <div class="col-span-6 capitalize">{{
                             concatName(data.first_name, data.last_name, data.middle_name) }}</div>
-                        <div class="col-span-2 ">{{ data.total_correct_answers }}/{{ data.total_questions }}
+                        <div class="col-span-2 ">{{ data.totalCorrect }}/{{ data.totalQuestions }}
                         </div>
 
                     </div>

@@ -256,13 +256,13 @@ export interface ExamAnswerDetails {
 
 export interface SummaryData {
     exam_id: number,
-    description: string,
+    exam_title: string,
     correctAnswers: number,
     totalQuestions: number,
 }
 
 
-export interface SummaryResult {
+export interface ExamineeInformation {
     examinee_id: string,
     first_name: string,
     last_name: string,
@@ -273,6 +273,10 @@ export interface SummaryResult {
     email: string,
     address: string,
     contact_number: string,
+}
+
+
+export interface SummaryResult extends ExamineeInformation {
     examCnt: number,
     examAttempt: number,
     examDetails: SummaryData[]
@@ -280,16 +284,13 @@ export interface SummaryResult {
 }
 
 
-export interface FinalResult {
-    examinee_id: string,
-    first_name: string,
-    last_name: string,
-    middle_name: string,
-    total_questions: number,
-    total_correct_answers: number,
-    color: string,
-    successRate: number
+export interface AllResults extends ExamineeInformation {
+    totalCorrect:number,
+    totalQuestions:number
 }
+
+
+
 
 
 //sessions
@@ -319,7 +320,8 @@ export interface SessionExamineeHeader {
 //consolidateanswer
 
 interface Exam {
-    description: string;
+    exam_title: string;
+    exam_id: number
 }
 
 interface Answer {
@@ -336,7 +338,7 @@ export interface Choice {
 export interface ConsoQuestionAnswer {
     question_id: number;
     question: string;
-    examList: Exam; 
+    examList: Exam;
     choicesList: Choice[];
 }
 

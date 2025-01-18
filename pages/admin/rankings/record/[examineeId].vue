@@ -18,7 +18,7 @@ const { data, status, error } = await useAsyncData(
   async () => {
     const [course, summary] = await Promise.all([
       repo.getAllCourses(),
-      repo.getSummaryResultV2ById(params.examineeId.toString()),
+      repo.getSummaryResultById(params.examineeId.toString()),
     ]);
     return {
       course,
@@ -41,7 +41,7 @@ const { summaryData, courseData, summaryScores } = useExamineeSummary(
 </script>
 
 <template>
-  {{ data.value?.summary }}
+
   <div class="grid grid-cols-12 gap-3">
     <div class="col-span-12 lg:col-span-4">
       <RankingRecordInformation

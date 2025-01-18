@@ -59,8 +59,8 @@ defineProps({
                             </UButton>
                         </div>
                         <div class="col-span-8 font-semibold capitalize">{{ item.exam_title }}</div>
-                        <div class="col-span-2"><span class="text-red-500">{{ item.total_correct_answers }}</span>/{{
-                            item.total_questions }}</div>
+                        <div class="col-span-2"><span class="text-red-500">{{ item.correctAnswers }}</span>/{{
+                            item.totalQuestions }}</div>
                     </div>
 
                 </div>

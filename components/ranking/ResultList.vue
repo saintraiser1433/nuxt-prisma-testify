@@ -23,7 +23,7 @@ const columns = [{
 }]
 defineProps({
     data: {
-        type: Object as PropType<FinalResult[]>,
+        type: Object as PropType<AllResults[]>,
         required: true,
         default: () => [],
     },
@@ -60,14 +60,16 @@ const concatName = (fname: string, lname: string, mname: string) => {
                     <span class="capitalize">{{ concatName(row.first_name, row.last_name, row.middle_name) }}</span>
                 </template>
                 <template #score-data="{ row, index }">
-                    {{ row.total_correct_answers }}/{{ row.total_questions }}
+                    {{ row.totalCorrect }}/{{ row.totalQuestions }}
                 </template>
-                <template #ratings-data="{ row, index }">
+                <template #ratings-data="{ row, index }"> 
+                
                     <UProgress :value="row.successRate" size="xl" :color="row.color" indicator class="relative">
+                   
                         <template #indicator="{ percent }">
                             <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-bold"
                                 :class="percent < 20 ? 'text-secondaryColor-950' : 'text-white'">
-                                {{ percent }}%
+                                {{ parseFloat(percent).toFixed(2) }}%
                             </div>
                         </template>
                     </UProgress>

@@ -16,7 +16,7 @@ const { payload, static: stat } = useNuxtApp()
 const { setToast } = useToasts();
 const { getProgressBarColor } = useProgressBarColor();
 const statuses = computed(() => status.value === 'pending');
-const { data, status, error } = await useAPI<FinalResult[]>('/results', {
+const { data, status, error } = await useAPI<AllResults[]>('/results', {
     getCachedData(key) {
         const data = payload.data[key] || stat.data[key]
         return data;
@@ -32,8 +32,8 @@ if (error.value) {
 
 const dataResults = computed(() => {
     return data.value?.map((item) => {
-        const totalQuestions = Number(item.total_questions) || 0;
-        const totalCorrectAnswers = Number(item.total_correct_answers) || 0;
+        const totalQuestions = Number(item.totalQuestions) || 0;
+        const totalCorrectAnswers = Number(item.totalCorrect) || 0;
 
         const successRate = totalQuestions > 0
             ? parseFloat(((totalCorrectAnswers / totalQuestions) * 100).toFixed(2))
@@ -51,13 +51,14 @@ const topRankings = computed(() => {
 
     return dataResults.value
         .slice()
-        .sort((a, b) => b.total_correct_answers - a.total_correct_answers)
+        .sort((a, b) => b.totalCorrect - a.totalCorrect)
         .slice(0, 10);
 });
 </script>
 
 
 <template>
+ 
     <div class="grid grid-cols-12 gap-3">
         <div class="col-span-12 lg:col-span-4">
             <RankingTopList :data="topRankings" />

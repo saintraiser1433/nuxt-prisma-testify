@@ -237,9 +237,9 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
         return fetch<SummaryResult>(`/results/${id}`)
     },
 
-    async getSummaryResultV2ById(id: string): Promise<SummaryResult> {
-        return fetch<SummaryResult>(`/results/${id}`)
-    },
+    // async getSummaryResultV2ById(id: string): Promise<SummaryResult> {
+    //     return fetch<SummaryResult>(`/results/summary/${id}`)
+    // },
 
 
 

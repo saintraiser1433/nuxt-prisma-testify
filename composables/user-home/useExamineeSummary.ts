@@ -4,8 +4,8 @@ export const useExamineeSummary = (data?: SummaryResult, dataCourse?: CourseMode
     const summaryScores = computed(() => {
         if (!summaryData.value) return { totalCorrect: 0, totalQuestions: 0 };
 
-        const totalCorrect = summaryData.value.examDetails.reduce((a, b) => a + b.total_correct_answers, 0);
-        const totalQuestions = summaryData.value.examDetails.reduce((a, b) => a + b.total_questions, 0);
+        const totalCorrect = summaryData.value.examDetails.reduce((a, b) => a + b.correctAnswers, 0);
+        const totalQuestions = summaryData.value.examDetails.reduce((a, b) => a + b.totalQuestions, 0);
         return {
             totalCorrect,
             totalQuestions

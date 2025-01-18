@@ -10,14 +10,15 @@ useSeoMeta({
   ogDescription: "This is an examination page",
 });
 const { info } = useAuthentication();
-const { setToast } = useToasts();
-const inf = JSON.parse(info.value);
 const { params } = useRoute();
 
 //top level
 const { data: question, status, error } = await useAPI<ConsoQuestionAnswer[]>(
   `/answer/consolidate/${params.examineeId}/${params.examId}`
 );
+
+const examTitle = computed(() => question?.value[0].examList.exam_title);
+
 </script>
 
 <template>
@@ -33,11 +34,11 @@ const { data: question, status, error } = await useAPI<ConsoQuestionAnswer[]>(
       }"
     >
       <template #header>
-        <!-- <UserDashboardHeader :title="examTitle">
+        <UserDashboardHeader :title="examTitle">
           <h1 class="text-white font-bold">
             SCORE: {{ answerCount }}/{{ totalQuestions }}
           </h1>
-        </UserDashboardHeader> -->
+        </UserDashboardHeader>
       </template>
       <template #default>
         <RankingConsolidateAnswers :question-data="question ?? []" />
