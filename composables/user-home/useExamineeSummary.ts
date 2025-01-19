@@ -24,15 +24,15 @@ export const useExamineeSummary = (data?: SummaryResult, dataCourse?: CourseMode
     });
 
     const isFinished = computed(() => {
-        const examCnt = summaryData.value?.examCnt ?? 0;
-        const examAttempt = summaryData.value?.examAttempt ?? 0;
+        const examCnt = summaryData.value?.totalExams ?? 0;
+        const examAttempt = summaryData.value?.examineeAttempt ?? 0;
         return examCnt === examAttempt;
     });
 
 
     const examAttempts = computed(() => {
-        const examAttempt = summaryData.value?.examAttempt ?? 0;
-        const examCnt = summaryData.value?.examCnt ?? 0;
+        const examAttempt = summaryData.value?.examineeAttempt ?? 0;
+        const examCnt = summaryData.value?.totalExams ?? 0;
         return `Exam Finished ${examAttempt} out of ${examCnt}`;
     });
 

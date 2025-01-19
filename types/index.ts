@@ -262,7 +262,13 @@ export interface SummaryData {
 }
 
 
-export interface ExamineeInformation {
+
+export interface AttemptsExam {
+    examineeAttempt: number,
+    totalExams: number,
+}
+
+export interface ExamineeInformation extends AttemptsExam {
     examinee_id: string,
     first_name: string,
     last_name: string,
@@ -276,17 +282,16 @@ export interface ExamineeInformation {
 }
 
 
-export interface SummaryResult extends ExamineeInformation {
-    examCnt: number,
-    examAttempt: number,
-    examDetails: SummaryData[]
 
+
+export interface SummaryResult extends ExamineeInformation {
+    examDetails: SummaryData[]
 }
 
 
 export interface AllResults extends ExamineeInformation {
-    totalCorrect:number,
-    totalQuestions:number
+    totalCorrect: number,
+    totalQuestions: number
 }
 
 
@@ -335,12 +340,27 @@ export interface Choice {
     answerList: Answer[];
 }
 
-export interface ConsoQuestionAnswer {
+export interface ConsoQuestionDetails {
     question_id: number;
     question: string;
     examList: Exam;
     choicesList: Choice[];
 }
+
+interface summaryScore {
+    totalQuestions: number,
+    correctAnswers: number
+}
+
+export interface ConsoSummary {
+    summaryScore: summaryScore[],
+    data: ConsoQuestionDetails[]
+}
+
+
+
+
+
 
 export interface LegendModel {
     label: string,

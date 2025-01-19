@@ -9,16 +9,30 @@ useSeoMeta({
   ogTitle: "Testify User Exam",
   ogDescription: "This is an examination page",
 });
-const { info } = useAuthentication();
+
 const { params } = useRoute();
 
 //top level
-const { data: question, status, error } = await useAPI<ConsoQuestionAnswer[]>(
+const { data: summary, status, error } = await useAPI<ConsoSummary>(
   `/answer/consolidate/${params.examineeId}/${params.examId}`
 );
 
-const examTitle = computed(() => question?.value[0].examList.exam_title);
+const questionsData = computed(() => summary.value?.data || []);
+const examTitle = computed(() =>
+  questionsData.value
+    ? `Exam Title: ${questionsData.value[0].examList.exam_title}`
+    : "Unknown Exam"
+);
 
+const summaryScores = computed(() => {
+  const totalQuestions = summary.value?.summaryScore[0].totalQuestions || 0;
+  const totalCorrect = summary.value?.summaryScore[0].correctAnswers || 0;
+
+  return {
+    totalQuestions,
+    totalCorrect,
+  };
+});
 </script>
 
 <template>
@@ -36,12 +50,12 @@ const examTitle = computed(() => question?.value[0].examList.exam_title);
       <template #header>
         <UserDashboardHeader :title="examTitle">
           <h1 class="text-white font-bold">
-            SCORE: {{ answerCount }}/{{ totalQuestions }}
+            SCORE: {{ summaryScores.totalCorrect }}/{{ summaryScores.totalQuestions }}
           </h1>
         </UserDashboardHeader>
       </template>
       <template #default>
-        <RankingConsolidateAnswers :question-data="question ?? []" />
+        <RankingConsolidateAnswers :question-data="questionsData" />
       </template>
     </UICard>
   </div>

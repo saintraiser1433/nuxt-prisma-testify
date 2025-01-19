@@ -152,7 +152,7 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
     },
 
     async updateExamSessionTimer(timelimit: number, examineeId: string | undefined, examId: number | undefined): Promise<T> {
-       
+
         return fetch<T>(`/answer/time/${examineeId}/${examId}`, {
             method: 'PUT',
             body: {
@@ -237,9 +237,7 @@ export const repository = <T>(fetch: $Fetch<T, NitroFetchRequest>) => ({
         return fetch<SummaryResult>(`/results/${id}`)
     },
 
-    // async getSummaryResultV2ById(id: string): Promise<SummaryResult> {
-    //     return fetch<SummaryResult>(`/results/summary/${id}`)
-    // },
+
 
 
 
