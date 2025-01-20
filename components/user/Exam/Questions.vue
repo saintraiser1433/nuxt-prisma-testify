@@ -5,7 +5,7 @@
             padding: 'p-0'
         }">
         <template #question_id-data="{ row, index }">
-            <div class="font-bold text-gray-800 dark:text-gray-100 p-5">
+            <div class="font-bold text-gray-800 dark:text-gray-100 p-5" :id="index + 1 === 1 ? 'init' : ''">
                 {{ index + 1 }}
             </div>
         </template>

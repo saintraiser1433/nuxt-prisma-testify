@@ -148,7 +148,7 @@ onUnmounted(() => {
             </template>
 
             <template #footer>
-                <UButton :loading="isLoading" type="submit" color="gray" size="md" @click="submitExam"
+                <UButton :loading="isLoading" type="submit" id="submition" color="gray" size="md" @click="submitExam"
                     :ui="BUTTON_UI_CONFIG">Submit Exam</UButton>
             </template>
         </UICard>

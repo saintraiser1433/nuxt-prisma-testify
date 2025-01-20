@@ -13,13 +13,7 @@ const { payload, static: stat } = useNuxtApp();
 const { setToast } = useToasts();
 const { getProgressBarColor } = useProgressBarColor();
 const statuses = computed(() => status.value === "pending");
-const { data, status, error } = await useAPI<AllResults[]>("/results", {
-  getCachedData(key) {
-    const data = payload.data[key] || stat.data[key];
-    return data;
-  },
-  server: false,
-});
+const { data, status, error } = await useAPI<AllResults[]>("/results");
 
 if (error.value) {
   setToast("error", error.value.message || "Failed to fetch items");

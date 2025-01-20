@@ -59,6 +59,12 @@ export const useExam = (
 
                 showUnanswered.value = false;
                 shouldRefetch.value++;
+
+                const element = document.getElementById('init');
+                element?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
             }
         } catch (error: any) {
             setToast('error', error.data?.message || 'An error occurred');
@@ -123,6 +129,8 @@ export const useExam = (
                     block: 'center'
                 });
             });
+        } else {
+            setToast('success', 'You have answered all the questions. You may now proceed to submit your exam.');
         }
     };
 

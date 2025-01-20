@@ -11,7 +11,6 @@ export const usePercentage = (totalCorrect: number, totalQuestion: number) => {
     }
 
     percentage = (totalCorrect / totalQuestion) * 100;
-    console.log('t', percentage);
     if (percentage >= 0.00 && percentage <= 50.99) {
         hexColor = '#ff4c51';
         detail = 'POOR';
