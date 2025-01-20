@@ -104,6 +104,7 @@ export default defineNuxtConfig({
 
 
 
+
   runtimeConfig: {
     gitSecretKey: process.env.GITHUB_SECRET_KEY,
     accessTokenSecret: process.env.NUXT_ACCESS_TOKEN_SECRET,
@@ -124,11 +125,14 @@ export default defineNuxtConfig({
     config: {},
     viewer: true,
   },
+
   vite: {
+
     plugins: [
       ViteComponents({
         resolvers: [IconsResolver()],
       }),
     ],
   },
+
 });
