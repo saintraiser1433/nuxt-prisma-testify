@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import { useScoreSlip } from '#imports';
+
+
 const columns = [{
     key: "increment",
     label: '#',
@@ -19,15 +22,28 @@ defineProps({
         required: true,
         default: () => [],
     },
+    examineeName: {
+        type: String,
+        required: true,
+        default: '',
+    },
     isLoading: {
         type: Boolean,
         required: true,
         default: true
     }
 })
+
+const { $datefns } = useNuxtApp()
+const { generateScoreSlip } = useScoreSlip();
+const dateNow = computed(() =>
+    $datefns.format(new Date(), "MMM d, yyyy")
+);
+
 </script>
 
 <template>
+ 
     <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }" :has-action-header="false">
         <template #header>
             <div class="flex justify-between items-center p-0">
@@ -44,7 +60,9 @@ defineProps({
                 </template>
                 <template #actions-data="{ row, index }">
                     <div class="flex gap-1">
-                        <UButton color="emerald" class="dark:text-white" variant="solid" size="xs">
+                        <UButton type="button"
+                            @click="generateScoreSlip(examineeName.toUpperCase(), row.description.toUpperCase(),dateNow)"
+                            color="emerald" class="dark:text-white" variant="solid" size="xs">
                             <i-ion-print width="16" height="16" />
                         </UButton>
 

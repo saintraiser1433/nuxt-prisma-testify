@@ -1,10 +1,33 @@
 <script lang="ts" setup>
-const { generateOption } = useWidgetOption();
+import { useDashboard } from '#imports';
 
-const primaryOption = generateOption('#7367f0');
-const successOption = generateOption('#4eda8c');
-const warningOption = generateOption('#ff9f43');
-const dangerOption = generateOption('#ff6468'); 
+defineProps({
+    totalRegister: {
+        type: Number,
+        required: true,
+        default: 0,
+    },
+    totalCompleted: {
+        type: Number,
+        required: true,
+        default: 0,
+    },
+    totalExams: {
+        type: Number,
+        required: true,
+        default: 0,
+    },
+    totalCourses: {
+        type: Number,
+        required: true,
+        default: 0,
+    },
+})
+const { generateOption } = useDashboard();
+
+
+
+
 </script>
 
 
@@ -15,14 +38,15 @@ const dangerOption = generateOption('#ff6468');
                 <div class="flex justify-between items-center p-5 font-semibold">
                     <div class="flex flex-col">
                         <h6>Registered Examinee's</h6>
-                        <h1 class="text-primary-500">2</h1>
+                        <h1 class="text-primary-500">{{ totalRegister }}</h1>
                     </div>
                     <div class="rounded-full bg-primary-500 relative p-2">
                         <svg-icon name="dashboard-icons/examinee" title="registered-examinee" width="32" height="32" />
                     </div>
                 </div>
                 <div class="w-full h-[80px]">
-                    <VChart ref="chart" :option="primaryOption" class="w-full h-full" :auto-resize="true" />
+                    <VChart ref="chart" :option="generateOption('#7367f0').option" class="w-full h-full"
+                        :auto-resize="true" />
                 </div>
             </UICard>
         </div>
@@ -31,14 +55,15 @@ const dangerOption = generateOption('#ff6468');
                 <div class="flex justify-between items-center p-5 font-semibold">
                     <div class="flex flex-col">
                         <h6>Completed Examinee's</h6>
-                        <h1 class="text-emerald-500">2</h1>
+                        <h1 class="text-emerald-500">{{ totalCompleted }}</h1>
                     </div>
                     <div class="rounded-full bg-emerald-500 relative p-2">
                         <svg-icon name="dashboard-icons/group" title="registered-examinee" width="32" height="32" />
                     </div>
                 </div>
                 <div class="w-full h-[80px]">
-                    <VChart ref="chart" :option="successOption" class="w-full h-full" :auto-resize="true" />
+                    <VChart ref="chart" :option="generateOption('#4eda8c').option" class="w-full h-full"
+                        :auto-resize="true" />
                 </div>
             </UICard>
         </div>
@@ -47,14 +72,15 @@ const dangerOption = generateOption('#ff6468');
                 <div class="flex justify-between items-center p-5 font-semibold">
                     <div class="flex flex-col">
                         <h6>Total Course's</h6>
-                        <h1 class="text-carnation-400">2</h1>
+                        <h1 class="text-carnation-400">{{ totalCourses }}</h1>
                     </div>
                     <div class="rounded-full bg-carnation-400 relative p-2">
                         <svg-icon name="dashboard-icons/course" title="registered-examinee" width="32" height="32" />
                     </div>
                 </div>
                 <div class="w-full h-[80px]">
-                    <VChart ref="chart" :option="warningOption" class="w-full h-full" :auto-resize="true" />
+                    <VChart ref="chart" :option="generateOption('#ff9f43').option" class="w-full h-full"
+                        :auto-resize="true" />
                 </div>
             </UICard>
         </div>
@@ -63,14 +89,15 @@ const dangerOption = generateOption('#ff6468');
                 <div class="flex justify-between items-center p-5 font-semibold">
                     <div class="flex flex-col">
                         <h6>Total Exam's</h6>
-                        <h1 class="text-neon-carrot-400">2</h1>
+                        <h1 class="text-neon-carrot-400">{{ totalExams }}</h1>
                     </div>
                     <div class="rounded-full bg-neon-carrot-400 relative p-2">
                         <svg-icon name="dashboard-icons/book" title="registered-examinee" width="32" height="32" />
                     </div>
                 </div>
                 <div class="w-full h-[80px]">
-                    <VChart ref="chart" :option="dangerOption" class="w-full h-full" :auto-resize="true" />
+                    <VChart ref="chart" :option="generateOption('#ff6468').option" class="w-full h-full"
+                        :auto-resize="true" />
                 </div>
             </UICard>
         </div>

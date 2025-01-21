@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { DashboardSummaryModel } from '#imports';
 
 definePageMeta({
     requiredRole: 'admin',
@@ -10,14 +11,22 @@ useSeoMeta({
     ogTitle: 'Testify Home Page',
     ogDescription: 'Testify Analytics'
 });
+const { setToast } = useToasts();
+
+
+
+const { data, status, error } = await useAPI<DashboardSummaryModel>('/dashboard/summary');
+if (error.value) {
+    setToast('error', error.value?.data.message || 'An error occurred while fetching exam details');
+}
 </script>
 
-<style scoped>
-/* Ensure the parent container is responsive */
-</style>
+
 
 <template>
-    <HomeSummaryAnalytics></HomeSummaryAnalytics>
+
+    <HomeSummaryAnalytics :total-register="data?.registeredExaminee" :total-completed="data?.completedExaminee"
+        :total-courses="data?.totalCourse" :total-exams="data?.totalExams" />
     <HomeAnalytics></HomeAnalytics>
     <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
         <template #header>
@@ -33,4 +42,3 @@ useSeoMeta({
     </UICard>
 
 </template>
-

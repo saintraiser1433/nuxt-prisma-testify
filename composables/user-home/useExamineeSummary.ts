@@ -6,12 +6,12 @@ export const useExamineeSummary = (data?: SummaryResult, dataCourse?: CourseMode
 
         const totalCorrect = summaryData.value.examDetails.reduce((a, b) => a + b.correctAnswers, 0);
         const totalQuestions = summaryData.value.examDetails.reduce((a, b) => a + b.totalQuestions, 0);
-        console.log(totalQuestions)
         return {
             totalCorrect,
             totalQuestions
         }
     })
+
 
     const examineeName = computed(() => {
         const middleNameInitial = summaryData.value?.middle_name ? summaryData.value.middle_name[0] : '';

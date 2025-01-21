@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import * as echarts from 'echarts';
+const { $echarts } = useNuxtApp();
 const options = ref<ECOption>({
   color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
 
@@ -47,7 +47,7 @@ const options = ref<ECOption>({
       showSymbol: false,
       areaStyle: {
         opacity: 0.8,
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+        color: new $echarts.graphic.LinearGradient(0, 0, 0, 1, [
           {
             offset: 0,
             color: 'rgb(0, 221, 255)'
@@ -217,4 +217,3 @@ const optionsa = ref<ECOption>({
 
   </div>
 </template>
-

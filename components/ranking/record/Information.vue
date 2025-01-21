@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-defineProps({
+const props = defineProps({
     data: {
         type: Object as PropType<SummaryResult>,
         required: true,
@@ -15,6 +15,7 @@ defineProps({
     }
 
 })
+
 </script>
 
 <template>
