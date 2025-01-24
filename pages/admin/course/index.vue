@@ -101,7 +101,6 @@ const toggleModal = () => {
 </script>
 
 <template>
-  <ReportScoreSlip></ReportScoreSlip>
   <UModal v-model="isOpen" prevent-close>
     <UICard
       :body="{

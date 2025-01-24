@@ -11,10 +11,9 @@ useSeoMeta({
   ogDescription: 'CRUD for Examinee'
 });
 
-const { $api, payload, static: stat } = useNuxtApp()
-const { setToast } = useToasts();
+const { $api, payload, static: stat, $toast } = useNuxtApp()
 const { setAlert } = useAlert();
-
+const { handleApiError } = useErrorHandler();
 
 //fetch Examinee
 
@@ -30,7 +29,7 @@ const { data, status, error } = await useAPI<User[]>('/examinee', {
 })
 
 if (error.value) {
-  setToast('error', error.value.message || 'Failed to fetch items')
+  $toast.error(error.value.message || 'Failed to fetch items')
 }
 
 
@@ -61,18 +60,18 @@ const submitExaminee = async (response: User) => {
     if (!isUpdate.value) {
       const res = await examineeRepo.addExaminee(response);
       examineeData.value.unshift(res.data as User)
-      setToast('success', res.message)
+      $toast.success(res.message)
     } else {
       const res = await examineeRepo.updateExaminee(response);
       const index = examineeData.value.findIndex((item) => item.id === res.data?.id);
       examineeData.value[index] = { ...examineeData.value[index], ...res.data }
-      setToast('success', res.message)
+      $toast.success(res.message)
     }
     isOpen.value = false;
     isUpdate.value = false;
 
   } catch (error: any) {
-    setToast('error', error.data.message || 'An error occurred');
+    return handleApiError(error)
   }
 }
 
@@ -94,9 +93,9 @@ const removeExaminee = (id: string) => {
           const response = await examineeRepo.removeExaminee(id);
           const index = examineeData.value.findIndex((item) => item.id === id);
           examineeData.value.splice(index, 1);
-          setToast('success', response.message);
+          $toast.success(response.message)
         } catch (error: any) {
-          setToast('error', error.data.message || 'An error occurred');
+          return handleApiError(error);
         }
       }
     }
@@ -156,4 +155,3 @@ const toggleModal = () => {
 
 
 </template>
-

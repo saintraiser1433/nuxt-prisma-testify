@@ -14,7 +14,7 @@ defineProps({
     }
 })
 
-const { indexToLetter } = useAlphabet();
+
 const { params, meta } = useRoute();
 const { $joi } = useNuxtApp()
 

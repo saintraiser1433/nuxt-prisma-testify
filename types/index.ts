@@ -383,16 +383,8 @@ export type ExamAnswer = {
 
 
 
-import { format, parse, parseISO, getDay } from 'date-fns';
-declare module '#app' {
-    interface NuxtApp {
-        $datefns: {
-            format: typeof format;
-            parse: typeof parse;
-            parseISO: typeof parseISO;
-            getDay: typeof getDay;
-        };
-    }
-}
+
+
+
 
 

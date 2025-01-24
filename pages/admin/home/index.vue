@@ -24,7 +24,7 @@ if (error.value) {
 
 
 <template>
-
+{{ data }}
     <HomeSummaryAnalytics :total-register="data?.registeredExaminee" :total-completed="data?.completedExaminee"
         :total-courses="data?.totalCourse" :total-exams="data?.totalExams" />
     <HomeAnalytics></HomeAnalytics>

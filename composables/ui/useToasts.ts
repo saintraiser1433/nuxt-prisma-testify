@@ -18,5 +18,11 @@ export const useToasts = () => {
     });
   };
 
-  return { setToast };
+  const setQueuedToast = async (icon: any, messages: string[], timer: number = 3000) => {
+    for (const message of messages) {
+      await setToast(icon, message, timer);
+    }
+  };
+
+  return { setToast, setQueuedToast };
 };

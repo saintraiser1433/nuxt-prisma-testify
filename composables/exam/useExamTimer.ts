@@ -1,6 +1,7 @@
+
+
 export const useExamTimer = (examineeId?: string, examId?: number) => {
     const store = useExamStore();
-    const { formatTime } = useFormatTime();
     const { $api } = useNuxtApp();
     const { setToast } = useToasts();
     const remainingTime = ref(0);
