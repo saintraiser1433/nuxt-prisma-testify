@@ -10,10 +10,9 @@ useSeoMeta({
 });
 
 
-const { $api, payload, static: stat } = useNuxtApp()
-const { setToast } = useToasts();
+const { $api, payload, static: stat,$toast } = useNuxtApp()
 const { setAlert } = useAlert()
-
+const { handleApiError } = useErrorHandler();
 
 /* fetch exam */
 const statuses = computed(() => status.value === 'pending');
@@ -27,7 +26,7 @@ const { data, status, error } = await useAPI<ExamModel[]>('/exam', {
 })
 
 if (error.value) {
-    setToast('error', error.value.data.message || 'Failed to fetch items')
+    $toast.error(error.value.data.message || 'Failed to fetch items')
 }
 
 
@@ -49,18 +48,18 @@ const submitExam = async (response: ExamModel) => {
         if (!isUpdate.value) {
             const res = await examRepo.addExam(response);
             examData.value.unshift(res.data as ExamModel)
-            setToast('success', res.message)
+            $toast.success(res.message)
         } else {
             const res = await examRepo.updateExam(response);
             const index = examData.value.findIndex((item) => item.exam_id === res.data?.exam_id);
             examData.value[index] = { ...examData.value[index], ...res.data }
-            setToast('success', res.message)
+            $toast.success(res.message)
         }
         isOpen.value = false;
         isUpdate.value = false;
 
     } catch (error: any) {
-        setToast('error', error.data.message || 'An error occurred');
+        return handleApiError(error);
     }
 }
 
@@ -82,10 +81,9 @@ const removeExam = (id: number) => {
                     const response = await examRepo.removeExam(id);
                     const index = examData.value.findIndex((item) => item.exam_id === id);
                     examData.value.splice(index, 1);
-                    setToast('success', response.message);
+                    $toast.success(response.message)
                 } catch (error: any) {
-                    console.error(error)
-                    setToast('error', error.data.message || 'An error occurred');
+                    return handleApiError(error);
                 }
             }
         }

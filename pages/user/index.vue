@@ -13,7 +13,7 @@ useSeoMeta({
 
 const { info } = useAuthentication();
 const { setToast } = useToasts();
-const { $api } = useNuxtApp();
+const { $api,$toast } = useNuxtApp();
 const inf = JSON.parse(info.value);
 
 const repo = repository($api);
@@ -30,7 +30,7 @@ const { data, status: statuses, error: errors } = await useAsyncData("key", asyn
 });
 
 if (errors.value) {
-  setToast("error", errors.value.message || "Failed to fetch items");
+  $toast.error(errors.value.message || "Failed to fetch items")
 }
 
 const {

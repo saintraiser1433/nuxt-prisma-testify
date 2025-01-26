@@ -18,7 +18,7 @@ useSeoMeta({
 const { $api, $datefns } = useNuxtApp();
 const { info } = useAuthentication();
 const { setToast } = useToasts();
-
+const {handleApiError} = useErrorHandler()
 const inf = JSON.parse(info.value);
 
 
@@ -45,8 +45,8 @@ const onSubmit = async (onResponse: Followup) => {
         } else {
             setToast('error', 'Cant find id');
         }
-    } catch (err: any) {
-        setToast('error', err.value?.data.message || 'An error occurred');
+    } catch (err) {
+        return handleApiError(err);
     }
 }
 

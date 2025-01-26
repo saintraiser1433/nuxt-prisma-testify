@@ -12,7 +12,7 @@ useSeoMeta({
     ogDescription: 'This is an examination page',
 });
 const { info } = useAuthentication();
-const { setToast } = useToasts()
+const { $toast } = useNuxtApp();
 const inf = JSON.parse(info.value);
 
 const initialQuestion = ref<ExamDetails | null>(null);
@@ -46,11 +46,11 @@ const { data: sessionAnswer, error: sessionError } = await useAPI<SessionExamine
 
 //error
 if (sessionError.value) {
-    setToast('error', error.value?.data.message || 'An error occurred while fetching exam details');
+    $toast.error(error.value?.data.message || 'An error occurred while fetching exam details')
 }
 
 if (error.value) {
-    setToast('error', error.value?.data.message || 'An error occurred while fetching exam details');
+    $toast.error(error.value?.data.message || 'An error occurred while fetching exam details')
 }
 
 
@@ -155,5 +155,3 @@ onUnmounted(() => {
     </div>
 
 </template>
-
-

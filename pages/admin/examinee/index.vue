@@ -75,7 +75,7 @@ const submitExaminee = async (response: User) => {
     isOpen.value = false;
     isUpdate.value = false;
   } catch (error: any) {
-    handleApiError(error);
+    return handleApiError(error);
   }
 };
 

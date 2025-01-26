@@ -10,9 +10,10 @@ useSeoMeta({
   ogDescription: "CRUD for course",
 });
 
-const { $api, payload, static: stat } = useNuxtApp();
-const { setToast } = useToasts();
+const { $api, payload, static: stat,$toast } = useNuxtApp();
 const { setAlert } = useAlert();
+const {handleApiError} = useErrorHandler();
+
 const isUpdate = ref(false);
 const isOpen = ref(false);
 
@@ -30,7 +31,7 @@ const { data, status, error } = await useAPI<CourseModel[]>("/course", {
   },
 });
 if (error.value) {
-  throw new Error(error.value.message || "Failed to fetch items");
+  $toast.error(error.value.message || "Failed to fetch items")
 }
 
 //submit course
@@ -47,19 +48,19 @@ const submitCourse = async (response: CourseModel) => {
     if (!isUpdate.value) {
       const res = await courseRepo.addCourse(response);
       courseData.value.unshift(res.data as CourseModel);
-      setToast("success", res.message);
+      $toast.success(res.message);
     } else {
       const res = await courseRepo.updateCourse(response);
       const index = courseData.value.findIndex(
         (item) => item.course_id === res.data?.course_id
       );
       courseData.value[index] = { ...courseData.value[index], ...res.data };
-      setToast("success", res.message);
+      $toast.success(res.message);
     }
     isOpen.value = false;
     isUpdate.value = false;
   } catch (error: any) {
-    setToast("error", error.data.message || "An error occurred");
+    return handleApiError(error);
   }
 };
 
@@ -79,9 +80,9 @@ const removeCourse = (id: number) => {
           const response = await courseRepo.removeCourse(id);
           const index = courseData.value.findIndex((item) => item.course_id === id);
           courseData.value.splice(index, 1);
-          setToast("success", response.message);
+          $toast.success(response.message);
         } catch (error: any) {
-          setToast("error", error.data.message || "An error occurred");
+          return handleApiError(error);
         }
       }
     }

@@ -8,9 +8,9 @@ useSeoMeta({
   ogTitle: "Testify Rankings Module",
   ogDescription: "Rankings",
 });
-const { setToast } = useToasts();
+
 const { params } = useRoute();
-const { $api } = useNuxtApp();
+const { $api,$toast } = useNuxtApp();
 const statuses = computed(() => status.value === "pending");
 const repo = repository<null>($api);
 const { data, status, error } = await useAsyncData(
@@ -31,7 +31,7 @@ const { data, status, error } = await useAsyncData(
 );
 
 if (error.value) {
-  setToast("error", error.value.message || "Failed to fetch items");
+  $toast.error(error.value.message || "Failed to fetch items")
 }
 
 const { summaryData, examineeName, courseData, summaryScores } = useExamineeSummary(

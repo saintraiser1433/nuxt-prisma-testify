@@ -9,14 +9,13 @@ useSeoMeta({
   ogDescription: "Rankings",
 });
 
-const { payload, static: stat } = useNuxtApp();
-const { setToast } = useToasts();
+const { $toast } = useNuxtApp();
 const { getProgressBarColor } = useProgressBarColor();
 const statuses = computed(() => status.value === "pending");
 const { data, status, error } = await useAPI<AllResults[]>("/results");
 
 if (error.value) {
-  setToast("error", error.value.message || "Failed to fetch items");
+  $toast.error(error.value.message || "Failed to fetch items")
 }
 
 const dataResults = computed(() => {

@@ -4,12 +4,10 @@ definePageMeta({
   layout: "empty",
   requiredRole: "guest",
 });
-
-const { setToast } = useToasts();
-const { $joi } = useNuxtApp();
+const { $joi,$toast } = useNuxtApp();
 
 const { signIn, info } = useAuthentication();
-
+const { handleApiError } = useErrorHandler();
 const state = ref<User>({
   username: "",
   password: "",
@@ -43,9 +41,9 @@ const onSubmit = async (event: FormSubmitEvent<User>) => {
         return navigateTo({ name: "deans-home" });
       }
     }
-    setToast("error", "No Role Assigned");
+    $toast.error("No role Assigned")
   } catch (err: any) {
-    setToast("error", err.data?.error || "An error occurred");
+    return handleApiError(err)
   }
 };
 </script>

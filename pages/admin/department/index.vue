@@ -11,9 +11,9 @@ useSeoMeta({
     ogDescription: 'CRUD for Department'
 });
 
-const { $api, payload, static: stat } = useNuxtApp()
-const { setToast } = useToasts();
+const { $api, payload, static: stat,$toast } = useNuxtApp()
 const { setAlert } = useAlert()
+const { handleApiError } = useErrorHandler();
 
 
 //fetch department
@@ -29,7 +29,7 @@ const { data: department, status, error: errordept } = await useAPI<DepartmentMo
 })
 
 if (errordept.value) {
-    throw new Error(errordept.value.message || 'Failed to fetch items')
+    $toast.error(errordept.value.message || 'Failed to fetch items')
 }
 
 
@@ -47,18 +47,18 @@ const submitDepartment = async (response: DepartmentModel) => {
         if (!isUpdate.value) {
             const res = await departmentRepo.addDepartment(response);
             departmentData.value.unshift(res.data as DepartmentModel)
-            setToast('success', res.message)
+            $toast.success(res.message)
         } else {
             const res = await departmentRepo.updateDepartment(response);
             const index = departmentData.value.findIndex((item) => item.department_id === res.data?.department_id);
             departmentData.value[index] = { ...departmentData.value[index], ...res.data }
-            setToast('success', res.message)
+            $toast.success(res.message)
         }
         isOpen.value = false;
         isUpdate.value = false;
 
     } catch (error: any) {
-        setToast('error', error.data.message || 'An error occurred');
+        return handleApiError(error);
     }
 }
 
@@ -78,9 +78,9 @@ const removeDepartment = (id: number) => {
                     const response = await departmentRepo.removeDepartment(id);
                     const index = departmentData.value.findIndex((item) => item.department_id === id);
                     departmentData.value.splice(index, 1);
-                    setToast('success', response.message);
+                    $toast.success(response.message)
                 } catch (error: any) {
-                    setToast('error', error.data.message || 'An error occurred');
+                    return handleApiError(error);
                 }
             }
         }

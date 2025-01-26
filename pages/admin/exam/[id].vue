@@ -3,22 +3,19 @@ definePageMeta({
     requiredRole: 'admin',
     middleware: 'check-exam'
 })
-
-const { setToast } = useToasts()
 const { setAlert } = useAlert()
 const { params } = useRoute();
-
+const { handleApiError } = useErrorHandler();
+const { $api, payload, static: stat,$toast } = useNuxtApp()
 const isUpdate = ref(false)
-const nuxtApp = useNuxtApp()
-
-const questionRepo = repository<ApiResponse<QuestionModel>>(nuxtApp.$api)
+const questionRepo = repository<ApiResponse<QuestionModel>>($api)
 const shouldRefetch = ref(0);
 const statuses = computed(() => status.value === 'pending');
 const { data: question, status, error } = await useAPI<QuestionModel[]>(`/question/${params.id}`, {
     watch: [shouldRefetch],
     lazy: true,
     getCachedData(key) {
-        const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+        const data = payload.data[key] || stat.data[key]
         if (!data) {
             return
         }
@@ -27,8 +24,8 @@ const { data: question, status, error } = await useAPI<QuestionModel[]>(`/questi
 })
 
 if (error.value) {
-    console.error(error.value)
-    setToast('error', error.value?.data.message || 'An error occurred');
+    $toast.error(error.value?.data.message || 'An error occurred')
+
 }
 
 
@@ -49,11 +46,11 @@ const submitQuestion = async (data: QuestionModel): Promise<void> => {
         } else {
             response = await questionRepo.updateQuestion(data);
         }
-        setToast('success', response.message)
+        $toast.success(response.message)
         shouldRefetch.value++;
         resetForm();
     } catch (error: any) {
-        setToast('error', error.data.value?.message || 'An error occurred');
+        return handleApiError(error);
     }
 }
 
@@ -71,10 +68,10 @@ const removeQuestion = (id: number) => {
             if (result.isConfirmed) {
                 try {
                     const response = await questionRepo.removeQuestion(id);
-                    setToast('success', response.message);
+                    $toast.success(response.message)
                     shouldRefetch.value++;
                 } catch (error: any) {
-                    setToast('error', error.data.message || 'An error occurred');
+                    return handleApiError(error);
                 }
             }
         }

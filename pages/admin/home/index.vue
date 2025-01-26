@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { DashboardSummaryModel } from '#imports';
 
 definePageMeta({
     requiredRole: 'admin',
@@ -11,20 +10,18 @@ useSeoMeta({
     ogTitle: 'Testify Home Page',
     ogDescription: 'Testify Analytics'
 });
-const { setToast } = useToasts();
+const { handleApiError } = useErrorHandler();
+const {$toast} = useNuxtApp();
 
-
-
-const { data, status, error } = await useAPI<DashboardSummaryModel>('/dashboard/summary');
+const { data, status, error } = await useAPI<DashboardModel>('/dashboard/summary');
 if (error.value) {
-    setToast('error', error.value?.data.message || 'An error occurred while fetching exam details');
+    $toast.error(error.value?.data.message || 'An error occurred while fetching')
 }
 </script>
 
 
 
 <template>
-{{ data }}
     <HomeSummaryAnalytics :total-register="data?.registeredExaminee" :total-completed="data?.completedExaminee"
         :total-courses="data?.totalCourse" :total-exams="data?.totalExams" />
     <HomeAnalytics></HomeAnalytics>

@@ -12,7 +12,6 @@ useSeoMeta({
 });
 
 const { $api, payload, static: stat, $toast } = useNuxtApp();
-const { setToast } = useToasts();
 const { setAlert } = useAlert();
 const { handleApiError } = useErrorHandler();
 /* Department */
@@ -166,15 +165,14 @@ const submitDeans = async (response: DeansModel) => {
     if (!isUpdate.value) {
       const res = await deansRepo.addDeans(response);
       deansData.value.unshift(res.data as DeansModel);
-
-      setToast("success", res.message);
+      $toast.success(res.message);
     } else {
       const res = await deansRepo.updateDeans(response);
       const index = deansData.value.findIndex(
         (item) => item.deans_id === res.data?.deans_id
       );
       deansData.value[index] = { ...deansData.value[index], ...res.data };
-      setToast("success", res.message);
+      $toast.success(res.message);
     }
     isOpen.value = false;
     isUpdate.value = false;

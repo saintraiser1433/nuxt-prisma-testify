@@ -11,11 +11,15 @@ useSeoMeta({
 });
 
 const { params } = useRoute();
-
+const {$toast} = useNuxtApp();
 //top level
 const { data: summary, status, error } = await useAPI<ConsoSummary>(
   `/answer/consolidate/${params.examineeId}/${params.examId}`
 );
+
+if (error.value) {
+  $toast.error(error.value.message || "Failed to fetch items")
+}
 
 const questionsData = computed(() => summary.value?.data || []);
 const examTitle = computed(() =>
