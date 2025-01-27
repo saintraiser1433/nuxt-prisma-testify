@@ -6,9 +6,10 @@ definePageMeta({
 const { setAlert } = useAlert()
 const { params } = useRoute();
 const { handleApiError } = useErrorHandler();
-const { $api, payload, static: stat,$toast } = useNuxtApp()
+const { $api, payload, static: stat, $toast } = useNuxtApp()
 const isUpdate = ref(false)
 const questionRepo = repository<ApiResponse<QuestionModel>>($api)
+const questionData = computed(() => question.value ?? []);
 const shouldRefetch = ref(0);
 const statuses = computed(() => status.value === 'pending');
 const { data: question, status, error } = await useAPI<QuestionModel[]>(`/question/${params.id}`, {
@@ -43,11 +44,14 @@ const submitQuestion = async (data: QuestionModel): Promise<void> => {
         let response;
         if (!isUpdate.value) {
             response = await questionRepo.addQuestion(data);
+            questionData.value.unshift(response.data as QuestionModel);
         } else {
             response = await questionRepo.updateQuestion(data);
+            shouldRefetch.value++;
         }
+
+
         $toast.success(response.message)
-        shouldRefetch.value++;
         resetForm();
     } catch (error: any) {
         return handleApiError(error);
@@ -68,8 +72,9 @@ const removeQuestion = (id: number) => {
             if (result.isConfirmed) {
                 try {
                     const response = await questionRepo.removeQuestion(id);
+                    const index = questionData.value.findIndex((item) => item.question_id === id);
+                    questionData.value.splice(index, 1);
                     $toast.success(response.message)
-                    shouldRefetch.value++;
                 } catch (error: any) {
                     return handleApiError(error);
                 }
@@ -108,7 +113,8 @@ const resetForm = () => {
                 <template #header>
                     <h1 class="text-2xl lg:text-lg font-semibold">Question List</h1>
                 </template>
-                <QuestionList :is-loading="statuses" :question-data="question ?? []" @update="editQuestion" @delete="removeQuestion" />
+                <QuestionList :is-loading="statuses" :question-data="questionData" @update="editQuestion"
+                    @delete="removeQuestion" />
 
             </UICard>
 
@@ -117,4 +123,3 @@ const resetForm = () => {
     </div>
 
 </template>
-

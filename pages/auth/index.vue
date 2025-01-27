@@ -4,6 +4,14 @@ definePageMeta({
   layout: "empty",
   requiredRole: "guest",
 });
+
+useSeoMeta({
+  title: "Testify Login Page",
+  description: "Authentication Page",
+  ogTitle: "Testify Login Page",
+  ogDescription: "Authentication Page",
+});
+
 const { $joi,$toast } = useNuxtApp();
 
 const { signIn, info } = useAuthentication();

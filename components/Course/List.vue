@@ -70,7 +70,7 @@ const handleUpdate = (item: CourseModel) => {
             <span>{{ index + 1 }}</span>
         </template>
         <template #description-data="{ row, index }">
-            <span class="capitalize">{{ row.description }}</span>
+            <span class="uppercase">{{ row.description }}</span>
         </template>
         <template #actions-data="{ row, index }">
             <div class="flex gap-1">

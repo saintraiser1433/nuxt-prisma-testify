@@ -45,7 +45,7 @@ export interface ChoicesModel extends Timestamped {
     choices_id?: number;
     question_id?: number;
     questionList?: QuestionModel; // Optional relationship
-    description?: string;
+    description: string;
     status?: boolean;
     answersList?: AnswersModel[]; // Optional relationship
 }

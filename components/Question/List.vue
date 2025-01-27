@@ -53,9 +53,9 @@ const handleDelete = (id: number) => {
         <template #question-data="{ row, index }">
             <td class="max-w-lg whitespace-normal text-wrap">
                 <p class="font-bold mb-2" v-html="row.question"></p>
-                <ol>
-                    <li class="capitalize mx-5" v-for="(choices, index) in row.choicesList" :key="choices.choices_id">
-                        <p :class="{ 'text-success': choices.status }" v-html="choices.description"></p>
+                <ol >
+                    <li :class="{ 'text-success': choices.status }" class="capitalize mx-5 p-2" v-for="(choices, index) in row.choicesList" :key="choices.choices_id">
+                        <p v-html="choices.description"></p>
                     </li>
                 </ol>
 

@@ -19,29 +19,33 @@ export const useExam = (
     const totalQuestions = computed(() => question.value?.data.length ?? 0);
 
     //customize question
-    const questionDetails = computed(() => {
-        if (!question.value) return [];
-        const answeredIds = new Set(Object.keys(answers.value).map(item => Number(item)));
-        return question.value.data.map((item) => {
-            const isAnswered = answeredIds.has(Number(item.question_id));
-            const highlightClass = !isAnswered && showUnanswered.value
-                ? 'bg-red-400 dark:bg-red-500'
-                : '';
+const questionDetails = computed(() => {
+    if (!question.value) return [];
+    
+    const answeredIds = new Set(Object.keys(answers.value).map(item => Number(item)));
+    
+    return question.value.data.map((item) => {
+        const isAnswered = answeredIds.has(Number(item.question_id));
+        const highlightClass = !isAnswered && showUnanswered.value
+            ? 'bg-red-400 dark:bg-red-500'
+            : '';
 
-            return {
-                question_id: {
-                    value: Number(item.question_id),
-                    class: highlightClass,
-                },
-                question: {
-                    value: String(item.question),
-                    class: highlightClass,
-                },
+        return {
+            question_id: {
+                value: Number(item.question_id),
+                class: highlightClass,
+            },
+            question: {
+                value: String(item.question),
+                class: highlightClass,
+            },
+            choices: item.choices
+        };
+    }); // Randomly sort the array
+});
 
-                choices: item.choices
-            };
-        });
-    });
+
+
 
 
     //submition exam
