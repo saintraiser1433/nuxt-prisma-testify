@@ -6,8 +6,7 @@ export const useExam = (
 
 ) => {
 
-    const { setToast } = useToasts();
-    const { $api } = useNuxtApp();
+    const { $api, $toast } = useNuxtApp();
     const { setAlert } = useAlert();
 
     const shouldRefetch = ref(0);
@@ -17,32 +16,32 @@ export const useExam = (
     const examTitle = computed(() => question.value?.exam_title ? `Exam Title : ${question.value?.exam_title}` : 'Exam');
     const answerCount = computed(() => Object.keys(answers.value).length);
     const totalQuestions = computed(() => question.value?.data.length ?? 0);
-
+    const { handleApiError } = useErrorHandler()
     //customize question
-const questionDetails = computed(() => {
-    if (!question.value) return [];
-    
-    const answeredIds = new Set(Object.keys(answers.value).map(item => Number(item)));
-    
-    return question.value.data.map((item) => {
-        const isAnswered = answeredIds.has(Number(item.question_id));
-        const highlightClass = !isAnswered && showUnanswered.value
-            ? 'bg-red-400 dark:bg-red-500'
-            : '';
+    const questionDetails = computed(() => {
+        if (!question.value) return [];
 
-        return {
-            question_id: {
-                value: Number(item.question_id),
-                class: highlightClass,
-            },
-            question: {
-                value: String(item.question),
-                class: highlightClass,
-            },
-            choices: item.choices
-        };
-    }); // Randomly sort the array
-});
+        const answeredIds = new Set(Object.keys(answers.value).map(item => Number(item)));
+
+        return question.value.data.map((item) => {
+            const isAnswered = answeredIds.has(Number(item.question_id));
+            const highlightClass = !isAnswered && showUnanswered.value
+                ? 'bg-red-400 dark:bg-red-500'
+                : '';
+
+            return {
+                question_id: {
+                    value: Number(item.question_id),
+                    class: highlightClass,
+                },
+                question: {
+                    value: String(item.question),
+                    class: highlightClass,
+                },
+                choices: item.choices
+            };
+        }); // Randomly sort the array
+    });
 
 
 
@@ -71,7 +70,7 @@ const questionDetails = computed(() => {
                 });
             }
         } catch (error: any) {
-            setToast('error', error.data?.message || 'An error occurred');
+            return handleApiError(error);
 
         } finally {
             isLoading.value = false;
@@ -93,8 +92,7 @@ const questionDetails = computed(() => {
 
         if (remainingTime.value > 0) {
             if (answerCount.value !== question.value?.data.length) {
-                setToast('error', 'Please answer all questions before proceeding');
-                return;
+                $toast.error('Please answer all questions before proceeding');
             } else {
                 setAlert('info', 'Are you sure you want to submit your answer? Once submit your answer will be cast!', '', 'Confirm submit').then(
                     async (result) => {
@@ -102,7 +100,8 @@ const questionDetails = computed(() => {
                             try {
                                 await performSubmit(submitData);
                             } catch (error: any) {
-                                setToast('error', error.data.message || 'An error occurred');
+                                return handleApiError(error);
+
                             }
                         }
                     }
@@ -110,7 +109,7 @@ const questionDetails = computed(() => {
             }
 
         } else {
-            setToast('warning', 'Times up');
+            $toast.warning('Times up');
             await performSubmit(submitData);
         }
 
@@ -134,7 +133,7 @@ const questionDetails = computed(() => {
                 });
             });
         } else {
-            setToast('success', 'You have answered all the questions. You may now proceed to submit your exam.');
+            $toast.success('You have answered all the questions. You may now proceed to submit your exam.');
         }
     };
 

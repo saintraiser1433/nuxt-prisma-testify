@@ -1,5 +1,17 @@
 <script lang="ts" setup>
+import type { PropType } from 'vue';
+import type { ChartModel } from '~/types/dashboard';
+
 const { $echarts } = useNuxtApp();
+const props = defineProps({
+  regExaminee: {
+    type: Array as PropType<ChartModel[]>,
+    default: () => []
+  }
+})
+
+const { regExaminee } = toRefs(props);
+
 const options = ref<ECOption>({
   color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
 
@@ -123,6 +135,7 @@ const optionsa = ref<ECOption>({
 
 
 <template>
+  {{ regExaminee }}
   <div class="grid grid-cols-12 my-5 gap-3">
     <div class="col-span-12 lg:col-span-8">
       <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }" :has-action-header="false">

@@ -41,7 +41,7 @@
                 class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-semibold"
                 :class="percent < 50 ? 'text-secondaryColor-950' : 'text-white'"
               >
-                {{ percent }}%
+                {{ parseFloat(percent).toFixed(2) }}%
               </div>
             </template>
           </UProgress>

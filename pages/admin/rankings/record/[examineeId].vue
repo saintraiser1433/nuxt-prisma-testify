@@ -12,7 +12,7 @@ useSeoMeta({
 const { params } = useRoute();
 const { $api,$toast } = useNuxtApp();
 const statuses = computed(() => status.value === "pending");
-const repo = repository<null>($api);
+const repo = repository($api);
 const { data, status, error } = await useAsyncData(
   "ranks",
   async () => {

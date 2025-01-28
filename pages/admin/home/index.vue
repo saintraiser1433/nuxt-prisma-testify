@@ -10,7 +10,6 @@ useSeoMeta({
     ogTitle: 'Testify Home Page',
     ogDescription: 'Testify Analytics'
 });
-const { handleApiError } = useErrorHandler();
 const {$toast} = useNuxtApp();
 
 const { data, status, error } = await useAPI<DashboardModel>('/dashboard/summary');
@@ -22,9 +21,9 @@ if (error.value) {
 
 
 <template>
-    <HomeSummaryAnalytics :total-register="data?.registeredExaminee" :total-completed="data?.completedExaminee"
-        :total-courses="data?.totalCourse" :total-exams="data?.totalExams" />
-    <HomeAnalytics></HomeAnalytics>
+    <HomeSummaryAnalytics :total-register="data?.summary.registeredExaminee" :total-completed="data?.summary.completedExaminee"
+        :total-courses="data?.summary.totalCourse" :total-exams="data?.summary.totalExams" />
+    <HomeAnalytics :reg-examinee="data?.regExaminee ?? []"></HomeAnalytics>
     <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
         <template #header>
             <div class="flex justify-between items-center p-0">
