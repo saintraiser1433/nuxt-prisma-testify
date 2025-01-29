@@ -88,9 +88,11 @@ export const useDashboard = () => {
         };
     };
 
+    //end
 
 
-    const optionForCustomChart = () => {
+
+    const optionForAreaChart = () => {
         const options: ECOption = {
             color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
             tooltip: {
@@ -127,7 +129,7 @@ export const useDashboard = () => {
             series: [
 
                 {
-                    name: 'Line 2',
+                    name: 'Line 1',
                     type: 'line',
                     stack: 'Total',
                     smooth: true,
@@ -217,7 +219,7 @@ export const useDashboard = () => {
 
     return {
         generateOption,
-        optionForCustomChart,
+        optionForAreaChart,
         optionForPieChart
     };
 };

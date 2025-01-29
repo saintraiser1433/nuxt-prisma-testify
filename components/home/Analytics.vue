@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue';
-import type { ChartModel } from '~/types/dashboard';
 
 const { $echarts } = useNuxtApp();
+const { optionForPieChart, optionForAreaChart } = useDashboard();
 const props = defineProps({
   regExaminee: {
     type: Array as PropType<ChartModel[]>,
@@ -11,6 +11,11 @@ const props = defineProps({
 })
 
 const { regExaminee } = toRefs(props);
+
+
+
+
+
 
 const options = ref<ECOption>({
   color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
@@ -49,7 +54,7 @@ const options = ref<ECOption>({
   series: [
 
     {
-      name: 'Line 2',
+      name: 'Line 1',
       type: 'line',
       stack: 'Total',
       smooth: true,
@@ -93,7 +98,7 @@ const optionsa = ref<ECOption>({
       'rose5',
       'rose6',
       'rose7',
-      'rose8'
+  
     ]
   },
   toolbox: {
