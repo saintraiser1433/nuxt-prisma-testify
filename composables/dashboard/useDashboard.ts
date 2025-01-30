@@ -2,7 +2,7 @@
 export const useDashboard = () => {
     const { $echarts } = useNuxtApp();
 
-    
+
     //for summary
     const generateOption = (baseColor: string) => {
         const primaryColor = baseColor;
@@ -90,11 +90,111 @@ export const useDashboard = () => {
 
     //end
 
+    const optionForBarChart = (data: ChartModel[]) => {
+        const options: ECOption = {
+
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow',
+                },
+            },
+            xAxis: {
+                type: 'category',
+                data: data.map((item) => item.name),
+                axisLabel: {
+                    color: '#666',
+                },
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    color: '#666',
+                },
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: true },
+                    dataView: {
+                        show: true,
+                        readOnly: false,
+                        optionToContent: (opt: { series: { data: { name: string; value: number; }[]; }[]; }) => {
+                            const table = `<table style="width:100%; text-align:center; border-collapse:collapse;">
+                      <thead>
+                        <tr>
+                          <th style="border:1px solid #ddd; padding:8px;">Name</th>
+                          <th style="border:1px solid #ddd; padding:8px;">Value</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${opt.series[0].data
+                                    .map(
+                                        (item: { name: string; value: number }) =>
+                                            `<tr>
+                                <td style="border:1px solid #ddd; padding:8px;">${item.name}</td>
+                                <td style="border:1px solid #ddd; padding:8px;">${item.value}</td>
+                              </tr>`
+                                    )
+                                    .join('')}
+                      </tbody>
+                    </table>`;
+                            return table;
+                        },
+                        contentToOption: (currentOpt: any, { series }: any) => {
+                            return {
+                                ...currentOpt,
+                                series,
+                            };
+                        },
+                    },
+                    restore: { show: true },
+                    saveAsImage: { show: true },
+                },
+            },
+            series: [
+                {
+                    name: 'Percentage',
+                    type: 'bar',
+                    data: data.map((item, index) => ({
+                        value: item.value,
+                        itemStyle: {
+                            color: getColorFromPalette(index), // Assign a random color to each bar
+                            shadowColor: getColorFromPalette(index),
+                            borderRadius: [20, 20, 0, 0],
+                            borderType: 'dashed',
+                        },
+
+                    }),
+                    ),
+
+                    barWidth: '60%',
+                },
+            ],
+            itemStyle: {
+                barBorderRadius: 5,
+                borderWidth: 1,
+                borderType: 'solid',
+                borderColor: '#73c0de',
+                shadowColor: '#5470c6',
+                shadowBlur: 3
+            },
+            grid: {
+                containLabel: true,
+                left: '2%',
+                right: '2%',
+                bottom: '2%',
+            },
+        };
+        return {
+            options
+        }
+    }
+
 
 
     const optionForAreaChart = () => {
         const options: ECOption = {
-            color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
@@ -105,9 +205,13 @@ export const useDashboard = () => {
                 }
             },
             legend: {
-                data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5']
+                data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine']
             },
-
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
             grid: {
                 left: '3%',
                 right: '4%',
@@ -127,33 +231,15 @@ export const useDashboard = () => {
                 }
             ],
             series: [
-
                 {
-                    name: 'Line 1',
+                    name: 'Email',
                     type: 'line',
                     stack: 'Total',
-                    smooth: true,
-                    lineStyle: {
-                        width: 0
-                    },
-                    showSymbol: false,
-                    areaStyle: {
-                        opacity: 0.8,
-                        color: new $echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                            {
-                                offset: 0,
-                                color: 'rgb(0, 221, 255)'
-                            },
-                            {
-                                offset: 1,
-                                color: 'rgb(77, 119, 255)'
-                            }
-                        ])
-                    },
+                    areaStyle: {},
                     emphasis: {
                         focus: 'series'
                     },
-                    data: [120, 282, 111, 234, 220, 340, 310]
+                    data: [120, 132, 101, 134, 90, 230, 210]
                 },
             ]
         };
@@ -162,64 +248,153 @@ export const useDashboard = () => {
         }
     }
 
-    const optionForPieChart = () => {
-        const options: ECOption = {
+    const optionForNightingale = (data: any[]) => {
+        return ref<ECOption>({
             legend: {
                 left: 'center',
-                top: 'bottom',
-                data: [
-                    'rose1',
-                    'rose2',
-                    'rose3',
-                    'rose4',
-                    'rose5',
-                    'rose6',
-                    'rose7',
-                    'rose8'
-                ]
+                bottom: 'bottom',
+
             },
             toolbox: {
                 show: true,
                 feature: {
                     mark: { show: true },
-                    dataView: { show: true, readOnly: false },
+                    dataView: {
+                        show: true,
+                        readOnly: false,
+                        optionToContent: (opt: { series: { data: { name: string; value: number; }[]; }[]; }) => {
+                            const table = `<table style="width:100%; text-align:center; border-collapse:collapse;">
+                      <thead>
+                        <tr>
+                          <th style="border:1px solid #ddd; padding:8px;">Name</th>
+                          <th style="border:1px solid #ddd; padding:8px;">Value</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${opt.series[0].data
+                                    .map(
+                                        (item: { name: string; value: number }) =>
+                                            `<tr>
+                                <td style="border:1px solid #ddd; padding:8px;">${item.name}</td>
+                                <td style="border:1px solid #ddd; padding:8px;">${item.value}</td>
+                              </tr>`
+                                    )
+                                    .join('')}
+                      </tbody>
+                    </table>`;
+                            return table;
+                        },
+                        contentToOption: (currentOpt: any, { series }: any) => {
+                            return {
+                                ...currentOpt,
+                                series,
+                            };
+                        },
+                    },
                     restore: { show: true },
-                    saveAsImage: { show: true }
-                }
+                    saveAsImage: { show: true },
+                },
             },
             series: [
-
                 {
                     name: 'Area Mode',
                     type: 'pie',
                     radius: [20, 140],
-                    center: ['50%', '50%'],
+                    center: ['50%', '45%'],
                     roseType: 'area',
                     itemStyle: {
-                        borderRadius: 5
+                        borderRadius: 5,
                     },
-                    data: [
-                        { value: 30, name: 'rose 1' },
-                        { value: 28, name: 'rose 2' },
-                        { value: 26, name: 'rose 3' },
-                        { value: 24, name: 'rose 4' },
-                        { value: 22, name: 'rose 5' },
-                        { value: 20, name: 'rose 6' },
-                        { value: 18, name: 'rose 7' },
-                        { value: 16, name: 'rose 8' }
-                    ]
+                    data: data,
+                },
+
+            ],
+        });
+
+
+    }
+
+
+    const optionForPieChart = (data: any[]) => {
+        return ref<ECOption>({
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b} : {c} ({d}%)'
+            },
+            legend: {
+                type: 'scroll',
+                orient: 'horizontal',
+                left: 'center',
+                bottom: 'bottom',
+                data: data.map(item => item.name) // Use the `name` property for the legend
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: true },
+                    dataView: {
+                        show: true,
+                        readOnly: false,
+                        optionToContent: (opt: { series: { data: { name: string; value: number; }[]; }[]; }) => {
+                            const table = `<table style="width:100%; text-align:center; border-collapse:collapse;">
+                      <thead>
+                        <tr>
+                          <th style="border:1px solid #ddd; padding:8px;">Name</th>
+                          <th style="border:1px solid #ddd; padding:8px;">Value</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${opt.series[0].data
+                                    .map(
+                                        (item: { name: string; value: number }) =>
+                                            `<tr>
+                                <td style="border:1px solid #ddd; padding:8px;">${item.name}</td>
+                                <td style="border:1px solid #ddd; padding:8px;">${item.value}</td>
+                              </tr>`
+                                    )
+                                    .join('')}
+                      </tbody>
+                    </table>`;
+                            return table;
+                        },
+                        contentToOption: (currentOpt: any, { series }: any) => {
+                            return {
+                                ...currentOpt,
+                                series,
+                            };
+                        },
+                    },
+                    restore: { show: true },
+                    saveAsImage: { show: true },
+                },
+            },
+            series: [
+                {
+                    name: 'Percentage',
+                    type: 'pie',
+                    radius: '50%',
+
+                    center: ['50%', '40%'],
+                    data: data, // Pass the entire data array here
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
                 }
             ]
-        }
+        });
+    };
 
-        return {
-            options
-        }
-    }
+
 
     return {
         generateOption,
         optionForAreaChart,
-        optionForPieChart
+        optionForNightingale,
+        optionForPieChart,
+        optionForBarChart
     };
 };
