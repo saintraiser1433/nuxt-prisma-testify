@@ -37,7 +37,7 @@ const { generateOption } = useDashboard();
             <UICard :has-header="false">
                 <div class="flex justify-between items-center p-5 font-semibold">
                     <div class="flex flex-col">
-                        <h6>Registered Examinee's</h6>
+                        <h6>Registered Examinees</h6>
                         <h1 class="text-primary-500">{{ totalRegister }}</h1>
                     </div>
                     <div class="rounded-full bg-primary-500 relative p-2">
@@ -54,7 +54,7 @@ const { generateOption } = useDashboard();
             <UICard :has-header="false">
                 <div class="flex justify-between items-center p-5 font-semibold">
                     <div class="flex flex-col">
-                        <h6>Completed Examinee's</h6>
+                        <h6>Completed Examinees</h6>
                         <h1 class="text-emerald-500">{{ totalCompleted }}</h1>
                     </div>
                     <div class="rounded-full bg-emerald-500 relative p-2">
@@ -71,7 +71,7 @@ const { generateOption } = useDashboard();
             <UICard :has-header="false">
                 <div class="flex justify-between items-center p-5 font-semibold">
                     <div class="flex flex-col">
-                        <h6>Total Course's</h6>
+                        <h6>Total Courses</h6>
                         <h1 class="text-carnation-400">{{ totalCourses }}</h1>
                     </div>
                     <div class="rounded-full bg-carnation-400 relative p-2">
@@ -88,7 +88,7 @@ const { generateOption } = useDashboard();
             <UICard :has-header="false">
                 <div class="flex justify-between items-center p-5 font-semibold">
                     <div class="flex flex-col">
-                        <h6>Total Exam's</h6>
+                        <h6>Total Exams</h6>
                         <h1 class="text-neon-carrot-400">{{ totalExams }}</h1>
                     </div>
                     <div class="rounded-full bg-neon-carrot-400 relative p-2">

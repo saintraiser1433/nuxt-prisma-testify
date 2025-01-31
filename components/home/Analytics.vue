@@ -19,9 +19,9 @@ const props = defineProps({
 })
 
 const { successRateCourse, successRateExam,registerVsCompleted } = toRefs(props);
-const regVsCompleted = optionForDataSet(registerVsCompleted.value)
-const successRatePerCourses = optionForNightingale(successRateCourse.value)
-const percentagePassPerExam = optionForBarChart(successRateExam.value)
+const regVsCompleted = optionForDataSet(registerVsCompleted.value ?? [])
+const successRatePerCourses = optionForNightingale(successRateCourse.value ?? [])
+const percentagePassPerExam = optionForBarChart(successRateExam.value ?? [])
 
 </script>
 
