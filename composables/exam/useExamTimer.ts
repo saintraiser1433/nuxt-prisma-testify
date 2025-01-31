@@ -2,7 +2,7 @@
 
 export const useExamTimer = (examineeId?: string, examId?: number) => {
     const store = useExamStore();
-    const { $api } = useNuxtApp();
+    const { $api,$toast } = useNuxtApp();
     const { setToast } = useToasts();
     const remainingTime = ref(0);
     let timerInterval: NodeJS.Timeout | null = null;
@@ -46,7 +46,7 @@ export const useExamTimer = (examineeId?: string, examId?: number) => {
             try {
                 await sessionTimer.updateExamSessionTimer(remainingTime.value, examineeId, examId);
             } catch (err: any) {
-                setToast('error', err.data.message || 'An error occurred while updating session timer');
+                $toast.error(err.data.message || 'An error occurred while updating session timer')
             }
         }, 5000);
     };

@@ -5,7 +5,7 @@ export const useProgressBarColor = () => {
         if (rate <= 89.99) return 'cyan';
         return 'emerald';
     };
-    
+
 
     return {
         getProgressBarColor

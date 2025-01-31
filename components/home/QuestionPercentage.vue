@@ -9,27 +9,23 @@ const columns = [{
   label: 'Exam Name',
   sortable: true
 }, {
-  key: 'description',
-  label: 'Description',
+  key: 'questions',
+  label: 'Questions',
   sortable: true
 }, {
-  key: 'time_limit',
-  label: 'Time',
+  key: 'total',
+  label: 'Total',
   sortable: true
 }, {
-  key: 'actions',
-  label: 'Actions',
-  sortable: false
-
+  key: 'successRate',
+  label: 'Success Rate',
+  sortable: true
 }]
 
 
-const emits = defineEmits<{
-  (e: 'toggleModal'): void,
-}>()
-const props = defineProps({
-  examData: {
-    type: Array as PropType<ExamModel[]>,
+defineProps({
+  questionsAnalytics: {
+    type: Array,
     required: true,
     default: () => [],
   },
@@ -37,21 +33,28 @@ const props = defineProps({
     type: Boolean,
     default: false,
   }
-
 })
 
 </script>
 
 <template>
-  <UITables :is-loading="isLoading" :data="examData" :columns="columns">
+  <UITables :has-border="true" :is-loading="isLoading" :data="questionsAnalytics" :columns="columns" :td="{
+            base: 'border dark:border-gray-700 align-top py-2'
+        }">
     <template #increment-data="{ row, index }">
       <span>{{ index + 1 }}</span>
     </template>
     <template #exam_title-data="{ row, index }">
       <span class="uppercase">{{ row.exam_title }}</span>
     </template>
-    <template #description-data="{ row, index }">
-      <span class="capitalize">{{ row.description }}</span>
+    <template #questions-data="{ row, index }">
+      <div v-html="row.questions"></div>
+    </template>
+    <template #total-data="{ row, index }">
+      <span class="capitalize">{{ row.total }}</span>
+    </template>
+    <template #successRate-data="{ row, index }">
+      <span class="capitalize">{{ row.successRate.value }} %</span>
     </template>
   </UITables>
 </template>

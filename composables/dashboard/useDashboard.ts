@@ -92,7 +92,7 @@ export const useDashboard = () => {
 
     const optionForBarChart = (data: ChartModel[]) => {
         const options: ECOption = {
-
+            legend: {},
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
@@ -101,7 +101,7 @@ export const useDashboard = () => {
             },
             xAxis: {
                 type: 'category',
-                data: data.map((item) => item.name),
+                data: data.map((item) => item.name), // X-axis labels based on `data.name`
                 axisLabel: {
                     color: '#666',
                 },
@@ -112,141 +112,35 @@ export const useDashboard = () => {
                     color: '#666',
                 },
             },
-            toolbox: {
-                show: true,
-                feature: {
-                    mark: { show: true },
-                    dataView: {
-                        show: true,
-                        readOnly: false,
-                        optionToContent: (opt: { series: { data: { name: string; value: number; }[]; }[]; }) => {
-                            const table = `<table style="width:100%; text-align:center; border-collapse:collapse;">
-                      <thead>
-                        <tr>
-                          <th style="border:1px solid #ddd; padding:8px;">Name</th>
-                          <th style="border:1px solid #ddd; padding:8px;">Value</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        ${opt.series[0].data
-                                    .map(
-                                        (item: { name: string; value: number }) =>
-                                            `<tr>
-                                <td style="border:1px solid #ddd; padding:8px;">${item.name}</td>
-                                <td style="border:1px solid #ddd; padding:8px;">${item.value}</td>
-                              </tr>`
-                                    )
-                                    .join('')}
-                      </tbody>
-                    </table>`;
-                            return table;
-                        },
-                        contentToOption: (currentOpt: any, { series }: any) => {
-                            return {
-                                ...currentOpt,
-                                series,
-                            };
-                        },
-                    },
-                    restore: { show: true },
-                    saveAsImage: { show: true },
-                },
-            },
             series: [
                 {
-                    name: 'Percentage',
+                    name:'Passed',
                     type: 'bar',
                     data: data.map((item, index) => ({
-                        value: item.value,
+                        name: item.name, // Use `data.name` for each data point
+                        value: item.value, // Use `data.value` for each data point
                         itemStyle: {
-                            color: getColorFromPalette(index), // Assign a random color to each bar
+                            color: getColorFromPalette(index), // Assign a color
                             shadowColor: getColorFromPalette(index),
                             borderRadius: [20, 20, 0, 0],
                             borderType: 'dashed',
                         },
-
-                    }),
-                    ),
-
+                    })),
                     barWidth: '60%',
                 },
             ],
-            itemStyle: {
-                barBorderRadius: 5,
-                borderWidth: 1,
-                borderType: 'solid',
-                borderColor: '#73c0de',
-                shadowColor: '#5470c6',
-                shadowBlur: 3
-            },
             grid: {
                 containLabel: true,
                 left: '2%',
                 right: '2%',
-                bottom: '2%',
+                bottom: '10%',
             },
         };
-        return {
-            options
-        }
-    }
+        return { options };
+    };
 
 
 
-    const optionForAreaChart = () => {
-        const options: ECOption = {
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross',
-                    label: {
-                        backgroundColor: '#6a7985'
-                    }
-                }
-            },
-            legend: {
-                data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine']
-            },
-            toolbox: {
-                feature: {
-                    saveAsImage: {}
-                }
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            xAxis: [
-                {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value'
-                }
-            ],
-            series: [
-                {
-                    name: 'Email',
-                    type: 'line',
-                    stack: 'Total',
-                    areaStyle: {},
-                    emphasis: {
-                        focus: 'series'
-                    },
-                    data: [120, 132, 101, 134, 90, 230, 210]
-                },
-            ]
-        };
-        return {
-            options
-        }
-    }
 
     const optionForNightingale = (data: any[]) => {
         return ref<ECOption>({
@@ -389,12 +283,101 @@ export const useDashboard = () => {
     };
 
 
+    const optionForDataSet = (data: any[]) => {
+        return ref<ECOption>({
+            legend: {
+                left: 'center',
+                bottom: 'bottom',
+
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: true },
+                    dataView: {
+                        show: true,
+                        readOnly: false,
+                        optionToContent: (opt: any) => {
+                            const table = `<table style="width:100%; text-align:center; border-collapse:collapse;">
+                      <thead>
+                        <tr>
+                          <th style="border:1px solid #ddd; padding:8px;">Date</th>
+                          <th style="border:1px solid #ddd; padding:8px;">Registered</th>
+                          <th style="border:1px solid #ddd; padding:8px;">Completed</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${opt.dataset[0].source
+                                    .map(
+                                        (item: { formatted_date: string; Registered: string; Completed: number }) =>
+                                            `<tr>
+                                <td style="border:1px solid #ddd; padding:8px;">${item.formatted_date}</td>
+                                <td style="border:1px solid #ddd; padding:8px;">${item.Registered}</td>
+                                <td style="border:1px solid #ddd; padding:8px;">${item.Completed}</td>
+                              </tr>`
+                                    )
+                                    .join('')}
+                      </tbody>
+                    </table>`;
+                            return table;
+                        },
+                        contentToOption: (currentOpt: any, { series }: any) => {
+                            return {
+                                ...currentOpt,
+                                series,
+                            };
+                        },
+                    },
+                    restore: { show: true },
+                    saveAsImage: { show: true },
+                },
+            },
+            dataset: {
+                dimensions: ['formatted_date', 'Registered', 'Completed'],
+                source: data
+            },
+            legends: {},
+            xAxis: { type: 'category' },
+            yAxis: {},
+            series: [{
+                type: 'bar',
+                itemStyle: {
+                    color: getColorFromPalette(0), // Assign a random color to each bar
+                    shadowColor: getColorFromPalette(4),
+                    borderRadius: [10, 10, 0, 0],
+                    borderType: 'dashed',
+                },
+            }, {
+                type: 'bar',
+                itemStyle: {
+                    color: getColorFromPalette(2), // Assign a random color to each bar
+                    shadowColor: getColorFromPalette(2),
+                    borderRadius: [20, 20, 0, 0],
+                    borderType: 'dashed',
+                },
+            }],
+            grid: {
+                containLabel: true,
+                left: '2%',
+                right: '2%',
+                bottom: '10%',
+            },
+
+
+        });
+    };
+
+
+
+
+
+
 
     return {
         generateOption,
-        optionForAreaChart,
         optionForNightingale,
         optionForPieChart,
-        optionForBarChart
+        optionForBarChart,
+        optionForDataSet
     };
 };

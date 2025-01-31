@@ -12,6 +12,7 @@ useSeoMeta({
 });
 const { $toast } = useNuxtApp();
 const { getAcronym } = useAcronym();
+const { getHighlightRate } = useHighlightRate();
 const { data, status, error } = await useAPI<DashboardModel>('/dashboard/summary');
 if (error.value) {
     $toast.error(error.value?.data.message || 'An error occurred while fetching')
@@ -20,15 +21,16 @@ const regExaminee = computed(() => data.value?.summary.registeredExaminee || 0);
 const comExaminee = computed(() => data.value?.summary.completedExaminee || 0);
 const totalCourses = computed(() => data.value?.summary.totalCourse || 0);
 const totalExams = computed(() => data.value?.summary.totalExams || 0);
+
 const successRatePerCourses = computed(() => data.value?.coursesPassed.map((item) => ({
     name: getAcronym(item.name).toUpperCase(),
     value: item.value
 })) || []);
 
 const successRatePerExam = computed(() => data.value?.examPassed.map((item) => {
-    const totalQuestions = item.total_questions;
-    const totalExaminee = item.total_examinees;
-    const totalCorrect = item.total_correct_answers;
+    const totalQuestions = item.totalQuestions;
+    const totalExaminee = item.totalExaminee;
+    const totalCorrect = item.totalCorrect;
 
     const totalPercentage = Number(((totalCorrect / (totalExaminee * totalQuestions)) * 100).toFixed(2));
     return {
@@ -36,6 +38,24 @@ const successRatePerExam = computed(() => data.value?.examPassed.map((item) => {
         value: totalPercentage
     }
 }) || [])
+const registerVsExaminee = computed(() => data.value?.dailyRegisterVsCompleted || []);
+const summaryQuestions = computed(() => data.value?.summaryQuestions.map((item) => {
+    const totalCorrect = item.totalCorrect;
+    const totalAttempt = item.totalAttempt;
+    const successRate = parseInt(((totalCorrect / totalAttempt) * 100).toFixed(2));
+
+
+    return {
+        exam_title: item.exam_title,
+        questions: item.question,
+        total: `${item.totalCorrect}/${item.totalAttempt}`,
+        successRate: {
+            value: successRate,
+            class: getHighlightRate(successRate)
+        }
+
+    }
+}, []));
 
 
 
@@ -47,9 +67,12 @@ const successRatePerExam = computed(() => data.value?.examPassed.map((item) => {
 <template>
     <HomeSummaryAnalytics :total-register="regExaminee" :total-completed="comExaminee" :total-courses="totalCourses"
         :total-exams="totalExams" />
-        
-    <HomeAnalytics :success-rate-course="successRatePerCourses" :success-rate-exam="successRatePerExam"></HomeAnalytics>
-    <!-- <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
+
+    <HomeAnalytics :success-rate-course="successRatePerCourses" :success-rate-exam="successRatePerExam"
+        :register-vs-completed="registerVsExaminee">
+
+    </HomeAnalytics>
+    <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
         <template #header>
             <div class="flex justify-between items-center p-0">
                 <div class="flex flex-col">
@@ -59,7 +82,7 @@ const successRatePerExam = computed(() => data.value?.examPassed.map((item) => {
             </div>
         </template>
 
-<HomeQuestionPercentage></HomeQuestionPercentage>
-</UICard> -->
+        <HomeQuestionPercentage :questions-analytics="summaryQuestions"></HomeQuestionPercentage>
+    </UICard>
 
 </template>

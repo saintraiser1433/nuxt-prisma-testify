@@ -46,9 +46,12 @@ const { percentage, hexColor, detail } = usePercentage(
   summaryScores.value.totalCorrect,
   summaryScores.value.totalQuestions
 );
+
+console.log(data);
 </script>
 
 <template>
+
   <div class="py-5 lg:py-2">
     <div class="grid grid-cols-12 gap-2">
       <div class="col-span-12 lg:col-span-3">
