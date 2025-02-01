@@ -23,4 +23,20 @@ export const BTN_TAKE_EXAM = {
         }
     },
     base: 'ml-auto'
+};
+
+export const BTN_ADD_DATA_MODAL = {
+    color: {
+        gray: {
+            solid: 'bg-primary-500 text-white hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600'
+        }
+    }
+}
+
+export const BTN_FILTER_COLUMNS = {
+    color: {
+        gray: {
+            solid: 'bg-emerald-500 text-white hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-600'
+        }
+    }
 }

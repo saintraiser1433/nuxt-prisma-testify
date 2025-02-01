@@ -27,6 +27,9 @@ export default {
     },
 
     extend: {
+      // fontFamily:{
+      //   custom:['Arial']
+      // },
       colors: {
         currentColor: {
           50: "#eef0ff",

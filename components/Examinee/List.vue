@@ -37,7 +37,7 @@ const props = defineProps({
 
 })
 
-const { examineeData,isLoading } = toRefs(props)
+const { examineeData, isLoading } = toRefs(props)
 
 
 const toggleModal = () => {
@@ -55,15 +55,9 @@ const handleUpdate = (item: User) => {
 </script>
 
 <template>
-    <UITables :is-loading="isLoading" :data="examineeData" :columns="columns">
-        <template #action-header>
-            <UButton icon="i-heroicons-plus" color="gray" size="md" @click="toggleModal" :ui="{
-                color:{
-                    gray: {
-                        solid:'bg-primary-500 text-white hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600'
-                    }
-                }
-            }">
+    <UITables :has-action-header="false" :is-loading="isLoading" :data="examineeData" :columns="columns">
+        <template #action>
+            <UButton icon="i-heroicons-plus" color="gray" size="md" @click="toggleModal" :ui="BTN_ADD_DATA_MODAL">
                 Add Examinee's
             </UButton>
         </template>
@@ -75,7 +69,7 @@ const handleUpdate = (item: User) => {
         </template>
         <template #actions-data="{ row, index }">
             <div class="flex gap-1">
-                <UButton color="emerald" class="dark:text-white" variant="solid" size="xs"  @click="handleUpdate(row)">
+                <UButton color="emerald" class="dark:text-white" variant="solid" size="xs" @click="handleUpdate(row)">
                     <i-bx-edit />
                 </UButton>
                 <UButton color="carnation" class="dark:text-white" variant="solid" size="xs"

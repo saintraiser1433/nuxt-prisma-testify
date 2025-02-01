@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const props = defineProps({
     base: String,
     td: {
@@ -77,49 +76,48 @@ const { search,
             </div>
         </div>
         <!-- Header and Action buttons -->
-        <div class="flex justify-between items-center w-full px-4 py-3 flex-col lg:flex-row gap-3"
+
+        <div class="flex justify-between items-center w-full px-2 py-2 flex-col lg:flex-row gap-3 bg-white dark:bg-darken"
             v-if="hasPageCount && hasColumnFilter">
-            <div class="flex items-center gap-1.5" v-if="hasPageCount">
-                <span class="text-sm leading-5">Rows per page:</span>
-                <USelect v-model.number="pageCount" :options="[3, 5, 10, 20, 30, 40]" class="me-2 w-20" size="xs"
-                    color="gray" />
-            </div>
-            <div class="flex gap-1.5 items-center" v-if="hasColumnFilter">
-                <UInput v-model="search" icon="i-heroicons-magnifying-glass-20-solid" color="gray"
-                    placeholder="Search..." />
-                <USelectMenu v-model="selectedColumns" :options="excludeSelectColumn" multiple>
-                    <UButton icon="i-heroicons-view-columns" size="xs" color="gray" :ui="{
-                        color: {
-                            gray: {
-                                solid: 'bg-emerald-500 text-white hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-600'
-                            }
-                        }
-                    }">
-                        Columns
+            <div class="flex items-center gap-1.5">
+                <!-- <span class="text-sm leading-5">Rows per page:</span> -->
+                <USelectMenu v-model="selectedColumns" :options="excludeSelectColumn" v-if="hasColumnFilter" multiple>
+                    <UButton icon="i-heroicons-funnel" size="xs" color="gray">
+                        Filter
                     </UButton>
 
                 </USelectMenu>
+                <UInput v-model="search" icon="i-heroicons-magnifying-glass-20-solid" color="gray"
+                    placeholder="Search..." size="xs" />
+                <USelect v-model.number="pageCount" :options="[3, 5, 10, 20, 30, 40]" class="me-2 w-20" size="xs"
+                    color="gray" v-if="hasPageCount" />
+
+            </div>
+            <div class="flex gap-1.5 items-center">
+                <slot name="action"></slot>
+
 
             </div>
         </div>
 
 
+
         <UTable :loading="isLoading" :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
-            :progress="{ color: 'primary', animation: 'carousel' }"
-            :sort-button="{ variant: 'outline', size: 'xs', square: false }"
-            :rows="hasPagination ? paginatedData : data" :columns="columnsTable" class="w-full text-xs" :ui="{
+            :progress="{ color: 'primary', animation: 'carousel' }" :rows="hasPagination ? paginatedData : data"
+            :columns="columnsTable" class="w-full text-xs" :ui="{
                 base: base || 'border-t dark:border-gray-700 ',
                 thead: 'static',
                 wrapper: 'static',
                 td: {
                     padding: td.padding || 'px-4 py-2',
                     base: td.base || '',
+                    color: 'dark:text-gray-300'
                 },
                 tr: {
                     base: tr.base || ' odd:bg-white even:bg-slate-50 dark:odd:bg-gray-900 dark:even:bg-gray-800  '
                 },
                 th: {
-                    padding: th.padding || 'py-3',
+                    padding: th.padding || 'py-2',
                     base: th.base || 'w-25 bg-gray-100 dark:bg-darken dark:text-slate-400 text-xs ',
                 },
             }
@@ -163,4 +161,3 @@ const { search,
 
 
 </template>
-

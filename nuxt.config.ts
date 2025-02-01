@@ -75,16 +75,18 @@ export default defineNuxtConfig({
     dirs: ["types/*.ts", "store/*.ts", "utils/*.ts", "composables/*.ts", "composables/*/*.ts", "constants/*.ts"],
   },
   modules: [
-    "@pinia/nuxt",
-    "unplugin-icons/nuxt",
-    "@vueuse/nuxt",
-    "@nuxt/ui",
+    '@pinia/nuxt',
+    'unplugin-icons/nuxt',
+    '@vueuse/nuxt',
+    '@nuxt/ui',
     '@morev/vue-transitions/nuxt',
-    "nuxt-tiptap-editor",
-    "@nuxt/image",
+    'nuxt-tiptap-editor',
+    '@nuxt/image',
     '@nuxtjs/svg-sprite',
-    "nuxt-echarts",
+    'nuxt-echarts',
+    // '@nuxt/fonts',
   ],
+  
   tiptap: {
     prefix: 'Tiptap',
     lowlight: {

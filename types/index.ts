@@ -357,9 +357,16 @@ export interface ConsoSummary {
     data: ConsoQuestionDetails[]
 }
 
+export interface ExamAnswer {
+    questionId: number,
+    answerId: number
+}
 
-
-
+export interface BreadCrumbsModel {
+    label: string;
+    icon?: string;
+    to?: string;
+}
 
 
 export interface LegendModel {
@@ -374,11 +381,6 @@ type LegendColor = 'red' | 'orange' | 'amber' | 'yellow' | 'lime' | 'green' | 'e
 
 export type ProgressColor = 'rose' | 'primary' | 'cyan' | 'emerald';
 
-
-export type ExamAnswer = {
-    questionId: number,
-    answerId: number
-}
 
 
 

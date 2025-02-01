@@ -39,7 +39,7 @@ defineProps({
     base: defaults?.base || 'overflow-hidden',
     shadow: 'shadow-sm dark:shadow-sm',
     divide: 'divide-0 divide-gray-200 dark:divide-gray-700',
-    header: { padding: header?.padding || 'px-4 py-5', base: header?.padding || 'dark:bg-darken' },
+    header: { padding: header?.padding || 'px-2 py-2', base: header?.base || 'dark:bg-darken' },
     body: { padding: body?.padding || '', base: body?.base || 'dark:bg-darken' },
     footer: { padding: footer?.padding || '', base: footer?.base || 'dark:bg-darken' }
   }">

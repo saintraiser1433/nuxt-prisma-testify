@@ -14,7 +14,7 @@ const props = defineProps({
 })
 
 const { isUpdate } = toRefs(props)
-const { $username, $password, $joi } = useNuxtApp();
+const { $password, $joi } = useNuxtApp();
 
 
 const schema = $joi.object({
@@ -34,10 +34,12 @@ const schema = $joi.object({
 
 const onSubmit = async (event: FormSubmitEvent<User>) => {
     let data: User;
+    const random5DigitNumber = Math.floor(10000 + Math.random() * 90000);
+    const username = `${event.data.last_name}_${event.data.first_name}_${random5DigitNumber}`;
     if (!isUpdate.value) {
         data = {
             ...event.data,
-            username: $username(),
+            username: username,
             password: $password()
         }
     } else {
@@ -69,7 +71,6 @@ const onSubmit = async (event: FormSubmitEvent<User>) => {
                 }
             }
         }">Submit</UButton>
- 
+
     </UForm>
 </template>
-

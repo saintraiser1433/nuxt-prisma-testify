@@ -15,8 +15,8 @@
   }
 
   body {
-    @apply bg-gray-100 text-slate-500 dark:text-fontBase dark:bg-darkBody;
-    font-family: "Public Sans", system-ui, sans-serif;
+    @apply bg-gray-100 text-slate-500 dark:text-gray-300 dark:bg-darkBody;
+    font-family: "Roboto", system-ui, sans-serif;
   }
 
   h1 {
