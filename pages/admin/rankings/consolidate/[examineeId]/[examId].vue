@@ -11,14 +11,18 @@ useSeoMeta({
 });
 
 const { params } = useRoute();
-const {$toast} = useNuxtApp();
+const { $toast } = useNuxtApp();
+const store = useStore();
+store.setModuleTitle("CONSOLIDATE ANSWERS");
+store.setLink(CONSOLIDATE_BREADCRUMBS);
+
 //top level
 const { data: summary, status, error } = await useAPI<ConsoSummary>(
   `/answer/consolidate/${params.examineeId}/${params.examId}`
 );
 
 if (error.value) {
-  $toast.error(error.value.message || "Failed to fetch items")
+  $toast.error(error.value.message || "Failed to fetch items");
 }
 
 const questionsData = computed(() => summary.value?.data || []);

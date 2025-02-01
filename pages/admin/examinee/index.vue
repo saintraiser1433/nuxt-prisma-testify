@@ -13,7 +13,9 @@ useSeoMeta({
 const { $api, payload, static: stat, $toast } = useNuxtApp();
 const { setAlert } = useAlert();
 const { handleApiError } = useErrorHandler();
-
+const store = useStore();
+store.setModuleTitle("LIST OF EXAMINEES");
+store.setLink(EXAMINEE_BREADCRUMBS);
 //fetch Examinee
 
 const examineeData = computed(() => data.value || []);
@@ -117,44 +119,49 @@ const toggleModal = () => {
   isOpen.value = true;
   isUpdate.value = false;
 };
-
-const links = [{
-  label: 'Home',
-  icon: 'i-heroicons-home',
-  to: '/admin/home'
-}, {
-  label: 'Examinee',
-  icon: 'i-heroicons-square-3-stack-3d'
-}]
 </script>
 
 <template>
-
   <!-- modal -->
   <UModal v-model="isOpen" :ui="{ width: 'sm:max-w-sm' }" prevent-close>
-    <UICard :body="{ padding: 'sm:px-3 sm:py-3' }" :header="{ padding: 'sm:py-3 sm:px-3' }">
+    <UICard
+      :body="{ padding: 'sm:px-3 sm:py-3' }"
+      :header="{ padding: 'sm:py-3 sm:px-3' }"
+    >
       <template #header>
         <div class="flex items-center justify-between">
           <h1 class="text-2xl lg:text-lg font-semibold">Examinee Information</h1>
-          <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
-            @click="isOpen = false" />
+          <UButton
+            color="gray"
+            variant="ghost"
+            icon="i-heroicons-x-mark-20-solid"
+            class="-my-1"
+            @click="isOpen = false"
+          />
         </div>
       </template>
-      <ExamineeForm v-model="examineeForm" :is-update="isUpdate" @data-examinee="submitExaminee" />
+      <ExamineeForm
+        v-model="examineeForm"
+        :is-update="isUpdate"
+        @data-examinee="submitExaminee"
+      />
     </UICard>
   </UModal>
 
   <!-- body -->
-  <div class="flex flex-col lg:flex-row gap-2 items-center justify-between mb-3">
-    <h1 class="text-2xl font-bold">LIST OF EXAMINEES</h1>
-    <UBreadcrumb :links="links" />
-  </div>
-  <UICard :has-header="false" :defaults="{
-    base: 'border-b-2 border-emerald-500 overflow-hidden'
-  }">
-    <ExamineeList :is-loading="statuses" :examinee-data="transformData" @toggle-modal="toggleModal"
-      @update="editExaminee" @delete="removeExaminee">
-
+  <UICard
+    :has-header="false"
+    :defaults="{
+      base: 'border-b-2 border-emerald-500 overflow-hidden',
+    }"
+  >
+    <ExamineeList
+      :is-loading="statuses"
+      :examinee-data="transformData"
+      @toggle-modal="toggleModal"
+      @update="editExaminee"
+      @delete="removeExaminee"
+    >
     </ExamineeList>
   </UICard>
 </template>

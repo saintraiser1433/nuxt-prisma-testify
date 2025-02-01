@@ -10,9 +10,12 @@ useSeoMeta({
   ogDescription: "CRUD for course",
 });
 
-const { $api, payload, static: stat,$toast } = useNuxtApp();
+const { $api, payload, static: stat, $toast } = useNuxtApp();
 const { setAlert } = useAlert();
-const {handleApiError} = useErrorHandler();
+const { handleApiError } = useErrorHandler();
+const store = useStore();
+store.setModuleTitle("LIST OF COURSES");
+store.setLink(COURSE_BREADCRUMBS);
 
 const isUpdate = ref(false);
 const isOpen = ref(false);
@@ -31,7 +34,7 @@ const { data, status, error } = await useAPI<CourseModel[]>("/course", {
   },
 });
 if (error.value) {
-  $toast.error(error.value.message || "Failed to fetch items")
+  $toast.error(error.value.message || "Failed to fetch items");
 }
 
 //submit course
@@ -126,10 +129,12 @@ const toggleModal = () => {
 
   <div class="grid grid-cols-5 gap-5">
     <div class="col-span-5">
-      <UICard>
-        <template #header>
-          <h1 class="text-2xl lg:text-lg font-semibold">List of Course's</h1>
-        </template>
+      <UICard
+        :has-header="false"
+        :defaults="{
+          base: 'border-b-2 border-emerald-500 overflow-hidden',
+        }"
+      >
         <CourseList
           :is-loading="statuses"
           :course-data="courseData"

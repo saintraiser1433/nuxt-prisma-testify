@@ -16,7 +16,7 @@
 
   body {
     @apply bg-gray-100 text-slate-500 dark:text-gray-300 dark:bg-darkBody;
-    font-family: "Roboto", system-ui, sans-serif;
+    font-family: "Poppins", system-ui, sans-serif;
   }
 
   h1 {
@@ -137,16 +137,16 @@
   }
 
   .switch {
-    @apply relative inline-block w-12 h-6 cursor-pointer; 
+    @apply relative inline-block w-12 h-6 cursor-pointer;
   }
 
   .switch__slider {
-    @apply relative inline-block w-full h-full bg-gray-600 rounded-full transition-colors duration-300; 
+    @apply relative inline-block w-full h-full bg-gray-600 rounded-full transition-colors duration-300;
   }
 
   .switch__slider::before {
     content: "";
-    @apply absolute h-[1.1rem] w-[1.2rem] left-[3px] bottom-[3px] bg-gray-300 rounded-full transition-transform duration-300; 
+    @apply absolute h-[1.1rem] w-[1.2rem] left-[3px] bottom-[3px] bg-gray-300 rounded-full transition-transform duration-300;
   }
 
   /* Custom Scrollbar */

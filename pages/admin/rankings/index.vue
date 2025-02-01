@@ -11,11 +11,15 @@ useSeoMeta({
 
 const { $toast } = useNuxtApp();
 const { getProgressBarColor } = useProgressBarColor();
+const store = useStore();
+store.setModuleTitle("RANKINGS");
+store.setLink(RANKINGS_BREADCRUMBS);
+
 const statuses = computed(() => status.value === "pending");
 const { data, status, error } = await useAPI<AllResults[]>("/results");
 
 if (error.value) {
-  $toast.error(error.value.message || "Failed to fetch items")
+  $toast.error(error.value.message || "Failed to fetch items");
 }
 
 const dataResults = computed(() => {

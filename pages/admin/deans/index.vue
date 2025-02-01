@@ -14,6 +14,9 @@ useSeoMeta({
 const { $api, payload, static: stat, $toast } = useNuxtApp();
 const { setAlert } = useAlert();
 const { handleApiError } = useErrorHandler();
+const store = useStore();
+store.setModuleTitle("LIST OF DEANS");
+store.setLink(DEANS_BREADCRUMBS);
 /* Department */
 const departmentData = computed(() => department.value || []);
 const { data: department, error: errordept } = await useAPI<DepartmentModel[]>(
@@ -287,10 +290,12 @@ const toggleModal = () => {
 
   <div class="grid grid-cols-5 gap-5">
     <div class="col-span-5">
-      <UICard>
-        <template #header>
-          <h1 class="text-2xl lg:text-lg font-semibold">List of Deans's</h1>
-        </template>
+      <UICard
+        :has-header="false"
+        :defaults="{
+          base: 'border-b-2 border-emerald-500 overflow-hidden',
+        }"
+      >
         <DeansList
           :is-loading="statusDean"
           :deans-data="transformDeans"

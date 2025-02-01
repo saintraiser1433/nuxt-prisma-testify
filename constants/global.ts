@@ -32,11 +32,3 @@ export const BTN_ADD_DATA_MODAL = {
         }
     }
 }
-
-export const BTN_FILTER_COLUMNS = {
-    color: {
-        gray: {
-            solid: 'bg-emerald-500 text-white hover:bg-emerald-600 dark:bg-emerald-500 dark:hover:bg-emerald-600'
-        }
-    }
-}
