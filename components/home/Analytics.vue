@@ -18,7 +18,7 @@ const props = defineProps({
 
 })
 
-const { successRateCourse, successRateExam,registerVsCompleted } = toRefs(props);
+const { successRateCourse, successRateExam, registerVsCompleted } = toRefs(props);
 const regVsCompleted = optionForDataSet(registerVsCompleted.value ?? [])
 const successRatePerCourses = optionForNightingale(successRateCourse.value ?? [])
 const percentagePassPerExam = optionForBarChart(successRateExam.value ?? [])
@@ -31,7 +31,8 @@ const percentagePassPerExam = optionForBarChart(successRateExam.value ?? [])
 <template>
   <div class="grid grid-cols-12 my-5 gap-3">
     <div class="col-span-12 lg:col-span-8">
-      <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }" :has-action-header="false">
+      <UICard :body="{ padding: 'sm:p-0' }" :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }"
+        :has-action-header="false">
         <template #header>
           <div class="flex justify-between items-center p-0">
             <div class="flex flex-col">
@@ -49,7 +50,7 @@ const percentagePassPerExam = optionForBarChart(successRateExam.value ?? [])
       </UICard>
     </div>
     <div class="col-span-12 lg:col-span-4">
-      <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
+      <UICard :body="{ padding: 'sm:p-0' }" :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
         <template #header>
           <div class="flex justify-between items-center p-0">
             <div class="flex flex-col">
@@ -67,7 +68,7 @@ const percentagePassPerExam = optionForBarChart(successRateExam.value ?? [])
   </div>
   <div class="grid grid-cols-12 my-5 gap-3">
     <div class="col-span-12">
-      <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
+      <UICard :body="{ padding: 'sm:p-0' }" :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
         <template #header>
           <div class="flex justify-between items-center p-0">
             <div class="flex flex-col">

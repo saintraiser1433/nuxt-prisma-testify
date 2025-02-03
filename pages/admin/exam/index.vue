@@ -107,11 +107,7 @@ const toggleModal = () => {
 <template>
   <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
   <UModal v-model="isOpen" prevent-close>
-    <UICard
-      :body="{
-        padding: 'px-4',
-      }"
-    >
+    <UICard>
       <template #header>
         <div class="flex items-center justify-between">
           <h1 class="text-2xl lg:text-lg font-semibold">Exam Information</h1>
@@ -136,6 +132,7 @@ const toggleModal = () => {
     <div class="col-span-5">
       <UICard
         :has-header="false"
+        :body="{ padding: 'sm:p-0' }"
         :defaults="{
           base: 'border-b-2 border-emerald-500 overflow-hidden',
         }"

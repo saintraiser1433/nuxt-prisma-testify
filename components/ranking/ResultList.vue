@@ -49,6 +49,7 @@ const concatName = (fname: string, lname: string, mname: string) => {
   <UICard
     :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }"
     :header="{ padding: 'p-3' }"
+    :body="{ padding: 'sm:p-0' }"
     :has-action-header="false"
   >
     <template #header>

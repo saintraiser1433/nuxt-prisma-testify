@@ -74,7 +74,7 @@ const columns = [
 
 const props = defineProps({
   questionData: {
-    type: Object as PropType<ConsoQuestionAnswer[]>,
+    type: Object as PropType<ConsoQuestionDetails[]>,
     required: true,
     default: () => [],
   },

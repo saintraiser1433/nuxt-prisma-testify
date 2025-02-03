@@ -95,11 +95,7 @@ const resetForm = () => {
 <template>
   <div class="grid grid-cols-12 gap-2">
     <div class="col-span-12 lg:col-span-4">
-      <UICard
-        :base="{ padding: 'sm:py-3' }"
-        :header="{ padding: 'sm:p-3' }"
-        :body="{ padding: 'sm:px-3 ' }"
-      >
+      <UICard :header="{ padding: 'sm:p-3' }">
         <template #header>
           <h1 class="text-2xl lg:text-lg font-semibold">Question Form</h1>
         </template>
@@ -112,7 +108,7 @@ const resetForm = () => {
       </UICard>
     </div>
     <div class="col-span-12 lg:col-span-8">
-      <UICard :header="{ padding: 'sm:p-3' }">
+      <UICard :body="{ padding: 'sm:p-0' }" :header="{ padding: 'sm:p-3' }">
         <template #header>
           <h1 class="text-2xl lg:text-lg font-semibold">Question List</h1>
         </template>

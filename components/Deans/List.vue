@@ -64,7 +64,7 @@ const handleUpdate = (item: DeansModel) => {
 </script>
 
 <template>
-  <UITables :is-loading="isLoading" :data="deansData" :columns="columns">
+  <UITables :has-action-header="false" :is-loading="isLoading" :data="deansData" :columns="columns">
     <template #action>
       <UButton
         icon="i-heroicons-plus"

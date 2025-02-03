@@ -14,7 +14,7 @@ const { getAcronym } = useAcronym();
 const { getHighlightRate } = useHighlightRate();
 const store = useStore();
 store.setModuleTitle("ANALYTICAL DASHBOARD");
-store.setLink(DASHBOARD_BREADCRUMBS);
+store.setLink(BASE_BREADCRUMB);
 
 const { data, status, error } = await useAPI<DashboardModel>("/dashboard/summary");
 if (error.value) {
@@ -83,7 +83,7 @@ const summaryQuestions = computed(() =>
     :register-vs-completed="registerVsExaminee"
   >
   </HomeAnalytics>
-  <UICard :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
+  <UICard :body="{ padding: 'sm:p-0' }" :defaults="{ base: 'border-b-2 border-emerald-400 overflow-hidden' }">
     <template #header>
       <div class="flex justify-between items-center p-0">
         <div class="flex flex-col">

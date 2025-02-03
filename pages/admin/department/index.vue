@@ -108,22 +108,13 @@ const toggleModal = () => {
 
 <template>
   <!-- <BaseLoader :isLoading="isLoading"></BaseLoader> -->
-  <UModal v-model="isOpen" prevent-close>
-    <UICard
-      :body="{
-        padding: 'px-4',
-      }"
-    >
+  <UModal v-model="isOpen" :ui="{ width: 'sm:max-w-sm' }" prevent-close>
+    <UICard>
       <template #header>
         <div class="flex items-center justify-between">
           <h1 class="text-2xl lg:text-lg font-semibold">Department Information</h1>
-          <UButton
-            color="gray"
-            variant="ghost"
-            icon="i-heroicons-x-mark-20-solid"
-            class="-my-1"
-            @click="isOpen = false"
-          />
+          <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1"
+            @click="isOpen = false" />
         </div>
       </template>
       <DepartmentForm v-model="departmentForm" @data-department="submitDepartment" />
@@ -132,19 +123,11 @@ const toggleModal = () => {
 
   <div class="grid grid-cols-5 gap-5">
     <div class="col-span-5">
-      <UICard
-        :has-header="false"
-        :defaults="{
-          base: 'border-b-2 border-emerald-500 overflow-hidden',
-        }"
-      >
-        <DepartmentList
-          :is-loading="statuses"
-          :department-data="departmentData"
-          @update="editDepartment"
-          @delete="removeDepartment"
-          @toggle-modal="toggleModal"
-        />
+      <UICard :has-header="false" :body="{ padding: 'sm:p-0' }" :defaults="{
+        base: 'border-b-2 border-emerald-500 overflow-hidden',
+      }">
+        <DepartmentList :is-loading="statuses" :department-data="departmentData" @update="editDepartment"
+          @delete="removeDepartment" @toggle-modal="toggleModal" />
       </UICard>
     </div>
   </div>

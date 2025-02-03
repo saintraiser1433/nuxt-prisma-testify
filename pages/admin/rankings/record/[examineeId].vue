@@ -12,7 +12,7 @@ useSeoMeta({
 const { params } = useRoute();
 const { $api, $toast } = useNuxtApp();
 const store = useStore();
-store.setModuleTitle("EXAMINEE INFORMATION");
+store.setModuleTitle("EXAMINEE RECORD");
 store.setLink(RECORD_BREADCRUMBS);
 
 const statuses = computed(() => status.value === "pending");

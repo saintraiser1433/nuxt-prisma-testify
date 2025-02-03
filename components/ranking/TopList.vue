@@ -16,7 +16,7 @@ const concatName = (fname: string, lname: string, mname: string) => {
 
 
 <template>
-    <UICard :defaults="{ base: ' border-b-2 border-emerald-400 overflow-hidden' }">
+    <UICard :body="{ padding: 'sm:p-0' }" :defaults="{ base: ' border-b-2 border-emerald-400 overflow-hidden' }">
         <template #header>
             <div class="flex justify-between items-center">
                 <h1 class="text-2xl font-semibold">Top 10 Highest Scores</h1>

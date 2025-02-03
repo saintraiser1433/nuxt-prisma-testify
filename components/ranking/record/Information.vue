@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const props = defineProps({
+defineProps({
     data: {
         type: Object as PropType<SummaryResult>,
         required: true,
@@ -19,7 +19,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <UICard :defaults="{ base: ' border-l-2 border-emerald-400 overflow-hidden' }">
+    <UICard :body="{ padding: 'sm:p-2' }" :defaults="{ base: ' border-l-2 border-emerald-400 overflow-hidden' }">
         <template #header>
             <div class="flex justify-between items-center">
                 <h1 class="text-3xl font-semibold">Examinee Information</h1>
