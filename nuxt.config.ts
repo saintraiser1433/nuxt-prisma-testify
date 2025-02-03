@@ -84,7 +84,7 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxtjs/svg-sprite',
     'nuxt-echarts',
-    // '@nuxt/fonts'
+    '@nuxt/fonts'
   ],
   tiptap: {
     prefix: 'Tiptap',

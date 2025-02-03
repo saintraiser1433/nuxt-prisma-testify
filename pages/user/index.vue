@@ -13,7 +13,7 @@ useSeoMeta({
 
 const { info } = useAuthentication();
 const { setToast } = useToasts();
-const { $api,$toast } = useNuxtApp();
+const { $api, $toast } = useNuxtApp();
 const inf = JSON.parse(info.value);
 
 const repo = repository($api);
@@ -30,7 +30,7 @@ const { data, status: statuses, error: errors } = await useAsyncData("key", asyn
 });
 
 if (errors.value) {
-  $toast.error(errors.value.message || "Failed to fetch items")
+  $toast.error(errors.value.message || "Failed to fetch items");
 }
 
 const {
@@ -46,12 +46,9 @@ const { percentage, hexColor, detail } = usePercentage(
   summaryScores.value.totalCorrect,
   summaryScores.value.totalQuestions
 );
-
-console.log(data);
 </script>
 
 <template>
-
   <div class="py-5 lg:py-2">
     <div class="grid grid-cols-12 gap-2">
       <div class="col-span-12 lg:col-span-3">
@@ -108,7 +105,7 @@ console.log(data);
         </UICard>
       </div>
       <div class="col-span-12 lg:col-span-9">
-        <UICard :header="{ padding: 'sm:p-0 p-0' }">
+        <UICard :body="{ padding: 'sm:p-0' }" :header="{ padding: 'sm:p-0 p-0' }">
           <template #header>
             <UserDashboardHeader title="STATISTICAL DASHBOARD" icon="/images/data.png" />
           </template>

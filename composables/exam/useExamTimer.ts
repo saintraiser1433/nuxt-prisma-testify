@@ -2,8 +2,7 @@
 
 export const useExamTimer = (examineeId?: string, examId?: number) => {
     const store = useExamStore();
-    const { $api,$toast } = useNuxtApp();
-    const { setToast } = useToasts();
+    const { $api, $toast } = useNuxtApp();
     const remainingTime = ref(0);
     let timerInterval: NodeJS.Timeout | null = null;
     let timerIntervalForSession: NodeJS.Timeout | null = null;
