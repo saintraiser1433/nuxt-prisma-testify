@@ -41,10 +41,7 @@ const {
   examAttempts,
 } = useExamineeSummary(data.value?.summaryData, data.value?.course);
 
-const { percentage, hexColor, detail } = usePercentage(
-  summaryScores.value.totalCorrect,
-  summaryScores.value.totalQuestions
-);
+const { percentage, hexColor, detail } = usePercentage(summaryScores);
 </script>
 
 <template>
@@ -72,7 +69,7 @@ const { percentage, hexColor, detail } = usePercentage(
             class="text-center text-gray-600 dark:text-gray-300 py-5 font-semibold text-2xl gap-1"
           >
             <span class="pr-1">Score: </span>
-            <span class="text-danger">{{ summaryScores.totalCorrect }}</span>
+            <span class="text-danger">{{ summaryScores.correctAnswers }}</span>
             <span>/{{ summaryScores.totalQuestions }}</span>
           </div>
           <h2

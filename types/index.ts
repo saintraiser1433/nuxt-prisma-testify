@@ -154,7 +154,7 @@ export interface User {
     password?: string,
     accessToken?: string,
     refreshToken?: string,
-    fullname?:string
+    fullname?: string
     role?: Role
 }
 
@@ -348,13 +348,13 @@ export interface ConsoQuestionDetails {
     choicesList: Choice[];
 }
 
-interface summaryScore {
+export interface SummaryScore {
     totalQuestions: number,
     correctAnswers: number
 }
 
 export interface ConsoSummary {
-    summaryScore: summaryScore[],
+    summaryScore: SummaryScore[],
     data: ConsoQuestionDetails[]
 }
 

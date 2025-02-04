@@ -1,8 +1,12 @@
-export const usePercentage = (totalCorrect: number, totalQuestion: number) => {
+import type { SummaryScore } from "~/types";
+
+export const usePercentage = (summary: Ref<SummaryScore>) => {
     let percentage = 0.00;
     let detail;
     let hexColor;
-    if (!totalCorrect || !totalQuestion) {
+    const correctAnswer = summary.value.correctAnswers;
+    const totalQuestion = summary.value.totalQuestions;
+    if (!correctAnswer || !totalQuestion) {
         return {
             percentage: 0.00,
             hexColor: '#4b0406',
@@ -10,7 +14,7 @@ export const usePercentage = (totalCorrect: number, totalQuestion: number) => {
         };
     }
 
-    percentage = (totalCorrect / totalQuestion) * 100;
+    percentage = (correctAnswer / totalQuestion) * 100;
     if (percentage >= 0.00 && percentage <= 50.99) {
         hexColor = '#ff4c51';
         detail = 'POOR';
