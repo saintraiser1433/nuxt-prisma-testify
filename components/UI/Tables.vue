@@ -23,6 +23,10 @@ const props = defineProps({
     required: true,
     default: () => [],
   },
+  hasSelectable: {
+    type: Boolean,
+    default: false,
+  },
   hasBorder: {
     type: Boolean,
     default: false,
@@ -50,7 +54,8 @@ const props = defineProps({
   },
 });
 
-const { data } = toRefs(props);
+
+const { data,hasSelectable } = toRefs(props);
 const {
   search,
   pageCount,
@@ -63,7 +68,35 @@ const {
   columnsTable,
   excludeSelectColumn,
   totalPages,
+  numberOfRows
 } = usePagination(data, props.columns);
+
+const selected = defineModel<any[]>({ default: () => [] });
+
+function select(row: any) {
+
+  const index = selected.value.findIndex(item => item.id === row.id)
+  if (index === -1) {
+    selected.value.push(row)
+  } else {
+    selected.value.splice(index, 1)
+  }
+}
+
+const tableProps = computed(() => {
+  if (hasSelectable.value) {
+    return {
+      modelValue: selected.value,
+      'onUpdate:modelValue': (value:any) => { selected.value = value; },
+      select: select,
+    };
+  } else {
+    return {};
+  }
+});
+
+
+
 </script>
 
 <template>
@@ -75,52 +108,30 @@ const {
     </div>
     <!-- Header and Action buttons -->
 
-    <div
-      class="flex justify-between items-center w-full px-2 py-2 flex-col lg:flex-row gap-3 bg-white dark:bg-darken"
-      v-if="hasPageCount && hasColumnFilter"
-    >
+    <div class="flex justify-between items-center w-full px-2 py-2 flex-col lg:flex-row gap-3 bg-white dark:bg-darken"
+      v-if="hasPageCount && hasColumnFilter">
       <div class="flex flex-wrap items-center gap-1.5">
         <!-- <span class="text-sm leading-5">Rows per page:</span> -->
-        <USelectMenu
-          v-model="selectedColumns"
-          :options="excludeSelectColumn"
-          v-if="hasColumnFilter"
-          multiple
-          class="w-32"
-        >
+        <USelectMenu v-model="selectedColumns" :options="excludeSelectColumn" v-if="hasColumnFilter" multiple
+          class="w-32">
           <UButton icon="i-heroicons-view-columns" class="w-32" size="xs" color="gray">
             Columns
           </UButton>
         </USelectMenu>
-        <UInput
-          v-model="search"
-          icon="i-heroicons-magnifying-glass-20-solid"
-          color="gray"
-          placeholder="Search..."
-          size="xs"
-        />
-        <USelect
-          v-model.number="pageCount"
-          :options="[3, 5, 10, 20, 30, 40]"
-          class="me-2"
-          size="xs"
-          color="gray"
-          v-if="hasPageCount"
-        />
+        <UInput v-model="search" icon="i-heroicons-magnifying-glass-20-solid" color="gray" placeholder="Search..."
+          size="xs" />
+        <USelect v-model.number="pageCount" :options="numberOfRows" class="me-2" size="xs" color="gray"
+          v-if="hasPageCount" />
       </div>
       <div class="flex gap-1.5 items-center">
         <slot name="action"></slot>
       </div>
     </div>
 
-    <UTable
-      :loading="isLoading"
+    <UTable v-bind="tableProps" :loading="isLoading"
       :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
-      :progress="{ color: 'primary', animation: 'carousel' }"
-      :rows="hasPagination ? paginatedData : data"
-      :columns="columnsTable"
-      class="w-full text-xs"
-      :ui="{
+      :progress="{ color: 'primary', animation: 'carousel' }" :rows="hasPagination ? paginatedData : data"
+      :columns="columnsTable" class="w-full text-xs" :ui="{
         base: base || 'border-t dark:border-gray-700 ',
         thead: 'static',
         wrapper: 'static',
@@ -138,8 +149,7 @@ const {
           padding: th.padding || 'py-2',
           base: th.base || 'w-25 bg-gray-100 dark:bg-darken dark:text-slate-400 text-xs ',
         },
-      }"
-    >
+      }">
       <template #empty-state>
         <div class="flex flex-col items-center justify-center py-6 gap-3">
           <svg-icon name="seticons/emptybox" width="64" height="64" />
@@ -151,10 +161,8 @@ const {
       </template>
     </UTable>
 
-    <div
-      v-if="hasPagination"
-      class="flex flex-wrap justify-between items-center border-t dark:border-gray-700 px-3 py-1 outline-none dark:bg-darken"
-    >
+    <div v-if="hasPagination"
+      class="flex flex-wrap justify-between items-center border-t dark:border-gray-700 px-3 py-1 outline-none dark:bg-darken">
       <div>
         <span class="text-sm leading-5">
           Showing
@@ -166,21 +174,15 @@ const {
           results
         </span>
       </div>
-      <UPagination
-        v-model="page"
-        :max="5"
-        :page-count="1"
-        :total="totalPages"
-        :ui="{
-          wrapper: 'flex items-center gap-1 py-1',
-          rounded: '!rounded-full min-w-[32px] justify-center',
-          default: {
-            activeButton: {
-              variant: 'outline',
-            },
+      <UPagination v-model="page" :max="5" :page-count="1" :total="totalPages" :ui="{
+        wrapper: 'flex items-center gap-1 py-1',
+        rounded: '!rounded-full min-w-[32px] justify-center',
+        default: {
+          activeButton: {
+            variant: 'outline',
           },
-        }"
-      />
+        },
+      }" />
     </div>
   </div>
 </template>

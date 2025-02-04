@@ -10,7 +10,6 @@ useSeoMeta({
 });
 
 const { $api, payload, static: stat, $toast } = useNuxtApp();
-const { setAlert } = useAlert();
 const { handleApiError } = useErrorHandler();
 const store = useStore();
 store.setModuleTitle("LIST OF EXAMS");

@@ -10,8 +10,6 @@ useSeoMeta({
   ogDescription: "Testify Analytics",
 });
 const { $toast } = useNuxtApp();
-const { getAcronym } = useAcronym();
-const { getHighlightRate } = useHighlightRate();
 const store = useStore();
 store.setModuleTitle("ANALYTICAL DASHBOARD");
 store.setLink(BASE_BREADCRUMB);
@@ -62,7 +60,7 @@ const summaryQuestions = computed(() =>
       total: `${item.totalCorrect}/${item.totalAttempt}`,
       successRate: {
         value: successRate,
-        class: getHighlightRate(successRate),
+        class: highlightSuccessRate(successRate),
       },
     };
   }, [])

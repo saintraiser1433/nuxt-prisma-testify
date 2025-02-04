@@ -4,8 +4,7 @@ export const useExamSession = (
     answers: Ref<Record<number, number>>,
     examineeId: string,
 ) => {
-    const { $api } = useNuxtApp();
-    const { setToast } = useToasts();
+    const { $api, $toast } = useNuxtApp();
     const sessionExamRepo = repository<ApiResponse<null>>($api);
 
     //get session
@@ -36,7 +35,7 @@ export const useExamSession = (
     //debouncing after push
     const debounceSaveAnswer = useDebounceFn(async (questionId: number, answerId: number) => {
         if (!question.value?.time_limit || !question.value?.exam_id) {
-            return setToast('error', 'Exam has not started yet');
+            return $toast.error('Exam has not started yet')
         }
         await sessionExamRepo.insertExamSession({
             examinee_id: examineeId,

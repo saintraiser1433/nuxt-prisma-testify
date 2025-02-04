@@ -3,7 +3,6 @@ definePageMeta({
   requiredRole: "admin",
   middleware: "check-exam",
 });
-const { setAlert } = useAlert();
 const { params } = useRoute();
 const { handleApiError } = useErrorHandler();
 const { $api, payload, static: stat, $toast } = useNuxtApp();

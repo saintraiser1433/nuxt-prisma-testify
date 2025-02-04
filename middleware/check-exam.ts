@@ -1,8 +1,8 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
     const id = Number(to.params.id);
     const nuxtApp = useNuxtApp()
+    const { handleApiError } = useErrorHandler();
     const examRepo = repository(nuxtApp.$api);
-    const { setToast } = useToasts();
     try {
         const response = await examRepo.getExamId(id);
         const title = response.exam_title || "Default Title";
@@ -18,10 +18,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             to.meta.examTitle = title;
             return;
         }
-        setToast('error', 'Exam not found');
+        nuxtApp.$toast.error('Exam not found');
         return nuxtApp.runWithContext(() => navigateTo({ name: "admin-exam" }));
     } catch (error) {
-        setToast('error', 'Exam not found');
+        handleApiError(error);
         return nuxtApp.runWithContext(() => navigateTo({ name: "admin-exam" }));
     }
 });

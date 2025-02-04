@@ -6,16 +6,17 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Testify Signup Page',
-  description: 'Testify Signup',
-  ogTitle: 'Testify Signup Page',
-  ogDescription: 'Testify Signup'
+    title: 'Testify Signup Page',
+    description: 'Testify Signup',
+    ogTitle: 'Testify Signup Page',
+    ogDescription: 'Testify Signup'
 });
 
 
 
 
-const { setToast } = useToasts();
+const { handleApiError } = useErrorHandler();
+const { $toast } = useNuxtApp();
 const username = ref('');
 const password = ref('');
 const config = useRuntimeConfig()
@@ -31,13 +32,13 @@ const handleSignup = async () => {
             }
         })
         if (result) {
-            setToast('success', 'Successfully registered')
+            $toast.success('Successfully registered')
         } else {
-            setToast('error', 'Invalid credentials ')
+            $toast.error('Invalid credentials ')
         }
 
     } catch (err) {
-        setToast('error', err.data?.error)
+        return handleApiError(err)
     }
 
 
@@ -88,4 +89,3 @@ const handleSignup = async () => {
 
 
 </template>
-

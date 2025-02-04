@@ -7,7 +7,6 @@ export const useExam = (
 ) => {
 
     const { $api, $toast } = useNuxtApp();
-    const { setAlert } = useAlert();
 
     const shouldRefetch = ref(0);
     const isLoading = ref(false);
@@ -94,7 +93,7 @@ export const useExam = (
             if (answerCount.value !== question.value?.data.length) {
                 $toast.error('Please answer all questions before proceeding');
             } else {
-                setAlert('info', 'Are you sure you want to submit your answer? Once submit your answer will be cast!', '', 'Confirm submit').then(
+                setAlert('info', 'Are you sure you want to submit your answer? Once you submit, your answer will be final!', '', 'Confirm submit').then(
                     async (result) => {
                         if (result.isConfirmed) {
                             try {

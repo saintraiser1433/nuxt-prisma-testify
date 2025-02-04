@@ -154,6 +154,7 @@ export interface User {
     password?: string,
     accessToken?: string,
     refreshToken?: string,
+    fullname?:string
     role?: Role
 }
 

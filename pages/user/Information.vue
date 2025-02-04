@@ -15,10 +15,9 @@ useSeoMeta({
 
 
 
-const { $api, $datefns } = useNuxtApp();
+const { $api, $datefns,$toast } = useNuxtApp();
 const { info } = useAuthentication();
-const { setToast } = useToasts();
-const {handleApiError} = useErrorHandler()
+const { handleApiError } = useErrorHandler()
 const inf = JSON.parse(info.value);
 
 
@@ -43,7 +42,7 @@ const onSubmit = async (onResponse: Followup) => {
             }
 
         } else {
-            setToast('error', 'Cant find id');
+            $toast.error('Cant find id');
         }
     } catch (err) {
         return handleApiError(err);
@@ -68,5 +67,3 @@ const onSubmit = async (onResponse: Followup) => {
 
     </div>
 </template>
-
-

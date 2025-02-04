@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useScoreSlip } from '#imports';
+
 
 
 const columns = [{
@@ -35,7 +35,6 @@ defineProps({
 })
 
 const { $datefns } = useNuxtApp()
-const { generateScoreSlip } = useScoreSlip();
 const dateNow = computed(() =>
     $datefns.format(new Date(), "MMM d, yyyy")
 );
@@ -61,7 +60,7 @@ const dateNow = computed(() =>
                 <template #actions-data="{ row, index }">
                     <div class="flex gap-1">
                         <UButton type="button"
-                            @click="generateScoreSlip(examineeName.toUpperCase(), row.description.toUpperCase(),dateNow)"
+                            @click="printScoreSlip(examineeName.toUpperCase(), row.description.toUpperCase(),dateNow)"
                             color="emerald" class="dark:text-white" variant="solid" size="xs">
                             <i-ion-print width="16" height="16" />
                         </UButton>

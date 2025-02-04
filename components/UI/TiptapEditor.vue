@@ -1,7 +1,6 @@
 <script setup>
 
 const { $api } = useNuxtApp();
-const { setToast } = useToasts()
 const config = useRuntimeConfig();
 const repo = repository($api)
 const props = defineProps({
@@ -16,7 +15,7 @@ const uploadImage = async (file) => {
         const { url } = await repo.uploadImage(formData);
         return url;
     } catch (err) {
-        setToast('error', err.value.data.message)
+        return handleApiError(err);
     }
 
 };

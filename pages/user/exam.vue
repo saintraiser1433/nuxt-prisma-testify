@@ -39,9 +39,7 @@ const { data: question, error } = await useAPI<ExamDetails>(`/exam/available/${i
   watch: [shouldRefetch],
 });
 
-const { data: sessionAnswer, error: sessionError } = await useAPI<
-  SessionExamineeHeader[]
->(`/answer/session/${inf.id}/${question.value?.exam_id}`, {
+const { data: sessionAnswer, error: sessionError } = await useAPI<SessionExamineeHeader[]>(`/answer/session/${inf.id}/${question.value?.exam_id}`, {
   watch: [shouldRefetch],
 });
 
@@ -120,29 +118,17 @@ onUnmounted(() => {
 
 <template>
   <div class="absolute end-5 bottom-20">
-    <UButton
-      type="button"
-      @click="findMissing"
-      variant="solid"
-      color="gray"
-      size="lg"
-      :ui="BTN_FINDMISSING"
-    >
+    <UButton type="button" @click="findMissing" variant="solid" color="gray" size="lg" :ui="BTN_FINDMISSING">
       <i-fluent-emoji-flat-magnifying-glass-tilted-left />
       Find my missing
     </UButton>
   </div>
-  <UICard
-    :has-footer="true"
-    :body="{
-      padding: 'sm:p-0 p-0',
-      base: 'h-[73vh] lg:h-[76vh] w-full overflow-y-auto',
-    }"
-    :header="{ padding: 'sm:p-0 p-0' }"
-    :footer="{
-      base: 'flex justify-center items-center py-2 dark:bg-darken',
-    }"
-  >
+  <UICard :has-footer="true" :body="{
+    padding: 'sm:p-0 p-0',
+    base: 'h-[73vh] lg:h-[76vh] w-full overflow-y-auto',
+  }" :header="{ padding: 'sm:p-0 p-0' }" :footer="{
+    base: 'flex justify-center items-center py-2 dark:bg-darken',
+  }">
     <template #header>
       <UserDashboardHeader :title="examTitle">
         <h1 class="text-white font-bold">
@@ -151,24 +137,12 @@ onUnmounted(() => {
       </UserDashboardHeader>
     </template>
     <template #default>
-      <UserExamQuestions
-        :session-data="sessionAnswerData"
-        :question-data="questionDetails"
-        @push-answer="pushAnswer"
-      />
+      <UserExamQuestions :session-data="sessionAnswerData" :question-data="questionDetails" @push-answer="pushAnswer" />
     </template>
 
     <template #footer>
-      <UButton
-        :loading="isLoading"
-        type="submit"
-        id="submition"
-        color="gray"
-        size="md"
-        @click="submitExam"
-        :ui="BUTTON_UI_CONFIG"
-        >Submit Exam</UButton
-      >
+      <UButton :loading="isLoading" type="submit" id="submition" color="gray" size="md" @click="submitExam"
+        :ui="BUTTON_UI_CONFIG">Submit Exam</UButton>
     </template>
   </UICard>
 </template>

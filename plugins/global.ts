@@ -7,10 +7,7 @@ import { toast, type ToastOptions } from 'vue3-toastify';
 import { format, parse, parseISO, getDay } from 'date-fns'
 import * as echarts from 'echarts';
 export default defineNuxtPlugin((nuxtApp) => {
-    const nanoid = customAlphabet("1234567890abcdef", 10);
-    const username = () => {
-        return nanoid();
-    }
+    const nanoid = customAlphabet("1234567890abcdef", 5);
     const password = () => {
         return nanoid();
     }
@@ -23,7 +20,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 
     //provide
-    nuxtApp.provide('username', username);
     nuxtApp.provide('password', password);
     nuxtApp.provide('joi', Joi);
     nuxtApp.provide('toast', toast)

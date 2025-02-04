@@ -12,7 +12,6 @@ useSeoMeta({
 });
 
 const { info } = useAuthentication();
-const { setToast } = useToasts();
 const { $api, $toast } = useNuxtApp();
 const inf = JSON.parse(info.value);
 

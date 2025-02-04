@@ -39,7 +39,7 @@ const concatName = (fname: string, lname: string, mname: string) => {
                 <div class="divide-y divide-gray-200 dark:divide-gray-700">
 
                     <div v-for="(data, index) in data" :key="data.examinee_id"
-                        class="grid grid-cols-12 gap-3 p-2 text-sm text-center">
+                        class="grid grid-cols-12 gap-3 p-2 text-sm text-center odd:bg-white even:bg-slate-50 dark:odd:bg-gray-900 dark:even:bg-gray-800">
                         <div class="col-span-1 flex justify-center items-center gap-2">
                             <svg-icon v-if="index + 1 === 1" name="seticons/firstmedal" width="24" height="24" />
                             <svg-icon v-else-if="index + 1 === 2" name="seticons/secondmedal" width="24" height="24" />

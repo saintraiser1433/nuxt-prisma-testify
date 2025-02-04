@@ -5,6 +5,7 @@ const columns = [
     label: "#",
     sortable: true,
   },
+
   {
     key: "exam_title",
     label: "Exam Name",
@@ -25,6 +26,7 @@ const columns = [
     label: "Actions",
     sortable: false,
   },
+
 ];
 
 const emits = defineEmits<{
@@ -67,23 +69,14 @@ const handleDelete = (id: number) => {
 const handleUpdate = (item: ExamModel) => {
   emits("update", item);
 };
+
+
 </script>
 
 <template>
-  <UITables
-    :has-action-header="false"
-    :is-loading="isLoading"
-    :data="examData"
-    :columns="columns"
-  >
+  <UITables :has-action-header="false" :is-loading="isLoading" :data="examData" :columns="columns">
     <template #action>
-      <UButton
-        icon="i-heroicons-plus"
-        color="gray"
-        size="md"
-        @click="toggleModal"
-        :ui="BTN_ADD_DATA_MODAL"
-      >
+      <UButton icon="i-heroicons-plus" color="gray" size="md" @click="toggleModal" :ui="BTN_ADD_DATA_MODAL">
         Add Exam
       </UButton>
     </template>
@@ -101,31 +94,14 @@ const handleUpdate = (item: ExamModel) => {
     </template>
     <template #actions-data="{ row, index }">
       <div class="flex gap-1">
-        <UButton
-          :to="{ name: 'admin-exam-id', params: { id: row.exam_id } }"
-          color="primary"
-          class="dark:text-white"
-          variant="solid"
-          size="xs"
-        >
+        <UButton :to="{ name: 'admin-exam-id', params: { id: row.exam_id } }" color="primary" class="dark:text-white"
+          variant="solid" size="xs">
           <i-bx-show />
         </UButton>
-        <UButton
-          color="emerald"
-          class="dark:text-white"
-          variant="solid"
-          size="xs"
-          @click="handleUpdate(row)"
-        >
+        <UButton color="emerald" class="dark:text-white" variant="solid" size="xs" @click="handleUpdate(row)">
           <i-bx-edit />
         </UButton>
-        <UButton
-          color="carnation"
-          class="dark:text-white"
-          variant="solid"
-          size="xs"
-          @click="handleDelete(row.exam_id)"
-        >
+        <UButton color="carnation" class="dark:text-white" variant="solid" size="xs" @click="handleDelete(row.exam_id)">
           <i-icon-park-solid-people-delete />
         </UButton>
       </div>

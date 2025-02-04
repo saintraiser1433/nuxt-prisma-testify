@@ -11,7 +11,6 @@ useSeoMeta({
 });
 
 const { $api, payload, static: stat, $toast } = useNuxtApp();
-const { setAlert } = useAlert();
 const { handleApiError } = useErrorHandler();
 const store = useStore();
 store.setModuleTitle("LIST OF EXAMINEES");
@@ -99,7 +98,7 @@ const removeExaminee = (id: string) => {
           const index = examineeData.value.findIndex((item) => item.id === id);
           examineeData.value.splice(index, 1);
           $toast.success(response.message);
-        } catch (error: any) {
+        } catch (error) {
           return handleApiError(error);
         }
       }
@@ -119,9 +118,12 @@ const toggleModal = () => {
   isOpen.value = true;
   isUpdate.value = false;
 };
+
+
 </script>
 
 <template>
+
   <!-- modal -->
   <UModal v-model="isOpen" :ui="{ width: 'sm:max-w-sm' }" prevent-close>
     <UICard>

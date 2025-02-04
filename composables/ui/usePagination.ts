@@ -1,4 +1,4 @@
-export const usePagination = (items: any,columns:any) => {
+export const usePagination = (items: any, columns: any) => {
   const search = ref('')
   const page = ref(1)
   const pageCount = ref(10)
@@ -21,6 +21,8 @@ export const usePagination = (items: any,columns:any) => {
     return Math.ceil(filteredTableData.value.length / pageCount.value)
   })
 
+  const numberOfRows = ref([3, 5, 10, 20, 30, 40, 50, 60, 100])
+
   const selectedColumns = ref(columns)
   const columnsTable = computed(() => columns.filter((column: any) => selectedColumns.value.includes(column)))
   const excludeSelectColumn = computed(() => columns.filter((v: any) => v.key !== 'select'))
@@ -37,6 +39,7 @@ export const usePagination = (items: any,columns:any) => {
     totalPages,
     selectedColumns,
     columnsTable,
-    excludeSelectColumn
+    excludeSelectColumn,
+    numberOfRows
   }
 }
