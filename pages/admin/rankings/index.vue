@@ -10,7 +10,6 @@ useSeoMeta({
 });
 
 const { $toast } = useNuxtApp();
-const { getProgressBarColor } = useProgressBarColor();
 const store = useStore();
 store.setModuleTitle("RANKINGS");
 store.setLink(RANKINGS_BREADCRUMBS);
@@ -35,7 +34,7 @@ const dataResults = computed(() => {
       return {
         ...item,
         successRate,
-        color: getProgressBarColor(successRate),
+        color: setProgressBarColor(successRate),
       };
     })
     .sort((a, b) => b.totalCorrect - a.totalCorrect);

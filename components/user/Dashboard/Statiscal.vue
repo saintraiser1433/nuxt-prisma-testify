@@ -136,7 +136,6 @@ const props = defineProps({
 });
 
 const { summaryData } = toRefs(props);
-const { getProgressBarColor } = useProgressBarColor();
 
 const data = computed(() => {
   if (!summaryData.value) return [];
@@ -150,7 +149,7 @@ const data = computed(() => {
       success_rate: successRate,
       correctAnswer: items.correctAnswers,
       totalQuestion: items.totalQuestions,
-      color: getProgressBarColor(successRate),
+      color: setProgressBarColor(successRate),
     };
   });
 });

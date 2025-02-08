@@ -2,12 +2,12 @@ export const useExamineeSummary = (data?: SummaryResult, dataCourse?: CourseMode
     const summaryData = computed(() => data);
 
     const summaryScores = computed(() => {
-        if (!summaryData.value) return { totalCorrect: 0, totalQuestions: 0 };
+        if (!summaryData.value) return { correctAnswers: 0, totalQuestions: 0 };
 
-        const totalCorrect = summaryData.value.examDetails.reduce((a, b) => a + b.correctAnswers, 0);
+        const correctAnswers = summaryData.value.examDetails.reduce((a, b) => a + b.correctAnswers, 0);
         const totalQuestions = summaryData.value.examDetails.reduce((a, b) => a + b.totalQuestions, 0);
         return {
-            totalCorrect,
+            correctAnswers,
             totalQuestions
         }
     })
@@ -21,7 +21,7 @@ export const useExamineeSummary = (data?: SummaryResult, dataCourse?: CourseMode
 
     const courseData = computed(() => {
         if (!dataCourse || !summaryData.value) return [];
-        return dataCourse.filter((item) => item.score <= (summaryScores.value.totalCorrect));
+        return dataCourse.filter((item) => item.score <= (summaryScores.value.correctAnswers));
     });
 
     const isFinished = computed(() => {
