@@ -4,7 +4,7 @@ import { config } from 'dotenv'
 import path from 'path' 
 import IconsResolver from "unplugin-icons/resolver";
 
-const envFile = process.env.NODE_ENV === 'production' ? '.env-production' : '.env-development';
+const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env-development';
 config({ path: path.resolve(process.cwd(), envFile) });
 
 
